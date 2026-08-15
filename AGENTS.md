@@ -10,6 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Rules
 
+- please don't return so many text when result task is just a single line code
 - always pnpm package manager
 
 ## Structure
