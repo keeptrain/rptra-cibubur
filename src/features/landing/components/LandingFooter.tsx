@@ -1,5 +1,4 @@
 import {
-  Trees,
   ArrowUpRight,
   Phone,
   Mail,
@@ -17,16 +16,11 @@ export default function LandingFooter() {
           {/* LEFT SIDE: Brand Info + 2 Columns Links */}
           <div className="flex flex-col space-y-6 lg:col-span-6">
             {/* Logo Brand & Short Description */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-md">
-                  <Trees className="size-5" />
-                </div>
-                <span className="text-xl font-extrabold tracking-tight text-white uppercase">
-                  RPTRA CIBUBUR
-                </span>
-              </div>
-              <p className="max-w-md text-xs leading-relaxed font-medium text-emerald-200/70">
+            <div>
+              <span className="text-xl font-extrabold tracking-tight text-white uppercase">
+                RPTRA CIBUBUR
+              </span>
+              <p className="mt-3 max-w-md text-xs leading-relaxed font-medium text-emerald-200/70">
                 Ruang Publik Terpadu Ramah Anak Kelurahan Cibubur, Jakarta
                 Timur. Sarana interaksi warga, arena bermain ramah anak, dan
                 tempat kegiatan sosial 100% bebas biaya.
@@ -72,9 +66,8 @@ export default function LandingFooter() {
 
               {/* Column 2: Kontak & Pengaduan */}
               <div className="space-y-3">
-                <h4 className="flex items-center gap-1 text-xs font-extrabold tracking-wider text-white uppercase">
-                  KONTAK &amp; PENGADUAN{" "}
-                  <ArrowUpRight className="size-3.5 text-emerald-300" />
+                <h4 className="text-xs font-extrabold tracking-wider text-white uppercase">
+                  KONTAK &amp; PENGADUAN
                 </h4>
                 <ul className="space-y-2 text-xs font-medium text-emerald-200/70">
                   <li className="flex items-center gap-2">
