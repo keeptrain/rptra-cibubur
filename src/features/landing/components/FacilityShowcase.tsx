@@ -58,14 +58,9 @@ export default function FacilityShowcase() {
       <div className="relative flex flex-col justify-between rounded-2xl border border-emerald-200/80 bg-white p-6 shadow-xs lg:col-span-7">
         <div className="space-y-6">
           {/* Stage Top Tag & Badge */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
             <span className="text-xs font-black tracking-widest text-emerald-700 uppercase">
               {current.category}
-            </span>
-            <span
-              className={`rounded-full border px-3 py-1 text-xs font-bold ${current.badgeColor}`}
-            >
-              {current.badge}
             </span>
           </div>
 
