@@ -10,7 +10,7 @@ const REPEATED_HIGHLIGHTS = [...highlights, ...highlights, ...highlights];
 
 export default function HighlightTicker() {
   return (
-    <div className="w-full overflow-hidden border-y border-emerald-300/80 bg-[#A7F3D0] py-3.5 text-emerald-950">
+    <div className="w-full overflow-hidden border-y border-emerald-300/80 bg-[#A7F3D0] my-6 py-3.5 text-emerald-950">
       <div className="flex w-max space-x-8 whitespace-nowrap">
         {REPEATED_HIGHLIGHTS.map((item, idx) => {
           const Icon = item.icon;
