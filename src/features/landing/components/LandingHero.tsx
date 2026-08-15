@@ -10,20 +10,14 @@ import ParkLiveStatus from "./ParkLiveStatus";
 
 function HeroTop() {
   return (
-    <div className="relative grid min-h-0 flex-1 grid-cols-1 items-center overflow-hidden bg-linear-to-br from-emerald-100/90 via-emerald-50/80 to-emerald-100/40 lg:grid-cols-12">
-      {/* Left Side: Big Typography */}
-      <div className="relative z-10 flex flex-col justify-center gap-2 p-6 sm:gap-4 sm:p-8 lg:col-span-7">
+    <div className="relative flex flex-1 flex-col justify-center overflow-hidden bg-linear-to-br from-emerald-100/90 via-emerald-50/80 to-emerald-100/40 p-4 sm:p-6 lg:p-8">
+      <div className="relative z-10 space-y-2 sm:space-y-3">
         <span className="inline-block text-xs font-extrabold tracking-widest text-emerald-700 uppercase sm:text-sm">
           Ruang Publik Terpadu Ramah Anak
         </span>
-        <h1 className="text-3xl leading-[0.95] font-black tracking-tight text-emerald-950 uppercase drop-shadow-xs sm:text-5xl lg:text-6xl xl:text-7xl">
+        <h1 className="text-3xl leading-[0.95] font-black tracking-tight text-emerald-950 uppercase drop-shadow-xs sm:text-4xl lg:text-5xl xl:text-6xl">
           RPTRA <br /> CIBUBUR <br /> PARK
         </h1>
-      </div>
-
-      {/* Right Side: Subtle Live Park Operational Status Card */}
-      <div className="relative z-10 flex items-center justify-start p-6 sm:p-8 lg:col-span-5 lg:justify-end">
-        <ParkLiveStatus />
       </div>
     </div>
   );
@@ -117,6 +111,7 @@ export default function LandingHero() {
     >
       <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-emerald-200/80 bg-[#F4FBF7] text-emerald-950 shadow-2xl shadow-emerald-950/5">
         <HeroTop />
+        <ParkLiveStatus />
         <HeroBottom />
       </div>
     </section>
