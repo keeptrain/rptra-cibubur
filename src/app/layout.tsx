@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RPTRA Cibubur Park",
+  title: "RPTRA Cibubur",
   description:
     "Ruang Publik Terpadu Ramah Anak Kelurahan Cibubur, Jakarta Timur",
 };
