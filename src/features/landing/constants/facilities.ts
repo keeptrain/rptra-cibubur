@@ -17,8 +17,6 @@ export interface FacilityItem {
   badge: string;
   badgeColor: string;
   features: string[];
-  ctaText: string;
-  ctaHref: string;
 }
 
 export const FACILITIES: FacilityItem[] = [
@@ -37,8 +35,6 @@ export const FACILITIES: FacilityItem[] = [
       "Area berpagar dengan pengawasan",
       "100% Gratis tanpa biaya masuk",
     ],
-    ctaText: "Panduan Bermain Aman",
-    ctaHref: "#tata-tertib",
   },
   {
     id: "literacy",
@@ -55,8 +51,6 @@ export const FACILITIES: FacilityItem[] = [
       "Komputer & akses internet sehat",
       "Buka setiap hari jam operasional",
     ],
-    ctaText: "Lihat Jam Operasional",
-    ctaHref: "#hero",
   },
   {
     id: "sports",
@@ -73,8 +67,6 @@ export const FACILITIES: FacilityItem[] = [
       "Peralatan outdoor fitness gym",
       "Pencahayaan terang saat sore",
     ],
-    ctaText: "Info Penggunaan Lapangan",
-    ctaHref: "#hero",
   },
   {
     id: "nature",
@@ -91,8 +83,6 @@ export const FACILITIES: FacilityItem[] = [
       "Kolam pembibitan ikan warga",
       "Kegiatan daur ulang sampah organik",
     ],
-    ctaText: "Eksplorasi Kebun Taman",
-    ctaHref: "#hero",
   },
   {
     id: "community",
@@ -109,7 +99,5 @@ export const FACILITIES: FacilityItem[] = [
       "Ruang serbaguna ber-AC lega",
       "Pengajuan peminjaman tempat gratis",
     ],
-    ctaText: "Hubungi Pengelola (WhatsApp)",
-    ctaHref: "https://wa.me/6281234567890?text=Halo%20Pengelola%20RPTRA%20Cibubur,%20saya%20ingin%20mengajukan%20peminjaman%20tempat",
   },
 ];

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { FACILITIES } from "../constants/facilities";
 
 export default function FacilityShowcase() {
@@ -9,9 +9,9 @@ export default function FacilityShowcase() {
   const current = FACILITIES[activeTab];
 
   return (
-    <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
-      {/* LEFT SIDE: Interactive Vertical Tab List */}
-      <div className="flex flex-col space-y-2 lg:col-span-5">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-12">
+      {/* TAB SELECTION LIST (Compact 3-column Grid on Mobile, Vertical List on Desktop) */}
+      <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-5 lg:col-span-5 lg:flex lg:flex-col lg:gap-0 lg:space-y-2">
         {FACILITIES.map((item, idx) => {
           const Icon = item.icon;
           const isActive = activeTab === idx;
@@ -20,32 +20,32 @@ export default function FacilityShowcase() {
             <button
               key={item.id}
               onClick={() => setActiveTab(idx)}
-              className={`group relative flex items-center gap-4 rounded-xl p-4 text-left transition-all duration-200 ${
+              className={`group relative flex flex-col items-center justify-center gap-1.5 rounded-2xl border p-3 text-center transition-all duration-200 lg:flex-row lg:items-center lg:gap-4 lg:rounded-xl lg:p-4 lg:text-left ${
                 isActive
-                  ? "bg-white text-emerald-950 shadow-md shadow-emerald-950/5"
-                  : "text-emerald-900/70 hover:bg-emerald-100/50 hover:text-emerald-950"
+                  ? "border-emerald-500/80 bg-emerald-600 text-white shadow-md lg:border-emerald-200/80 lg:bg-white lg:text-emerald-950 lg:shadow-emerald-950/5"
+                  : "border-emerald-200/60 bg-white/90 text-emerald-900/80 hover:border-emerald-300 hover:bg-emerald-100/50 hover:text-emerald-950 lg:border-transparent lg:bg-transparent"
               }`}
             >
-              {/* Active Bar Indicator */}
+              {/* Active Bar Indicator (Desktop Only) */}
               {isActive && (
-                <span className="absolute top-3 bottom-3 left-0 w-1 rounded-r-full bg-emerald-600" />
+                <span className="hidden lg:absolute lg:top-3 lg:bottom-3 lg:left-0 lg:block lg:w-1 lg:rounded-r-full lg:bg-emerald-600" />
               )}
 
               <div
-                className={`flex size-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                className={`flex size-10 shrink-0 items-center justify-center rounded-xl transition-colors sm:size-11 ${
                   isActive
-                    ? "bg-emerald-600 text-white shadow-xs"
+                    ? "bg-white/20 text-white lg:bg-emerald-600 lg:text-white lg:shadow-xs"
                     : "bg-emerald-100/80 text-emerald-800 group-hover:bg-emerald-200/80"
                 }`}
               >
                 <Icon className="size-5" />
               </div>
 
-              <div className="flex-1">
-                <span className="block text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">
+              <div className="min-w-0 flex-1">
+                <span className="hidden text-[10px] font-extrabold tracking-wider text-emerald-700 uppercase lg:block">
                   {item.category}
                 </span>
-                <span className="block text-base font-bold tracking-tight">
+                <span className="line-clamp-1 block text-[11px] leading-tight font-bold tracking-tight sm:text-xs lg:line-clamp-none lg:text-base">
                   {item.title}
                 </span>
               </div>
@@ -54,12 +54,12 @@ export default function FacilityShowcase() {
         })}
       </div>
 
-      {/* RIGHT SIDE: Open Stage Showcase */}
-      <div className="relative flex flex-col justify-between rounded-2xl border border-emerald-200/80 bg-white p-6 shadow-xs sm:p-10 lg:col-span-7">
+      {/* RIGHT SIDE: Open Stage Showcase (Detail View) */}
+      <div className="relative flex flex-col justify-between rounded-2xl border border-emerald-200/80 bg-white p-6 shadow-xs lg:col-span-7">
         <div className="space-y-6">
           {/* Stage Top Tag & Badge */}
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="text-xs font-black uppercase tracking-widest text-emerald-700">
+            <span className="text-xs font-black tracking-widest text-emerald-700 uppercase">
               {current.category}
             </span>
             <span
@@ -80,13 +80,13 @@ export default function FacilityShowcase() {
           </div>
 
           {/* Narrative Description */}
-          <p className="text-xs font-medium leading-relaxed text-emerald-900/80 sm:text-base">
+          <p className="text-xs leading-relaxed font-medium text-emerald-900/80 sm:text-base">
             {current.desc}
           </p>
 
           {/* Feature Checklist */}
           <div className="pt-2">
-            <h4 className="mb-3 text-xs font-black uppercase tracking-wider text-emerald-950">
+            <h4 className="mb-3 text-xs font-black tracking-wider text-emerald-950 uppercase">
               Keunggulan &amp; Fasilitas Zona Ini:
             </h4>
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
@@ -101,18 +101,6 @@ export default function FacilityShowcase() {
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Bottom Action Button */}
-        <div className="mt-8 border-t border-emerald-100 pt-8">
-          <a
-            href={current.ctaHref}
-            className="inline-flex items-center gap-2 rounded-full bg-emerald-950 px-6 py-3 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all hover:scale-105 hover:bg-emerald-800"
-          >
-            <ShieldCheck className="size-4 text-lime-400" />
-            {current.ctaText}
-            <ArrowRight className="ml-1 size-4" />
-          </a>
         </div>
       </div>
     </div>
