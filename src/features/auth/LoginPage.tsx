@@ -24,7 +24,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             href={"/"}
             className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl border-2 border-emerald-950 bg-emerald-600 text-white shadow-[3px_3px_0px_0px_#064e3b]"
           >
-            <Trees className="size-7 text-lime-300" />
+            <Trees className="size-7 text-[#A7F3D0]" />
           </Link>
 
           <h1 className="text-3xl font-black tracking-tight text-emerald-950 uppercase sm:text-4xl">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -20,7 +20,7 @@ export default function LoginForm({
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSendOtp = (e: React.FormEvent) => {
+  const handleSendOtp = (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!email) return;
     setIsLoading(true);
@@ -47,8 +47,8 @@ export default function LoginForm({
 
   if (isSuccess) {
     return (
-      <div className="p-8 text-center border-t-2 border-emerald-950">
-        <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full border-2 border-emerald-950 bg-lime-400 text-emerald-950 shadow-[4px_4px_0px_0px_#064e3b]">
+      <div className="border-t-2 border-emerald-950 p-8 text-center">
+        <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full border-2 border-emerald-950 bg-[#A7F3D0] text-emerald-950 shadow-[4px_4px_0px_0px_#064e3b]">
           <CheckCircle2 className="size-8" />
         </div>
         <h2 className="text-2xl font-black text-emerald-950 uppercase">
@@ -60,7 +60,7 @@ export default function LoginForm({
         <div className="mt-6">
           <Link
             href="/"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none"
           >
             MASUK KE BERANDA
             <ArrowRight className="size-4" />
@@ -73,14 +73,14 @@ export default function LoginForm({
   return (
     <>
       {/* STEP INDICATOR TABS (Determined from Server query params) */}
-      <div className="grid grid-cols-2 border-y-2 border-emerald-950 text-xs font-black uppercase tracking-wider">
+      <div className="grid grid-cols-2 border-y-2 border-emerald-950 text-xs font-black tracking-wider uppercase">
         {/* Tab 1: Email */}
         <button
           type="button"
           onClick={handleBackToEmail}
           className={`border-r-2 border-emerald-950 px-4 py-3 transition-colors ${
             initialStep === "email"
-              ? "bg-lime-400 text-emerald-950"
+              ? "bg-[#A7F3D0] text-emerald-950"
               : "bg-emerald-50/70 text-emerald-800/70 hover:bg-emerald-100/60"
           }`}
         >
@@ -97,7 +97,7 @@ export default function LoginForm({
           disabled={!email}
           className={`px-4 py-3 transition-colors ${
             initialStep === "otp"
-              ? "bg-lime-400 text-emerald-950"
+              ? "bg-[#A7F3D0] text-emerald-950"
               : "bg-emerald-50/70 text-emerald-800/40 disabled:cursor-not-allowed"
           }`}
         >
@@ -113,7 +113,7 @@ export default function LoginForm({
             <div className="space-y-2 text-left">
               <label
                 htmlFor="email"
-                className="block text-xs font-black uppercase tracking-wider text-emerald-950"
+                className="block text-xs font-black tracking-wider text-emerald-950 uppercase"
               >
                 EMAIL
               </label>
@@ -124,14 +124,14 @@ export default function LoginForm({
                 placeholder="nama@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-sm font-semibold text-emerald-950 placeholder-emerald-800/40 outline-none transition-shadow focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600"
+                className="w-full rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-sm font-semibold text-emerald-950 placeholder-emerald-800/40 transition-shadow outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600"
               />
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-75"
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-75"
             >
               {isLoading ? "MENGIRIM KODE..." : "KIRIM KODE OTP"}
               <ArrowRight className="size-4" />
@@ -144,7 +144,7 @@ export default function LoginForm({
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="otp"
-                  className="block text-xs font-black uppercase tracking-wider text-emerald-950"
+                  className="block text-xs font-black tracking-wider text-emerald-950 uppercase"
                 >
                   KODE OTP
                 </label>
@@ -164,7 +164,7 @@ export default function LoginForm({
                 placeholder="123456"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                className="w-full text-center tracking-widest rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-base font-black text-emerald-950 placeholder-emerald-800/40 outline-none transition-shadow focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600"
+                className="w-full rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-center text-base font-black tracking-widest text-emerald-950 placeholder-emerald-800/40 transition-shadow outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600"
               />
               <p className="pt-1 text-center text-[11px] font-medium text-emerald-800/80">
                 Kode 6-digit dikirimkan ke{" "}
@@ -175,7 +175,7 @@ export default function LoginForm({
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-75"
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-75"
             >
               {isLoading ? "MEMVERIFIKASI..." : "VERIFIKASI & MASUK"}
               <ArrowRight className="size-4" />
