@@ -10,16 +10,48 @@ import ParkLiveStatus from "./ParkLiveStatus";
 
 function HeroTop() {
   return (
-    <div className="relative flex flex-1 flex-col justify-center overflow-hidden bg-linear-to-br from-emerald-100/90 via-emerald-50/80 to-emerald-100/40 p-4 sm:p-6 lg:p-8">
-      <div className="relative z-10 space-y-2 sm:space-y-3">
-        <span className="inline-block text-xs font-extrabold tracking-widest text-emerald-700 uppercase sm:text-sm">
-          Ruang Publik Terpadu Ramah Anak
-        </span>
-        <h1 className="text-3xl leading-[0.95] font-black tracking-tight text-emerald-950 uppercase drop-shadow-xs sm:text-4xl lg:text-5xl xl:text-6xl">
-          RPTRA <br /> CIBUBUR <br /> PARK
-        </h1>
+    <div className="relative flex flex-1 flex-col justify-center overflow-hidden bg-linear-to-br from-emerald-100/90 via-emerald-50/80 to-emerald-100/40">
+      <div className="grid h-full w-full grid-cols-1 items-stretch lg:grid-cols-12">
+        {/* Left Side: Main Title - Wide Horizontally with Padding */}
+        <div className="relative z-10 flex flex-col justify-center space-y-2 p-6 sm:space-y-3 sm:p-8 lg:col-span-7 lg:p-10 xl:col-span-8">
+          <span className="inline-block text-xs font-extrabold tracking-widest text-emerald-700 uppercase sm:text-sm">
+            Ruang Publik Terpadu Ramah Anak
+          </span>
+          <h1 className="text-3xl leading-tight font-black tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl xl:text-7xl">
+            RPTRA CIBUBUR PARK
+          </h1>
+        </div>
+
+        {/* Right Side: Full Fill Stat Stack Box (Edge-to-Edge Full Height Fill) */}
+        <div className="relative flex flex-col justify-center divide-y divide-emerald-200/80 text-emerald-950 lg:col-span-5 lg:border-l lg:border-emerald-200/80 xl:col-span-4">
+          <HeroStats />
+        </div>
       </div>
     </div>
+  );
+}
+
+function HeroStats() {
+  const stats = [
+    { value: "120+", label: "TOTAL KEGIATAN" },
+    { value: "1.000+", label: "PENGUNJUNG / BULAN" },
+  ];
+  return (
+    <>
+      {stats.map((stat, idx) => (
+        <div
+          key={idx}
+          className="flex flex-1 items-center justify-between px-6 py-4 transition-colors hover:bg-[#F1EEE3] sm:px-8"
+        >
+          <span className="text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">
+            {stat.value}
+          </span>
+          <span className="max-w-[120px] text-right text-[11px] leading-snug font-black tracking-widest text-emerald-900/80 uppercase">
+            {stat.label}
+          </span>
+        </div>
+      ))}
+    </>
   );
 }
 
