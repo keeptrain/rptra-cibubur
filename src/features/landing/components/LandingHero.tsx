@@ -1,9 +1,9 @@
 import {
   Trees,
-  ShieldCheck,
   Play,
   ArrowUpRight,
   CalendarIcon,
+  HistoryIcon,
 } from "lucide-react";
 import Link from "next/link";
 import ParkLiveStatus from "./ParkLiveStatus";
@@ -41,12 +41,12 @@ function HeroStats() {
       {stats.map((stat, idx) => (
         <div
           key={idx}
-          className="flex flex-1 items-center justify-between px-6 py-4 transition-colors hover:bg-[#F1EEE3] sm:px-8"
+          className="flex flex-1 items-center justify-between px-6 py-4 md:px-8"
         >
           <span className="text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">
             {stat.value}
           </span>
-          <span className="max-w-[120px] text-right text-[11px] leading-snug font-black tracking-widest text-emerald-900/80 uppercase">
+          <span className="max-w-30 text-right text-[11px] leading-snug font-black tracking-widest text-emerald-900/80 uppercase">
             {stat.label}
           </span>
         </div>
@@ -78,6 +78,21 @@ function HeroBottom() {
           </Link>
         </div>
       </div>
+
+      {/* Column 2 */}
+      <div className="flex flex-col justify-between space-y-3 p-5 sm:space-y-4 sm:p-6 lg:p-8">
+        <div className="space-y-2 sm:space-y-3">
+          <HistoryIcon className="size-5 sm:size-6" />
+          <h3 className="text-lg font-black tracking-wide text-emerald-950 uppercase sm:text-xl">
+            Kegiatan Terakhir
+          </h3>
+        </div>
+
+        <div className="pt-1">
+          <span>-</span>
+        </div>
+      </div>
+
       {/* Column 1 */}
       <div className="flex flex-col justify-between space-y-3 p-5 sm:space-y-4 sm:p-6 lg:p-8">
         <div className="space-y-2 sm:space-y-3">
@@ -96,25 +111,6 @@ function HeroBottom() {
               <Play className="ml-0.5 h-3.5 w-3.5 fill-white" />
             </span>
             LIHAT ZONA TAMAN
-          </a>
-        </div>
-      </div>
-
-      {/* Column 2 */}
-      <div className="flex flex-col justify-between space-y-3 p-5 sm:space-y-4 sm:p-6 lg:p-8">
-        <div className="space-y-2 sm:space-y-3">
-          <ShieldCheck className="size-5 sm:size-6" />
-          <h3 className="text-lg font-black tracking-wide text-emerald-950 uppercase sm:text-xl">
-            Keamanan Terjaga
-          </h3>
-        </div>
-
-        <div className="pt-1">
-          <a
-            href="#tata-tertib"
-            className="inline-flex items-center justify-center rounded-full bg-[#A7F3D0] px-5 py-2.5 text-[11px] font-black tracking-wider text-emerald-950 uppercase shadow-md shadow-emerald-500/10 transition-all hover:scale-105 hover:bg-emerald-200 sm:px-6 sm:py-3 sm:text-xs"
-          >
-            SELENGKAPNYA +
           </a>
         </div>
       </div>
