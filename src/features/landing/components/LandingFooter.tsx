@@ -11,7 +11,7 @@ import {
 export default function LandingFooter() {
   return (
     <footer className="bg-[#041D17] p-6 text-emerald-100/90">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl sm:px-4 lg:px-8">
         {/* MAIN FOOTER GRID (2 COLUMNS) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-12">
           {/* LEFT SIDE: Brand Info + 2 Columns Links */}
@@ -98,14 +98,14 @@ export default function LandingFooter() {
           {/* RIGHT SIDE: Vertical Stack (Full Map Card + Connect Card) */}
           <div className="flex flex-col space-y-4 lg:col-span-6">
             {/* 1. Full Google Maps Card with Absolute Floating Overlay Box */}
-            <div className="relative h-60 w-full overflow-hidden rounded-2xl border border-emerald-900/80 bg-[#072B22] shadow-md">
+            <div className="relative h-50 w-full overflow-hidden rounded-2xl border border-emerald-900/80 bg-[#072B22] shadow-md">
               {/* Full background Google Maps iframe */}
               <div className="absolute inset-0 size-full overflow-hidden">
                 <iframe
                   title="Peta Lokasi RPTRA Cibubur"
                   src="https://maps.google.com/maps?q=-6.3605,106.8837&hl=id&z=16&output=embed"
                   width="100%"
-                  height="130%"
+                  height="100%"
                   style={{ border: 0 }}
                   allowFullScreen={false}
                   loading="lazy"
