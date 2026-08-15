@@ -1,6 +1,7 @@
 import LandingHero from "./components/LandingHero";
 import HighlightTicker from "./components/HighlightTicker";
 import FacilitiesSection from "./components/FacilitiesSection";
+import ParkRulesSection from "./components/ParkRulesSection";
 
 export default function LandingPage() {
   return (
@@ -8,6 +9,7 @@ export default function LandingPage() {
       <LandingHero />
       <HighlightTicker />
       <FacilitiesSection />
+      <ParkRulesSection />
     </main>
   );
 }
