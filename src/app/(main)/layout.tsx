@@ -1,4 +1,4 @@
-import LandingNavbar from "@/features/landing/components/LandingNavbar";
+import LandingNavbar from "@/features/landing/components/navigation/LandingNavbar";
 import LandingFooter from "@/features/landing/components/LandingFooter";
 
 export default function MainLayout({
