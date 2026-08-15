@@ -20,10 +20,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <div className="overflow-hidden rounded-2xl border-3 border-emerald-950 bg-white shadow-[8px_8px_0px_0px_#064e3b]">
         <div className="px-6 pt-8 pb-6 text-center sm:px-8">
           {/* Logo Circle */}
-
           <Link
             href={"/"}
-            className="mx-auto mb-5 flex size-14 items-center justify-center rounded-full border-2 border-emerald-950 bg-emerald-600 text-white shadow-[3px_3px_0px_0px_#064e3b]"
+            className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl border-2 border-emerald-950 bg-emerald-600 text-white shadow-[3px_3px_0px_0px_#064e3b]"
           >
             <Trees className="size-7 text-lime-300" />
           </Link>
