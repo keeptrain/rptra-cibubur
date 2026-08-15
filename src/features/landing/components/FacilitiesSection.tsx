@@ -8,7 +8,7 @@ export default function FacilitiesSection() {
     >
       {/* Section Header */}
       <h2 className="text-3xl font-black tracking-tight text-emerald-950 uppercase sm:text-5xl">
-        Fasilitas <span className="text-emerald-600">5 Zona Ceria</span>
+        Fasilitas <span className="text-emerald-600">5 Zona</span>
       </h2>
 
       {/* Interactive Showcase Component */}

@@ -20,7 +20,7 @@ export interface FacilityItem {
 export const FACILITIES: FacilityItem[] = [
   {
     id: "playground",
-    category: "Zona Outdoor 01",
+    category: "Zona Outdoor",
     title: "Area Bermain Motorik Anak",
     tagline: "Wahana Terbuka Ber-Lantai Karet Aman",
     desc: "Area bermain anak yang dirancang khusus dengan lantai karet peredam benturan, ayunan ganda, perosotan bertingkat, dan jungkat-jungkit untuk melatih ketangkasan fisik serta interaksi sosial buah hati Anda.",
