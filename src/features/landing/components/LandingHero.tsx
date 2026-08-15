@@ -6,12 +6,13 @@ import {
   CalendarIcon,
 } from "lucide-react";
 import Link from "next/link";
+import ParkLiveStatus from "./ParkLiveStatus";
 
 function HeroTop() {
   return (
-    <div className="relative grid min-h-0 flex-1 grid-cols-1 overflow-hidden bg-linear-to-br from-emerald-100/90 via-emerald-50/80 to-emerald-100/40 lg:grid-cols-12">
+    <div className="relative grid min-h-0 flex-1 grid-cols-1 items-center overflow-hidden bg-linear-to-br from-emerald-100/90 via-emerald-50/80 to-emerald-100/40 lg:grid-cols-12">
       {/* Left Side: Big Typography */}
-      <div className="relative z-10 flex flex-col justify-center gap-2 px-8 sm:gap-4 lg:col-span-7">
+      <div className="relative z-10 flex flex-col justify-center gap-2 p-6 sm:gap-4 sm:p-8 lg:col-span-7">
         <span className="inline-block text-xs font-extrabold tracking-widest text-emerald-700 uppercase sm:text-sm">
           Ruang Publik Terpadu Ramah Anak
         </span>
@@ -20,13 +21,9 @@ function HeroTop() {
         </h1>
       </div>
 
-      {/* Right Side: Visual Showcase Area */}
-      <div className="relative hidden items-end justify-center overflow-hidden sm:flex lg:col-span-5">
-        {/* Background Light Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.15),transparent_70%)]" />
-
-        {/* People / Card Graphic */}
-        <div className="relative z-10 flex w-full max-w-md items-end justify-center gap-4 px-6 pt-8"></div>
+      {/* Right Side: Subtle Live Park Operational Status Card */}
+      <div className="relative z-10 flex items-center justify-start p-6 sm:p-8 lg:col-span-5 lg:justify-end">
+        <ParkLiveStatus />
       </div>
     </div>
   );
@@ -77,7 +74,7 @@ function HeroBottom() {
         <div className="pt-1">
           <a
             href="#tata-tertib"
-            className="inline-flex items-center justify-center rounded-full bg-[#A3E635] px-5 py-2.5 text-[11px] font-black tracking-wider text-emerald-950 uppercase shadow-md shadow-lime-500/20 transition-all hover:scale-105 hover:bg-[#86EFAC] sm:px-6 sm:py-3 sm:text-xs"
+            className="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[11px] font-black tracking-wider text-emerald-950 uppercase shadow-md shadow-lime-500/20 transition-all hover:scale-105 hover:bg-[#86EFAC] sm:px-6 sm:py-3 sm:text-xs"
           >
             SELENGKAPNYA +
           </a>
