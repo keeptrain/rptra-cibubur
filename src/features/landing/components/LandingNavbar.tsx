@@ -11,6 +11,7 @@ import {
   CalendarIcon,
   PersonStanding,
   PersonStandingIcon,
+  ClipboardListIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -22,7 +23,7 @@ export default function LandingNavbar() {
     {
       name: "Rencana Kunjungan",
       href: "/rencana-kunjungan",
-      icon: PersonStandingIcon,
+      icon: ClipboardListIcon,
     },
   ];
 
