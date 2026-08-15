@@ -5,7 +5,7 @@ export default function FacilitiesSection() {
   return (
     <section
       id="zona-taman"
-      className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8"
+      className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8"
     >
       {/* Section Header */}
       <div className="mb-14">
@@ -17,7 +17,8 @@ export default function FacilitiesSection() {
           Eksplorasi <span className="text-emerald-600">5 Zona Ceria</span>
         </h2>
         <p className="mt-2 text-xs font-medium text-emerald-800/80 sm:text-base">
-          Pilih zona di bawah ini untuk melihat detail fasilitas &amp; keunggulan RPTRA Cibubur.
+          Pilih zona di bawah ini untuk melihat detail fasilitas &amp;
+          keunggulan RPTRA Cibubur.
         </p>
       </div>
 
