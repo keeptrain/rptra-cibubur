@@ -50,7 +50,7 @@ function HeroBottom() {
             href="#zona-taman"
             className="group inline-flex items-center gap-2.5 text-xs font-bold tracking-wider text-emerald-900 uppercase transition-colors hover:text-emerald-600 sm:text-sm"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500 text-white shadow-md shadow-orange-500/30 transition-transform group-hover:scale-105 sm:h-9 sm:w-9">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-white shadow-md shadow-emerald-600/20 transition-transform group-hover:scale-105 sm:h-9 sm:w-9">
               <Play className="ml-0.5 h-3.5 w-3.5 fill-white" />
             </span>
             LIHAT ZONA TAMAN
@@ -74,7 +74,7 @@ function HeroBottom() {
         <div className="pt-1">
           <a
             href="#tata-tertib"
-            className="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[11px] font-black tracking-wider text-emerald-950 uppercase shadow-md shadow-lime-500/20 transition-all hover:scale-105 hover:bg-[#86EFAC] sm:px-6 sm:py-3 sm:text-xs"
+            className="inline-flex items-center justify-center rounded-full bg-[#A7F3D0] px-5 py-2.5 text-[11px] font-black tracking-wider text-emerald-950 uppercase shadow-md shadow-emerald-500/10 transition-all hover:scale-105 hover:bg-emerald-200 sm:px-6 sm:py-3 sm:text-xs"
           >
             SELENGKAPNYA +
           </a>

@@ -27,9 +27,9 @@ export default function ParkLiveStatus() {
   }, []);
 
   return (
-    <div className="w-full max-w-sm bg-white/85 p-4 shadow-xs backdrop-blur-md transition-all hover:border-emerald-300 sm:p-5">
+    <div className="w-full max-w-xs bg-white/85 p-4 backdrop-blur-md sm:p-5">
       {/* Live Operational Badge & Time */}
-      <div className="flex items-center justify-between gap-3 border-b border-emerald-100/80 pb-3">
+      <div className="flex items-center justify-between gap-3 pb-3">
         <div className="flex items-center gap-2">
           <span className="relative flex size-2.5">
             {isOpen && (
@@ -53,28 +53,18 @@ export default function ParkLiveStatus() {
 
       {/* Operational Details Grid */}
       <div className="grid grid-cols-2 gap-3 pt-3 text-xs text-emerald-900">
-        <div className="flex items-center gap-2">
-          <Clock className="size-3.5 shrink-0 text-emerald-600" />
-          <div>
-            <span className="block text-[10px] font-bold text-emerald-800/60 uppercase">
-              Jam Buka
-            </span>
-            <span className="font-semibold text-emerald-950">
-              06:00 - 18:00
-            </span>
-          </div>
+        <div>
+          <span className="block text-[10px] font-bold text-emerald-800/60 uppercase">
+            Jam Buka
+          </span>
+          <span className="font-semibold text-emerald-950">06:00 - 18:00</span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Sun className="size-3.5 shrink-0 text-amber-500" />
-          <div>
-            <span className="block text-[10px] font-bold text-emerald-800/60 uppercase">
-              Cuaca Area
-            </span>
-            <span className="font-semibold text-emerald-950">
-              Cerah Berawan
-            </span>
-          </div>
+        <div>
+          <span className="block text-[10px] font-bold text-emerald-800/60 uppercase">
+            Cuaca Area
+          </span>
+          <span className="font-semibold text-emerald-950">Cerah Berawan</span>
         </div>
       </div>
     </div>
