@@ -17,11 +17,6 @@ export default function ParkLiveStatus({
       return hours >= 6 && hours < 18;
     })();
 
-  const currentTimeStr = `${new Date().toLocaleTimeString("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit",
-  })} WIB`;
-
   // Dynamic repetition calculation based on text length
   const repeatCount = Math.max(8, Math.ceil(180 / (closeNotice.length || 1)));
   const noticeItems = Array.from({ length: repeatCount }, () => closeNotice);
@@ -42,7 +37,7 @@ export default function ParkLiveStatus({
               }`}
             />
           </span>
-          <span className="font-extrabold tracking-wide text-emerald-950 ">
+          <span className="font-extrabold tracking-wide text-emerald-950">
             {isParkOpen ? "Taman Beroperasi Hari Ini" : "Taman Tutup Hari Ini"}{" "}
             <strong className="font-bold text-emerald-950">
               ( 06:00 - 18:00 WIB )
@@ -53,7 +48,7 @@ export default function ParkLiveStatus({
 
       {/* Dynamic Running Text Marquee Alasan Tutup */}
       {!isParkOpen && (
-        <div className="w-full overflow-hidden p-2 text-xs font-semibold text-emerald-900 sm:p-0 md:py-4 ">
+        <div className="w-full overflow-hidden p-2 text-xs font-semibold text-emerald-900 sm:p-0 md:py-4">
           <div className="animate-marquee flex w-max space-x-6 whitespace-nowrap">
             {noticeItems.map((notice, idx) => (
               <div key={idx} className="flex items-center gap-2.5">
