@@ -1,88 +1,106 @@
-import { Clock, MapPin, User, Bell, ArrowRight } from "lucide-react";
+import { CalendarPlus, ArrowUpRight } from "lucide-react";
 import { AgendaItem } from "../constants/agendas";
 
 interface TodayHighlightProps {
   agenda: AgendaItem;
 }
 
-export default function TodayHighlight({ agenda }: TodayHighlightProps) {
-  return (
-    <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-emerald-900 via-emerald-800 to-teal-950 p-6 text-white shadow-lg sm:p-8">
-      {/* Background Glow Effect */}
-      <div className="pointer-events-none absolute -right-10 -top-10 size-72 rounded-full bg-emerald-500/20 blur-3xl" />
+function getGoogleCalendarUrl(agenda: AgendaItem) {
+  const title = encodeURIComponent(`${agenda.title} - RPTRA Cibubur`);
+  const details = encodeURIComponent(
+    `${agenda.description}\n\nWaktu: ${agenda.time}\nLokasi: ${agenda.location}${
+      agenda.instructor ? `\nPendamping: ${agenda.instructor}` : ""
+    }`
+  );
+  const location = encodeURIComponent(
+    `${agenda.location}, RPTRA Cibubur, Jakarta Timur`
+  );
 
-      <div className="relative z-10 space-y-5">
-        {/* Header Tag */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-lime-300/40 bg-lime-400/20 px-3.5 py-1 text-xs font-extrabold tracking-wider text-lime-300 uppercase backdrop-blur-md">
-            <span className="size-2 rounded-full bg-lime-400 animate-pulse" />
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const dateFormatted = `${year}${month}${day}`;
+
+  let startTime = "080000";
+  let endTime = "100000";
+
+  const timeMatch = agenda.time.match(/(\d{2}):(\d{2})\s*-\s*(\d{2}):(\d{2})/);
+  if (timeMatch) {
+    startTime = `${timeMatch[1]}${timeMatch[2]}00`;
+    endTime = `${timeMatch[3]}${timeMatch[4]}00`;
+  }
+
+  const dates = `${dateFormatted}T${startTime}/${dateFormatted}T${endTime}`;
+
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${dates}`;
+}
+
+export default function TodayHighlight({ agenda }: TodayHighlightProps) {
+  const calendarUrl = getGoogleCalendarUrl(agenda);
+
+  return (
+    <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-950 bg-[#F7F5EE] p-6 text-emerald-950 shadow-[6px_6px_0px_0px_#041D17] sm:p-8">
+      {/* Editorial Top Tag Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-emerald-950 pb-4">
+        <div className="flex items-center gap-2">
+          <span className="inline-block size-2.5 animate-pulse rounded-full bg-emerald-600" />
+          <span className="text-xs font-black tracking-widest text-emerald-950 uppercase">
             HARI INI • {agenda.dayName.toUpperCase()}
           </span>
-          <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase text-white backdrop-blur-md">
-            {agenda.categoryLabel}
-          </span>
         </div>
+        <span className="text-xs font-black tracking-wider text-emerald-800 uppercase">
+          {agenda.categoryLabel}
+        </span>
+      </div>
 
-        {/* Title & Description */}
-        <div>
-          <h2 className="text-2xl font-black tracking-tight text-white uppercase sm:text-3xl lg:text-4xl">
-            {agenda.title}
-          </h2>
-          <p className="mt-2 max-w-3xl text-xs font-medium leading-relaxed text-emerald-100/90 sm:text-base">
-            {agenda.description}
-          </p>
-        </div>
+      {/* Main Content */}
+      <div className="space-y-4 pt-5">
+        <h2 className="text-3xl leading-[0.95] font-black tracking-tight uppercase sm:text-4xl lg:text-5xl">
+          {agenda.title}
+        </h2>
 
-        {/* Info Grid */}
-        <div className="grid grid-cols-1 gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 text-xs text-white backdrop-blur-md sm:grid-cols-3 sm:text-sm">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-lime-400/20 text-lime-300">
-              <Clock className="size-4" />
-            </div>
-            <div>
-              <span className="block text-[10px] font-bold uppercase text-emerald-200/70">Waktu</span>
-              <span className="font-bold">{agenda.time}</span>
-            </div>
+        <p className="max-w-3xl text-xs leading-relaxed font-semibold text-emerald-900/80 sm:text-sm">
+          {agenda.description}
+        </p>
+
+        {/* Minimal Hairline Meta Grid */}
+        <div className="grid grid-cols-1 gap-4 border-t-2 border-emerald-950 pt-4 text-xs font-black sm:grid-cols-3 sm:text-sm">
+          <div>
+            <span className="block text-[10px] tracking-widest text-emerald-700 uppercase">
+              WAKTU
+            </span>
+            <span className="text-emerald-950">{agenda.time}</span>
           </div>
 
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-lime-400/20 text-lime-300">
-              <MapPin className="size-4" />
-            </div>
-            <div>
-              <span className="block text-[10px] font-bold uppercase text-emerald-200/70">Lokasi</span>
-              <span className="font-bold">{agenda.location}</span>
-            </div>
+          <div>
+            <span className="block text-[10px] tracking-widest text-emerald-700 uppercase">
+              LOKASI
+            </span>
+            <span className="text-emerald-950">{agenda.location}</span>
           </div>
 
           {agenda.instructor && (
-            <div className="flex items-center gap-2.5">
-              <div className="flex size-9 items-center justify-center rounded-xl bg-lime-400/20 text-lime-300">
-                <User className="size-4" />
-              </div>
-              <div>
-                <span className="block text-[10px] font-bold uppercase text-emerald-200/70">Pendamping / Narsum</span>
-                <span className="font-bold">{agenda.instructor}</span>
-              </div>
+            <div>
+              <span className="block text-[10px] tracking-widest text-emerald-700 uppercase">
+                NARSUM / PENDAMPING
+              </span>
+              <span className="text-emerald-950">{agenda.instructor}</span>
             </div>
           )}
         </div>
 
         {/* Action Button */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
-          <span className="text-xs font-semibold text-lime-300">
-            🎯 Sasaran: <strong className="text-white">{agenda.targetAudience}</strong>
-          </span>
-
+        <div className="pt-3">
           <a
-            href={`https://wa.me/6281234567890?text=Halo%20Pengelola%20RPTRA,%20saya%20ingin%20tanya%20mengenai%20${encodeURIComponent(agenda.title)}`}
+            href={calendarUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-lime-400 px-5 py-2.5 text-xs font-extrabold uppercase text-emerald-950 shadow-md transition-all hover:scale-105 hover:bg-lime-300"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-950 px-6 py-3.5 text-xs font-black tracking-wider text-[#A7F3D0] uppercase shadow-[3px_3px_0px_0px_#A7F3D0] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
           >
-            <Bell className="size-4" />
-            Pengingat WhatsApp
-            <ArrowRight className="size-3.5" />
+            <CalendarPlus className="size-4 text-[#A7F3D0]" />
+            + SIMPAN KE GOOGLE CALENDAR
+            <ArrowUpRight className="size-4" />
           </a>
         </div>
       </div>
