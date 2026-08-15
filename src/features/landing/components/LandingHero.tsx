@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   CalendarIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 function HeroTop() {
   return (
@@ -98,13 +99,13 @@ function HeroBottom() {
         </div>
 
         <div className="relative z-10 pt-1">
-          <a
-            href="#agenda"
+          <Link
+            href="/agenda"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 text-[11px] font-black tracking-wider text-emerald-950 uppercase shadow-xl transition-all hover:scale-105 hover:bg-emerald-50 sm:px-6 sm:py-3 sm:text-xs"
           >
             EXPLORE AGENDA
             <ArrowUpRight className="h-3.5 w-3.5" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>

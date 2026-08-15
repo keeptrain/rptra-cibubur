@@ -1,14 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { Trees, Calendar, Menu, X, PhoneCall } from "lucide-react";
+import {
+  Trees,
+  Calendar,
+  Menu,
+  X,
+  PhoneCall,
+  Building2,
+  CalendarIcon,
+  PersonStanding,
+  PersonStandingIcon,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function LandingNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "Zona Taman", href: "#zona-taman", icon: Trees },
-    { name: "Agenda Warga", href: "#agenda", icon: Calendar },
+    { name: "Agenda Warga", href: "/agenda", icon: CalendarIcon },
+    {
+      name: "Rencana Kunjungan",
+      href: "/rencana-kunjungan",
+      icon: PersonStandingIcon,
+    },
   ];
 
   return (
@@ -16,11 +31,11 @@ export default function LandingNavbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo & Brand */}
-          <a href="#">
+          <Link href="/">
             <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500">
               <Trees className="size-6 text-white" />
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <nav className="hidden items-center gap-1 rounded-full border border-emerald-100/60 bg-emerald-50/70 p-1.5 md:flex dark:border-zinc-700/50 dark:bg-zinc-800/50">
