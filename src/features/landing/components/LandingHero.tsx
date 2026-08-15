@@ -34,10 +34,6 @@ function HeroBottom() {
           <h3 className="text-lg font-black tracking-wide text-white uppercase sm:text-xl">
             AGENDA WARGA
           </h3>
-          <p className="line-clamp-2 text-xs leading-relaxed font-medium text-emerald-100 sm:text-sm">
-            Ikuti senam rutin, posyandu balita &amp; lansia gratis setiap
-            minggu.
-          </p>
         </div>
 
         <div className="relative z-10 pt-1">
@@ -57,10 +53,6 @@ function HeroBottom() {
           <h3 className="text-lg font-black tracking-wide text-emerald-950 uppercase sm:text-xl">
             Fasilitas Lengkap
           </h3>
-          <p className="line-clamp-2 text-xs leading-relaxed font-medium text-emerald-800/80 sm:text-sm">
-            Taman terbuka hijau, perpustakaan mini ber-AC, lapangan olahraga,
-            dan wahana bermain anak.
-          </p>
         </div>
 
         <div className="pt-1">
@@ -83,10 +75,6 @@ function HeroBottom() {
           <h3 className="text-lg font-black tracking-wide text-emerald-950 uppercase sm:text-xl">
             Keamanan Terjaga
           </h3>
-          <p className="line-clamp-2 text-xs leading-relaxed font-medium text-emerald-800/80 sm:text-sm">
-            Lingkungan ramah keluarga dengan lantai karet aman peredam benturan
-            dan area bebas rokok.
-          </p>
         </div>
 
         <div className="pt-1">
