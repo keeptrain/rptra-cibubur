@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Calendar, Layers } from "lucide-react";
+import { Calendar, Layers } from "lucide-react";
 import { MOCK_AGENDAS } from "./constants/agendas";
 import TodayHighlight from "./components/TodayHighlight";
 import SevenDaySchedule from "./components/SevenDaySchedule";
