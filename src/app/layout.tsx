@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import LandingNavbar from "@/features/landing/components/LandingNavbar";
-import LandingFooter from "@/features/landing/components/LandingFooter";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,21 +13,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RPTRA Cibubur",
-  description: "Rumah Pintar Terpadu dan Ruang Publik Terpadu Anak Cibubur",
+  title: "RPTRA Cibubur Park",
+  description:
+    "Ruang Publik Terpadu Ramah Anak Kelurahan Cibubur, Jakarta Timur",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
-        <LandingNavbar />
-        {children}
-        <LandingFooter />
-      </body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }
