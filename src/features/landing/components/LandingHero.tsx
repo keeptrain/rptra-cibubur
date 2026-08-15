@@ -35,6 +35,7 @@ function HeroStats() {
   const stats = [
     { value: "120+", label: "TOTAL KEGIATAN" },
     { value: "1.000+", label: "PENGUNJUNG / BULAN" },
+    { value: "4.6 / 5", label: "Google Maps Rating" },
   ];
   return (
     <>
