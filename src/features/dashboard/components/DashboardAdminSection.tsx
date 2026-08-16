@@ -1,6 +1,6 @@
 import { getLiveStatus } from "@/features/landing/api/getLiveStatus";
 import CloseParkForm from "./CloseParkForm";
-import { AxeIcon, LayoutDashboardIcon, Clock } from "lucide-react";
+import { AxeIcon, Clock } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardAdminSection() {
@@ -8,8 +8,6 @@ export default async function DashboardAdminSection() {
 
   return (
     <div className="space-y-5">
-      
-
       {/* PARK STATUS CONTROL CARD */}
       <div className="rounded-2xl border border-slate-200 bg-white p-5 px-6 text-left shadow-xs">
         <div className="mb-4 flex flex-col gap-2 border-b border-slate-100 pb-4">

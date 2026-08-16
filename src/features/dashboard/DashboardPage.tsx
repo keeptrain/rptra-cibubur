@@ -2,12 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "../auth/lib/getUser";
 import DashboardAdminSection from "./components/DashboardAdminSection";
 import DashboardUserSection from "./components/DashboardUserSection";
-import {
-  LayoutDashboardIcon,
-  TreesIcon,
-  UserCircle2Icon,
-  UserIcon,
-} from "lucide-react";
+import { TreesIcon, UserCircle2Icon } from "lucide-react";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -24,11 +19,7 @@ export default async function DashboardPage() {
               <TreesIcon className="size-6 text-white" />
             </div>
           </Link>
-          <div className="flex items-center gap-2">
-            <div>
-              <h2 className="text-base font-bold text-slate-900">Dashboard</h2>
-            </div>
-          </div>
+          <h2 className="text-base font-bold text-slate-900">Dashboard</h2>
           <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
             <UserCircle2Icon className="size-4" />
             <span>Akun</span>

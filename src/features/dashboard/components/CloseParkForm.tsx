@@ -2,7 +2,7 @@
 
 import { useClosePark } from "../hooks/useClosePark";
 import { useReopenPark } from "../hooks/useReopenPark";
-import { AlertCircle, Lock, Unlock, ArrowRight } from "lucide-react";
+import { AlertCircle, Unlock, ArrowRight, SquareXIcon } from "lucide-react";
 
 interface CloseParkFormProps {
   isOpen: boolean;
@@ -51,7 +51,7 @@ export default function CloseParkForm({ isOpen }: CloseParkFormProps) {
             onClick={() => setIsFormOpen(!isFormOpen)}
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-semibold shadow-xs transition-colors sm:w-auto"
           >
-            <Lock className="size-3.5" />
+            <SquareXIcon className="size-4" />
             Tutup Taman Sekarang
           </button>
         ) : (
