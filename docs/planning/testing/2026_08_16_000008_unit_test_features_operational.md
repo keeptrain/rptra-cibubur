@@ -102,7 +102,7 @@ Bagian ini mendokumentasikan evaluasi refaktor kode agar pengguna dapat melakuka
 
 ## 5. Checklist Verifikasi & Kriteria Keberhasilan
 
-- [ ] Berkas-berkas unit test tersusun rapi di direktori `src/features/operational/__tests__/unit/`.
-- [ ] Seluruh skenario Bad Path pada 4 berkas aksi/API teruji dengan deskripsi bahasa Inggris.
-- [ ] Seluruh skenario Good Path teruji mencakup mode CLOSED, MODIFIED, OPEN, dan pagination.
-- [ ] Seluruh pengujian berjalan 100% lulus (_all tests pass_) pada eksekusi terminal.
+- [x] Berkas-berkas unit test tersusun rapi di direktori `src/features/operational/__tests__/unit/`.
+- [x] Seluruh skenario Bad Path pada 4 berkas aksi/API teruji dengan deskripsi bahasa Inggris.
+- [x] Seluruh skenario Good Path teruji mencakup mode CLOSED, MODIFIED, OPEN, dan pagination.
+- [x] Seluruh pengujian berjalan 100% lulus (_42 passed in 10 test files_) pada eksekusi terminal.
