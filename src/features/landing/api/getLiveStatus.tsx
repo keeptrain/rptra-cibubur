@@ -1,7 +1,7 @@
 export const getLiveStatus = async () => {
   // TODO: Implement actual park live status
   // from database
-  const isOpen = false;
+  const isOpen = null;
 
   // Set initial value for closeNotice
   const closeNotice = "Sedang ada acara mendadak, harap menunggu";
@@ -13,6 +13,7 @@ export const getLiveStatus = async () => {
     (() => {
       const nowWib = new Date(new Date().toLocaleString("en-US", { timeZone }));
       const hours = nowWib.getHours();
+      
       // RPTRA Cibubur open hours: 06:00 - 18:00 WIB
       return hours >= 6 && hours < 18;
     })();

@@ -122,10 +122,15 @@ function HeroBottom() {
 
 function ParkLiveStatusSkeleton() {
   return (
-    <div className="w-full border-t border-zinc-200/70 bg-white/90 px-6 py-3.5 sm:px-8">
-      <div className="flex animate-pulse items-center gap-3">
-        <div className="size-2.5 rounded-full bg-zinc-200" />
-        <div className="h-3.5 w-64 rounded-md bg-zinc-100" />
+    <div className="flex animate-pulse flex-col">
+      <div className="w-full border-t border-zinc-200/70 bg-white/90 px-6 py-2 sm:px-8">
+        <div className="flex items-center gap-3">
+          <div className="size-2.5 rounded-full bg-zinc-200" />
+          <div className="h-3.5 w-64 rounded-md bg-zinc-100" />
+        </div>
+      </div>
+      <div className="w-full border-zinc-200/70 bg-white/90 px-6 py-1 sm:px-8">
+        <div className="flex h-3.5 w-full rounded-md bg-zinc-100" />
       </div>
     </div>
   );
