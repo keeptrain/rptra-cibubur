@@ -30,5 +30,6 @@
 
 ## Planning
 
-- Buatkan test untuk features/auth
+- Buatkan test untuk features/operational
+- taruh documents di docs/planning/testing/
 - Jika ada blok code atau code yang perlu di refactor/perbaiki agar bisa di test lebih kecil atau agar logicnya lebih mudah di test, wajib membuat dokumentasi terlebih dahulu untuk menjelaskan perubahan tersebut, lalu biarkan saya review kamu siapkan kotak kosong untuk saya isi ya/tidak
