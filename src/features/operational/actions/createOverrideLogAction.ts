@@ -44,6 +44,13 @@ export function validateOverrideInput(input: CreateOverrideInput): {
 }
 
 export async function createOverrideLogAction(input: CreateOverrideInput) {
+  // Vercel Best Practice: async-cheap-condition-before-await
+  // Evaluate cheap synchronous validation before performing async cookies() or DB operations
+  const validation = validateOverrideInput(input);
+  if (!validation.isValid) {
+    return { success: false, message: validation.message! };
+  }
+
   try {
     const cookieStore = await cookies();
     const supabase = await createClient(cookieStore);
@@ -68,12 +75,6 @@ export async function createOverrideLogAction(input: CreateOverrideInput) {
         success: false,
         message: "Akses ditolak. Memerlukan peran Administrator.",
       };
-    }
-
-    // Validate input rules
-    const validation = validateOverrideInput(input);
-    if (!validation.isValid) {
-      return { success: false, message: validation.message! };
     }
 
     const { error: insertError } = await supabase

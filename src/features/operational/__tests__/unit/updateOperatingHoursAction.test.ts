@@ -42,6 +42,22 @@ describe("updateOperatingHoursAction", () => {
 
   /* BAD PATH TEST CASES */
   describe("Bad Path", () => {
+    it("should reject early when input dayOfWeek or time parameters are invalid without calling cookies", async () => {
+      const resInvalidDay = await updateOperatingHoursAction({
+        ...sampleInput,
+        dayOfWeek: 99,
+      });
+      expect(resInvalidDay.success).toBe(false);
+      expect(resInvalidDay.message).toBe("Data input jadwal operasional tidak valid.");
+
+      const resEmptyTime = await updateOperatingHoursAction({
+        ...sampleInput,
+        openTime: "",
+      });
+      expect(resEmptyTime.success).toBe(false);
+      expect(resEmptyTime.message).toBe("Data input jadwal operasional tidak valid.");
+    });
+
     it("should reject when user session is expired or null", async () => {
       mockGetUser.mockResolvedValueOnce({
         data: { user: null },
@@ -79,7 +95,9 @@ describe("updateOperatingHoursAction", () => {
 
       const res = await updateOperatingHoursAction(sampleInput);
       expect(res.success).toBe(false);
-      expect(res.message).toContain("Gagal memperbarui: Permission denied for table park_operating_hours");
+      expect(res.message).toContain(
+        "Gagal memperbarui: Permission denied for table park_operating_hours",
+      );
     });
   });
 

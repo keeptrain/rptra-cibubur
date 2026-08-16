@@ -11,7 +11,23 @@ interface UpdateOperatingHourInput {
   isOpen: boolean;
 }
 
-export async function updateOperatingHoursAction(input: UpdateOperatingHourInput) {
+export async function updateOperatingHoursAction(
+  input: UpdateOperatingHourInput,
+) {
+  // Vercel Best Practice: async-cheap-condition-before-await
+  // Evaluate cheap synchronous validation before performing async cookies() or DB operations
+  if (
+    input.dayOfWeek < 0 ||
+    input.dayOfWeek > 6 ||
+    !input.openTime ||
+    !input.closeTime
+  ) {
+    return {
+      success: false,
+      message: "Data input jadwal operasional tidak valid.",
+    };
+  }
+
   try {
     const cookieStore = await cookies();
     const supabase = await createClient(cookieStore);
@@ -23,13 +39,19 @@ export async function updateOperatingHoursAction(input: UpdateOperatingHourInput
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
-      return { success: false, message: "Sesi telah berakhir. Silakan login kembali." };
+      return {
+        success: false,
+        message: "Sesi telah berakhir. Silakan login kembali.",
+      };
     }
 
     // Verify admin role
     const userRole = user.app_metadata?.role;
     if (userRole !== "admin") {
-      return { success: false, message: "Akses ditolak. Memerlukan peran Administrator." };
+      return {
+        success: false,
+        message: "Akses ditolak. Memerlukan peran Administrator.",
+      };
     }
 
     const { error: updateError } = await supabase
@@ -43,7 +65,10 @@ export async function updateOperatingHoursAction(input: UpdateOperatingHourInput
       .eq("day_of_week", input.dayOfWeek);
 
     if (updateError) {
-      return { success: false, message: `Gagal memperbarui: ${updateError.message}` };
+      return {
+        success: false,
+        message: `Gagal memperbarui: ${updateError.message}`,
+      };
     }
 
     // Purge cached live status
@@ -53,7 +78,8 @@ export async function updateOperatingHoursAction(input: UpdateOperatingHourInput
 
     return { success: true, message: "Jadwal reguler berhasil diperbarui!" };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Terjadi kesalahan sistem.";
+    const msg =
+      err instanceof Error ? err.message : "Terjadi kesalahan sistem.";
     return { success: false, message: msg };
   }
 }
