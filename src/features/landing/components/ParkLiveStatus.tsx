@@ -27,8 +27,8 @@ export default async function ParkLiveStatus() {
         </div>
       </div>
 
-      {/* Dynamic Running Text Marquee Alasan Tutup */}
-      {!isOpen && (
+      {/* Dynamic Running Text Marquee (Only for sudden/custom closure logs) */}
+      {!isOpen && closeNotice.length > 0 && (
         <div className="w-full overflow-hidden p-2 text-xs font-semibold text-emerald-900 sm:p-0 md:py-4">
           <div className="animate-marquee flex w-max space-x-6 whitespace-nowrap">
             {closeNotice.map((notice, idx) => (
