@@ -35,9 +35,11 @@ export const getLiveStatus = unstable_cache(
     const currentMinute = parseInt(partMap.minute, 10);
     const currentTotalMinutes = currentHour * 60 + currentMinute;
 
-    let isParkOpen = currentHour >= 6 && currentHour < 18;
+    let isParkOpen = false;
     let activeNotice: string | null = null;
     let operatingHoursText = "06:00 - 18:00 WIB";
+    let statusLabel = "Ditutup (Di Luar Jam Reguler)";
+    let isEmergencyClosed = false;
 
     try {
       const supabase = createClient();
@@ -49,10 +51,12 @@ export const getLiveStatus = unstable_cache(
         .eq("day_of_week", dayOfWeek)
         .maybeSingle();
 
+      let isScheduleOpenNow = false;
+
       if (schedule) {
         if (!schedule.is_open) {
-          isParkOpen = false;
           operatingHoursText = "Libur (Jadwal Reguler)";
+          isScheduleOpenNow = false;
         } else if (schedule.open_time && schedule.close_time) {
           const openClean = schedule.open_time.slice(0, 5);
           const closeClean = schedule.close_time.slice(0, 5);
@@ -63,10 +67,14 @@ export const getLiveStatus = unstable_cache(
           const openTotal = oHour * 60 + (oMin || 0);
           const closeTotal = cHour * 60 + (cMin || 0);
 
-          isParkOpen =
+          isScheduleOpenNow =
             currentTotalMinutes >= openTotal && currentTotalMinutes < closeTotal;
         }
       }
+
+      // Base status from regular schedule
+      isParkOpen = isScheduleOpenNow;
+      statusLabel = isParkOpen ? "Beroperasi" : "Ditutup (Sesuai Jam Reguler)";
 
       // 2. Check for today's operation log override (higher priority)
       const { data: todayLog } = await supabase
@@ -80,6 +88,8 @@ export const getLiveStatus = unstable_cache(
       if (todayLog) {
         if (todayLog.status === "CLOSED") {
           isParkOpen = false;
+          isEmergencyClosed = true;
+          statusLabel = "Ditutup Sementara (Penutupan Darurat)";
           if (todayLog.reason_notice) {
             activeNotice = todayLog.reason_notice;
           }
@@ -97,12 +107,18 @@ export const getLiveStatus = unstable_cache(
             isParkOpen =
               currentTotalMinutes >= openTotal &&
               currentTotalMinutes < closeTotal;
+
+            statusLabel = isParkOpen
+              ? "Beroperasi (Jadwal Khusus)"
+              : "Ditutup (Di Luar Jam Khusus)";
           }
           if (todayLog.reason_notice) {
             activeNotice = todayLog.reason_notice;
           }
         } else if (todayLog.status === "OPEN") {
-          isParkOpen = true;
+          // Re-opening cancels emergency closure and restores regular schedule check
+          isParkOpen = isScheduleOpenNow;
+          statusLabel = isParkOpen ? "Beroperasi" : "Ditutup (Sesuai Jam Reguler)";
         }
       }
     } catch {
@@ -118,6 +134,8 @@ export const getLiveStatus = unstable_cache(
 
     return {
       isOpen: isParkOpen,
+      statusLabel,
+      isEmergencyClosed,
       operatingHours: operatingHoursText,
       closeNotice: noticeItems,
     };
