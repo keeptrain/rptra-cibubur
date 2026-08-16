@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { sendOtpAction } from "../actions/login/sendOtpAction";
+import { verifyOtpAction } from "../actions/login/verifyOtpAction";
 
 interface LoginFormProps {
   initialStep: "email" | "otp";
@@ -18,30 +20,97 @@ export default function LoginForm({
   const [email, setEmail] = useState(initialEmail);
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [emailValidationError, setEmailValidationError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
-  const handleSendOtp = (e: React.SubmitEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // Determine step from URL query params (Server Side step determination)
-      router.push(`/login?step=otp&email=${encodeURIComponent(email)}`);
-    }, 500);
+  // Cooldown timer effect for resending OTP
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => {
+      setCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
+  // Real-time Gmail validation
+  const handleEmailChange = (val: string) => {
+    setEmail(val);
+    setErrorMessage("");
+    if (val && !/^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(val.trim())) {
+      setEmailValidationError(
+        "Saat ini hanya menerima email berdomain @gmail.com",
+      );
+    } else {
+      setEmailValidationError("");
+    }
   };
 
-  const handleVerifyOtp = (e: React.FormEvent) => {
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!otp) return;
+    if (!email || emailValidationError) return;
+
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    setErrorMessage("");
+
+    const res = await sendOtpAction(email);
+    setIsLoading(false);
+
+    if (res.success) {
+      setCooldown(60);
+      router.push(`/login?step=otp&email=${encodeURIComponent(email.trim())}`);
+    } else {
+      setErrorMessage(res.error || "Gagal mengirimkan kode OTP.");
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otp || otp.length !== 8) {
+      setErrorMessage("Kode OTP harus berupa 8 digit angka.");
+      return;
+    }
+
+    setIsLoading(true);
+    setErrorMessage("");
+
+    const res = await verifyOtpAction(email, otp);
+    setIsLoading(false);
+
+    if (res.success) {
       setIsSuccess(true);
-    }, 700);
+      setTimeout(() => {
+        router.push(res.redirectTo || "/dashboard");
+      }, 1000);
+    } else {
+      setErrorMessage(
+        res.error || "Verifikasi gagal. Silakan periksa kembali kode OTP.",
+      );
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (cooldown > 0 || isLoading) return;
+    setIsLoading(true);
+    setErrorMessage("");
+
+    const res = await sendOtpAction(email);
+    setIsLoading(false);
+
+    if (res.success) {
+      setCooldown(60);
+      setErrorMessage(
+        "Kode OTP baru 8-digit berhasil dikirimkan ke email Anda.",
+      );
+    } else {
+      setErrorMessage(res.error || "Gagal mengirimkan ulang kode OTP.");
+    }
   };
 
   const handleBackToEmail = () => {
+    setErrorMessage("");
+    setOtp("");
     router.push(`/login?step=email&email=${encodeURIComponent(email)}`);
   };
 
@@ -55,14 +124,15 @@ export default function LoginForm({
           BERHASIL MASUK!
         </h2>
         <p className="mt-2 text-xs font-semibold text-emerald-800">
-          Selamat datang kembali di portal RPTRA Cibubur.
+          Selamat datang kembali di portal RPTRA Cibubur. Mengalihkan ke
+          dashboard...
         </p>
         <div className="mt-6">
           <Link
-            href="/"
+            href="/dashboard"
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none"
           >
-            MASUK KE BERANDA
+            MASUK KE DASHBOARD
             <ArrowRight className="size-4" />
           </Link>
         </div>
@@ -72,7 +142,7 @@ export default function LoginForm({
 
   return (
     <>
-      {/* STEP INDICATOR TABS (Determined from Server query params) */}
+      {/* STEP INDICATOR TABS */}
       <div className="grid grid-cols-2 border-y-2 border-emerald-950 text-xs font-black tracking-wider uppercase">
         {/* Tab 1: Email */}
         <button
@@ -92,48 +162,75 @@ export default function LoginForm({
           type="button"
           onClick={() =>
             email &&
+            !emailValidationError &&
             router.push(`/login?step=otp&email=${encodeURIComponent(email)}`)
           }
-          disabled={!email}
+          disabled={!email || !!emailValidationError}
           className={`px-4 py-3 transition-colors ${
             initialStep === "otp"
               ? "bg-[#A7F3D0] text-emerald-950"
               : "bg-emerald-50/70 text-emerald-800/40 disabled:cursor-not-allowed"
           }`}
         >
-          02 / KODE OTP
+          02 / KODE OTP (8 DIGIT)
         </button>
       </div>
 
       {/* FORM CONTENT BODY */}
       <div className="p-6 sm:p-8">
+        {/* Error Alert Message Box */}
+        {errorMessage && (
+          <div
+            className={`mb-5 flex items-start gap-2.5 rounded-xl border-2 border-emerald-950 p-3.5 text-left text-xs font-bold ${
+              errorMessage.includes("berhasil")
+                ? "bg-[#A7F3D0] text-emerald-950"
+                : "bg-rose-100 text-rose-950"
+            }`}
+          >
+            <AlertCircle className="mt-0.5 size-4 shrink-0" />
+            <span className="leading-snug">{errorMessage}</span>
+          </div>
+        )}
+
         {initialStep === "email" ? (
           /* STEP 1: EMAIL FORM */
           <form onSubmit={handleSendOtp} className="space-y-5">
             <div className="space-y-2 text-left">
-              <label
-                htmlFor="email"
-                className="block text-xs font-black tracking-wider text-emerald-950 uppercase"
-              >
-                EMAIL
-              </label>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="email"
+                  className="block text-xs font-black tracking-wider text-emerald-950 uppercase"
+                >
+                  EMAIL GMAIL *
+                </label>
+                <span className="text-[10px] font-extrabold text-emerald-700 uppercase">
+                  Khusus @gmail.com
+                </span>
+              </div>
               <input
                 id="email"
                 type="email"
                 required
-                placeholder="nama@example.com"
+                placeholder="nama@gmail.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-sm font-semibold text-emerald-950 placeholder-emerald-800/40 transition-shadow outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600"
+                onChange={(e) => handleEmailChange(e.target.value)}
+                className={`w-full rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-sm font-semibold text-emerald-950 placeholder-emerald-800/40 transition-shadow outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600 ${
+                  emailValidationError ? "border-rose-500 bg-rose-50/30" : ""
+                }`}
               />
+              {emailValidationError && (
+                <p className="text-[11px] font-extrabold text-rose-600">
+                  {emailValidationError}
+                </p>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={isLoading}
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-75"
+              disabled={isLoading || !!emailValidationError || !email}
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
             >
-              {isLoading ? "MENGIRIM KODE..." : "KIRIM KODE OTP"}
+              {isLoading ? "MENGIRIM KODE OTP..." : "KIRIM KODE OTP 8-DIGIT"}
               <ArrowRight className="size-4" />
             </button>
           </form>
@@ -146,7 +243,7 @@ export default function LoginForm({
                   htmlFor="otp"
                   className="block text-xs font-black tracking-wider text-emerald-950 uppercase"
                 >
-                  KODE OTP
+                  KODE OTP 8-DIGIT *
                 </label>
                 <button
                   type="button"
@@ -160,26 +257,45 @@ export default function LoginForm({
                 id="otp"
                 type="text"
                 required
-                maxLength={6}
-                placeholder="123456"
+                maxLength={8}
+                inputMode="numeric"
+                pattern="[0-9]*"
+                placeholder="12345678"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className="w-full rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-center text-base font-black tracking-widest text-emerald-950 placeholder-emerald-800/40 transition-shadow outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600"
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                className="w-full rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-center text-lg font-black tracking-widest text-emerald-950 placeholder-emerald-800/40 transition-shadow outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600"
               />
               <p className="pt-1 text-center text-[11px] font-medium text-emerald-800/80">
-                Kode 6-digit dikirimkan ke{" "}
+                Kode 8-digit dikirimkan ke{" "}
                 <strong className="text-emerald-950">{email}</strong>
               </p>
             </div>
 
             <button
               type="submit"
-              disabled={isLoading}
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-75"
+              disabled={isLoading || otp.length !== 8}
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
             >
-              {isLoading ? "MEMVERIFIKASI..." : "VERIFIKASI & MASUK"}
+              {isLoading ? "MEMVERIFIKASI KODE..." : "VERIFIKASI & MASUK"}
               <ArrowRight className="size-4" />
             </button>
+
+            {/* Resend OTP Button with 60s Cooldown */}
+            <div className="pt-2 text-center">
+              <button
+                type="button"
+                onClick={handleResendOtp}
+                disabled={cooldown > 0 || isLoading}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950 disabled:cursor-not-allowed disabled:text-emerald-800/40"
+              >
+                <RefreshCw
+                  className={`size-3.5 ${isLoading ? "animate-spin" : ""}`}
+                />
+                {cooldown > 0
+                  ? `Kirim Ulang Kode (${cooldown}s)`
+                  : "Kirim Ulang Kode OTP"}
+              </button>
+            </div>
           </form>
         )}
       </div>
