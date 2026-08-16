@@ -1,8 +1,11 @@
 import { Trees, CalendarIcon, ClipboardListIcon } from "lucide-react";
 import Link from "next/link";
 import MobileNavMenu from "./MobileNavMenu";
+import { getCurrentUser } from "@/features/auth/lib/getUser";
 
-export default function LandingNavbar() {
+export default async function LandingNavbar() {
+  const user = await getCurrentUser();
+
   const navLinks = [
     { name: "Agenda Warga", href: "/agenda", icon: CalendarIcon },
     {
@@ -43,10 +46,10 @@ export default function LandingNavbar() {
           {/* Desktop Status & CTA Button */}
           <div className="hidden items-center gap-3 lg:flex">
             <Link
-              href="/login"
+              href={user ? "/dashboard" : "/login"}
               className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/25 transition-all duration-200 hover:-translate-y-0.5 hover:from-emerald-500 hover:to-teal-500 hover:shadow-emerald-600/35 active:translate-y-0"
             >
-              Masuk
+              {user ? "Dashboard" : "Masuk"}
             </Link>
           </div>
 
