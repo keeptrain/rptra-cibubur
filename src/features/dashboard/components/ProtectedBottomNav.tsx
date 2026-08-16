@@ -21,11 +21,7 @@ export default function ProtectedBottomNav() {
       href: "#",
       icon: Menu,
     },
-    {
-      name: "User",
-      href: "#",
-      icon: UserIcon,
-    },
+   
   ];
 
   const handleLogout = async () => {
@@ -43,18 +39,7 @@ export default function ProtectedBottomNav() {
             (pathname === item.href ||
               (item.href !== "/dashboard" && pathname.startsWith(item.href)));
 
-          if (item.name === "User") {
-            return (
-              <button
-                key={item.name}
-                type="button"
-                onClick={handleLogout}
-                className="relative flex min-h-11 min-w-18 flex-col items-center justify-center gap-1 rounded-2xl px-4 py-2 font-extrabold text-rose-700/80 transition-all duration-200 hover:bg-rose-50/80 hover:text-rose-950 md:min-h-10.5 md:min-w-0 md:flex-row md:gap-2.5 md:rounded-2xl md:px-6 md:py-2.5"
-              >
-                <Icon className="size-5 transition-transform duration-200" />
-              </button>
-            );
-          }
+          
 
           return (
             <Link
