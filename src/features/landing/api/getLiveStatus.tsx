@@ -10,13 +10,30 @@ export const getLiveStatus = unstable_cache(
     const currentHour = nowWib.getHours();
 
     let isParkOpen = currentHour >= 6 && currentHour < 18;
-    let activeNotice: string | null = null; // Default null (no marquee for regular schedule closure)
+    let activeNotice: string | null = null;
+    let operatingHoursText = "06:00 - 18:00 WIB";
 
     try {
-      // Use public client without cookies() for clean public data caching
       const supabase = createClient();
 
-      // 1. Check for today's operation log override (sudden closure / custom event notice)
+      // 1. Read 7-day regular schedule from park_operating_hours table
+      const { data: schedule } = await supabase
+        .from("park_operating_hours")
+        .select("*")
+        .eq("day_of_week", dayOfWeek)
+        .maybeSingle();
+
+      if (schedule) {
+        if (!schedule.is_open) {
+          operatingHoursText = "Libur (Jadwal Reguler)";
+        } else if (schedule.open_time && schedule.close_time) {
+          const openClean = schedule.open_time.slice(0, 5);
+          const closeClean = schedule.close_time.slice(0, 5);
+          operatingHoursText = `${openClean} - ${closeClean} WIB`;
+        }
+      }
+
+      // 2. Check for today's operation log override (sudden closure / custom event notice)
       const { data: todayLog } = await supabase
         .from("park_operation_logs")
         .select("*")
@@ -34,29 +51,19 @@ export const getLiveStatus = unstable_cache(
         } else if (todayLog.status === "OPEN") {
           isParkOpen = true;
         }
-      } else {
-        // 2. Read 7-day regular schedule from park_operating_hours table
-        const { data: schedule } = await supabase
-          .from("park_operating_hours")
-          .select("*")
-          .eq("day_of_week", dayOfWeek)
-          .maybeSingle();
-
-        if (schedule) {
-          if (!schedule.is_open) {
-            isParkOpen = false;
-          } else if (schedule.open_time && schedule.close_time) {
-            const openHour = parseInt(schedule.open_time.split(":")[0], 10);
-            const closeHour = parseInt(schedule.close_time.split(":")[0], 10);
-            isParkOpen = currentHour >= openHour && currentHour < closeHour;
-          }
+      } else if (schedule) {
+        if (!schedule.is_open) {
+          isParkOpen = false;
+        } else if (schedule.open_time && schedule.close_time) {
+          const openHour = parseInt(schedule.open_time.split(":")[0], 10);
+          const closeHour = parseInt(schedule.close_time.split(":")[0], 10);
+          isParkOpen = currentHour >= openHour && currentHour < closeHour;
         }
       }
     } catch {
       // Fallback default calculation if DB query is unconfigured
     }
 
-    // Dynamic repetition calculation ONLY if there is an active sudden closure notice
     const noticeItems = activeNotice
       ? Array.from(
           { length: Math.max(8, Math.ceil(180 / activeNotice.length)) },
@@ -66,6 +73,7 @@ export const getLiveStatus = unstable_cache(
 
     return {
       isOpen: isParkOpen,
+      operatingHours: operatingHoursText,
       closeNotice: noticeItems,
     };
   },
