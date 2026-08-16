@@ -20,3 +20,5 @@
 ---
 
 ## Planning
+
+- Mengisi dashboardpage

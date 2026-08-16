@@ -5,7 +5,7 @@ import EmailStep from "./EmailStep";
 import OtpStep from "./OtpStep";
 
 export default function LoginForm() {
-  const [step, setStep] = useState<"email" | "otp">("otp");
+  const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState("");
 
   const handleEmailSuccessNext = (submittedEmail: string) => {

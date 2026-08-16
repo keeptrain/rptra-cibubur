@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/features/auth/lib/getUser";
+import ProtectedBottomNav from "@/features/dashboard/components/ProtectedBottomNav";
 
 export default async function ProtectedLayout({
   children,
@@ -12,5 +13,10 @@ export default async function ProtectedLayout({
     redirect("/login");
   }
 
-  return children;
+  return (
+    <div className="flex min-h-screen flex-col bg-emerald-50 pb-24 md:pb-15">
+      {children}
+      <ProtectedBottomNav />
+    </div>
+  );
 }
