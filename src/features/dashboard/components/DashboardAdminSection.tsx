@@ -7,16 +7,8 @@ export default async function DashboardAdminSection() {
   const { isOpen, operatingHours } = await getLiveStatus();
 
   return (
-    <div className="space-y-5 px-4 py-6 sm:px-6">
-      {/* SECTION HEADER */}
-      <div className="flex items-center gap-3 border-b border-slate-200/80 pb-4 text-left">
-        <div className="flex size-9 items-center justify-center rounded-xl bg-white shadow-xs">
-          <LayoutDashboardIcon className="size-5 text-slate-700" />
-        </div>
-        <div>
-          <h2 className="text-base font-bold text-slate-900">Dashboard</h2>
-        </div>
-      </div>
+    <div className="space-y-5">
+      
 
       {/* PARK STATUS CONTROL CARD */}
       <div className="rounded-2xl border border-slate-200 bg-white p-5 px-6 text-left shadow-xs">
