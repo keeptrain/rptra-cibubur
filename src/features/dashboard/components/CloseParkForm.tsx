@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
 import { useClosePark } from "../hooks/useClosePark";
 import { useReopenPark } from "../hooks/useReopenPark";
+import { AlertCircle, Lock, Unlock, ArrowRight } from "lucide-react";
 
 interface CloseParkFormProps {
   isOpen: boolean;
@@ -29,41 +29,56 @@ export default function CloseParkForm({ isOpen }: CloseParkFormProps) {
   const isLoading = isClosing || isReopening;
 
   return (
-    <div>
+    <div className="space-y-4">
       {displayMessage && (
-        <p className="mb-2 text-xs font-bold text-emerald-900">
-          {displayMessage}
-        </p>
+        <div
+          className={`flex items-center gap-2 rounded-lg p-3 text-xs font-medium ${
+            displayMessage.includes("Berhasil")
+              ? "border border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border border-rose-200 bg-rose-50 text-rose-800"
+          }`}
+        >
+          <AlertCircle className="size-4 shrink-0" />
+          <span>{displayMessage}</span>
+        </div>
       )}
 
-      {/* SINGLE DYNAMIC BUTTON BASED ON CURRENT PARK STATUS */}
+      {/* SINGLE DYNAMIC BUTTON */}
       <div>
         {isOpen ? (
           <button
             type="button"
             onClick={() => setIsFormOpen(!isFormOpen)}
-            className="rounded border border-red-200 bg-red-50 px-3 py-1 text-xs font-bold text-red-700 hover:bg-red-100"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-semibold shadow-xs transition-colors sm:w-auto"
           >
-            Tutup Sekarang
+            <Lock className="size-3.5" />
+            Tutup Taman Sekarang
           </button>
         ) : (
           <button
             type="button"
             onClick={() => handleReopenPark(() => setIsFormOpen(false))}
             disabled={isLoading}
-            className="rounded border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-emerald-700 disabled:opacity-50 sm:w-auto"
           >
-            {isReopening ? "Memproses..." : "Buka Kembali"}
+            <Unlock className="size-3.5" />
+            {isReopening ? "Memproses..." : "Buka Kembali Taman"}
           </button>
         )}
       </div>
 
-      {/* FORM FILL REASON (ONLY WHEN PARK IS OPEN & ADMIN WANTS TO CLOSE IT) */}
+      {/* REASON FORM DRAWER */}
       {isOpen && isFormOpen && (
-        <form onSubmit={handleClosePark} className="mt-3 space-y-2">
-          <div>
-            <label htmlFor="reason" className="block text-xs font-bold">
-              Alasan Penutupan / Pengumuman Marquee:
+        <form
+          onSubmit={handleClosePark}
+          className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/80 p-4 text-left"
+        >
+          <div className="space-y-1">
+            <label
+              htmlFor="reason"
+              className="block text-xs font-semibold text-slate-700"
+            >
+              Alasan Penutupan / Teks Pengumuman Marquee:
             </label>
             <input
               type="text"
@@ -72,24 +87,25 @@ export default function CloseParkForm({ isOpen }: CloseParkFormProps) {
               placeholder="cth: Ditutup sementara karena perbaikan fasilitas..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="mt-1 w-full rounded border px-3 py-2 text-xs"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-normal text-slate-900 placeholder-slate-400 transition-colors outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             />
           </div>
 
-          <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={isLoading || !reason.trim()}
-              className="rounded bg-red-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-50"
-            >
-              {isClosing ? "Menyimpan..." : "Konfirmasi Tutup Taman"}
-            </button>
+          <div className="flex items-center justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={() => setIsFormOpen(false)}
-              className="rounded border px-3 py-1.5 text-xs font-bold"
+              className="rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
             >
               Batal
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading || !reason.trim()}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-rose-700 disabled:opacity-50"
+            >
+              {isClosing ? "Menyimpan..." : "Konfirmasi Tutup"}
+              <ArrowRight className="size-3.5" />
             </button>
           </div>
         </form>

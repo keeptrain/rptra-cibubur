@@ -14,7 +14,7 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-emerald-50 pb-24 md:pb-15">
+    <div className="flex min-h-screen flex-col bg-zinc-50 pb-24 md:pb-15">
       {children}
       <ProtectedBottomNav />
     </div>
