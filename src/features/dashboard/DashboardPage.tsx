@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { logoutAction } from "@/features/auth/actions/logoutAction";
 
 interface DashboardPageProps {
   userEmail: string;
@@ -20,6 +21,12 @@ interface DashboardPageProps {
 export default function DashboardPage({ userEmail }: DashboardPageProps) {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    await logoutAction();
+    router.push("/login");
+  };
 
   return (
     <main className="flex-1 bg-emerald-50 py-8 sm:py-12">
@@ -47,6 +54,7 @@ export default function DashboardPage({ userEmail }: DashboardPageProps) {
 
           <button
             type="button"
+            onClick={handleLogout}
             disabled={isLoggingOut}
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-5 py-3 text-xs font-black text-rose-700 uppercase transition-all hover:bg-rose-100 disabled:opacity-50"
           >
