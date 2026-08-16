@@ -6,7 +6,8 @@ import Link from "next/link";
 import CloseParkForm from "./admin/CloseParkForm";
 
 export default async function DashboardAdminSection() {
-  const { isOpen, operatingHours } = await getLiveStatus();
+  const { isOpen, statusLabel, isEmergencyClosed, operatingHours } =
+    await getLiveStatus();
 
   return (
     <div className="space-y-5">
@@ -33,7 +34,7 @@ export default async function DashboardAdminSection() {
                   : "bg-rose-100 text-rose-800"
               }`}
             >
-              {isOpen ? "Beroperasi" : "Ditutup"}
+              {statusLabel}
             </div>
 
             {/* DYNAMIC REGULAR OPERATING HOURS */}
@@ -45,7 +46,7 @@ export default async function DashboardAdminSection() {
         </div>
 
         {/* FORM CONTAINER */}
-        <CloseParkForm isOpen={isOpen} />
+        <CloseParkForm isOpen={isOpen} isEmergencyClosed={isEmergencyClosed} />
       </div>
 
       {/* ISOLATED METRICS COMPONENT */}
