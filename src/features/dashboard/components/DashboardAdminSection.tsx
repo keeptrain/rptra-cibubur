@@ -1,7 +1,9 @@
 import { getLiveStatus } from "@/features/landing/api/getLiveStatus";
-import CloseParkForm from "./CloseParkForm";
+import DashboardMetrics from "./admin/DashboardMetrics";
+import TodayScheduleSection from "./admin/TodayScheduleSection";
 import { AxeIcon, Clock } from "lucide-react";
 import Link from "next/link";
+import CloseParkForm from "./admin/CloseParkForm";
 
 export default async function DashboardAdminSection() {
   const { isOpen, operatingHours } = await getLiveStatus();
@@ -11,9 +13,9 @@ export default async function DashboardAdminSection() {
       {/* PARK STATUS CONTROL CARD */}
       <div className="rounded-2xl border border-slate-200 bg-white p-5 px-6 text-left shadow-xs">
         <div className="mb-4 flex flex-col gap-2 border-b border-slate-100 pb-4">
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-500">
-              STATUS HARI INI
+              STATUS OPERASIONAL HARI INI
             </span>
             <Link
               href={"/settings"}
@@ -23,7 +25,7 @@ export default async function DashboardAdminSection() {
             </Link>
           </div>
 
-          <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div
               className={`w-fit rounded-2xl px-4 py-1 text-xs font-semibold ${
                 isOpen
@@ -45,6 +47,12 @@ export default async function DashboardAdminSection() {
         {/* FORM CONTAINER */}
         <CloseParkForm isOpen={isOpen} />
       </div>
+
+      {/* ISOLATED METRICS COMPONENT */}
+      <DashboardMetrics />
+
+      {/* TODAY'S SCHEDULE SECTION */}
+      <TodayScheduleSection />
     </div>
   );
 }

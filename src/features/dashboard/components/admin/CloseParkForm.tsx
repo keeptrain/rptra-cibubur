@@ -1,8 +1,8 @@
 "use client";
 
-import { useClosePark } from "../hooks/useClosePark";
-import { useReopenPark } from "../hooks/useReopenPark";
 import { AlertCircle, Unlock, ArrowRight, SquareXIcon } from "lucide-react";
+import { useClosePark } from "../../hooks/useClosePark";
+import { useReopenPark } from "../../hooks/useReopenPark";
 
 interface CloseParkFormProps {
   isOpen: boolean;
