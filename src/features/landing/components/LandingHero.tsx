@@ -19,7 +19,7 @@ function HeroTop() {
             Ruang Publik Terpadu Ramah Anak
           </span>
           <h1 className="text-3xl leading-tight font-black tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl xl:text-7xl">
-            RPTRA CIBUBUR PARK
+            TAMAN RPTRA CIBUBUR
           </h1>
         </div>
 
