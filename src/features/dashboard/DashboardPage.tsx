@@ -1,13 +1,16 @@
-"use client";
+import { getCurrentUser } from "../auth/lib/getUser";
+import DashboardAdminSection from "./components/DashboardAdminSection";
+import DashboardUserSection from "./components/DashboardUserSection";
 
-import { useRouter } from "next/navigation";
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
+  const isAdmin = user?.app_metadata?.role === "admin";
 
-interface DashboardPageProps {
-  userEmail: string;
-}
-
-export default function DashboardPage({ userEmail }: DashboardPageProps) {
-  const router = useRouter();
-
-  return <main className="flex-1 bg-emerald-50 py-8 sm:py-12"></main>;
+  return (
+    <main className="flex-1">
+      <div className="mx-auto min-h-screen max-w-4xl">
+        {isAdmin ? <DashboardAdminSection /> : <DashboardUserSection />}
+      </div>
+    </main>
+  );
 }
