@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import ParkLiveStatus from "./ParkLiveStatus";
+import { Suspense } from "react";
 
 function HeroTop() {
   return (
@@ -119,6 +120,17 @@ function HeroBottom() {
   );
 }
 
+function ParkLiveStatusSkeleton() {
+  return (
+    <div className="w-full border-t border-zinc-200/70 bg-white/90 px-6 py-3.5 sm:px-8">
+      <div className="flex animate-pulse items-center gap-3">
+        <div className="size-2.5 rounded-full bg-zinc-200" />
+        <div className="h-3.5 w-64 rounded-md bg-zinc-100" />
+      </div>
+    </div>
+  );
+}
+
 export default function LandingHero() {
   return (
     <section
@@ -127,7 +139,9 @@ export default function LandingHero() {
     >
       <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-emerald-200/80 bg-[#F4FBF7] text-emerald-950 shadow-2xl shadow-emerald-950/5">
         <HeroTop />
-        <ParkLiveStatus />
+        <Suspense fallback={<ParkLiveStatusSkeleton />}>
+          <ParkLiveStatus />
+        </Suspense>
         <HeroBottom />
       </div>
     </section>
