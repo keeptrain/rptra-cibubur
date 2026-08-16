@@ -20,3 +20,15 @@ drop policy if exists "Allow public read on park_operation_logs" on public.park_
 create policy "Allow public read on park_operation_logs"
   on public.park_operation_logs for select
   to anon, authenticated using (true);
+
+-- Grant UPDATE on park_operating_hours to authenticated role
+grant update on public.park_operating_hours to authenticated;
+
+-- RLS Policy for Admin UPDATE
+drop policy if exists "Allow admin update on park_operating_hours" on public.park_operating_hours;
+create policy "Allow admin update on park_operating_hours"
+  on public.park_operating_hours for update
+  to authenticated
+  using (
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+  );
