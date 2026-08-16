@@ -98,7 +98,7 @@ export default function RegularHoursEditor({
   };
 
   return (
-    <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 px-6 text-left shadow-xs">
+    <div className="space-y-4 border border-slate-200 bg-white p-5 px-6 text-left shadow-xs">
       {/* HEADER */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div>
@@ -106,7 +106,7 @@ export default function RegularHoursEditor({
             JADWAL REGULER MINGGUAN (7 HARI)
           </h3>
           <p className="text-xs font-medium text-slate-500">
-            Klik kartu hari untuk membuka panel edit jam operasional.
+            Klik header kartu hari untuk membuka panel edit jam operasional.
           </p>
         </div>
       </div>
@@ -232,11 +232,11 @@ const DayCardItem = memo(function DayCardItem({
           : "border-slate-200/80 bg-slate-50/60 p-3.5 hover:border-slate-300 hover:bg-white hover:shadow-xs"
       }`}
     >
-      {/* CARD HEADER TRIGGER */}
+      {/* HEADER TRIGGER (ONLY TOP AREA IS CLICKABLE) */}
       <button
         type="button"
         onClick={onToggleExpand}
-        className="flex w-full items-start justify-between text-left"
+        className="flex w-full cursor-pointer items-start justify-between text-left"
       >
         <div className="space-y-1">
           <span className="text-xs font-bold text-slate-900">
@@ -268,7 +268,7 @@ const DayCardItem = memo(function DayCardItem({
         </div>
       </button>
 
-      {/* COLLAPSED TIME SUMMARY */}
+      {/* COLLAPSED TIME SUMMARY (NON-CLICKABLE TEXT) */}
       {!isExpanded && (
         <div className="mt-3 flex items-center gap-1 text-xs font-bold text-slate-700">
           <Clock className="size-3.5 shrink-0 text-slate-400" />
