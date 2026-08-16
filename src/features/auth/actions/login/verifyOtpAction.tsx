@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
+import { silentLoginUsingMagicLinkAction } from "./silentLoginUsingMagicLinkAction";
 
 export async function verifyOtpAction(email: string, otpInput: string) {
   const trimmedEmail = email.trim().toLowerCase();
@@ -18,7 +19,7 @@ export async function verifyOtpAction(email: string, otpInput: string) {
   const supabase = await createClient(cookieStore);
 
   try {
-    // 1. Call Stored RPC Procedure to verify 8-digit OTP
+    // 1. Call Stored RPC Procedure to verify 8-digit OTP in database
     const { data: res, error: rpcError } = await supabase.rpc(
       "verify_otp_code",
       {
@@ -38,6 +39,16 @@ export async function verifyOtpAction(email: string, otpInput: string) {
       return {
         success: false,
         error: res?.error || "Verifikasi OTP gagal.",
+      };
+    }
+
+    // 2. OTP Valid: Call server-only silent login to establish Supabase Auth session cookie
+    const loginRes = await silentLoginUsingMagicLinkAction(trimmedEmail);
+
+    if (!loginRes.success) {
+      return {
+        success: false,
+        error: loginRes.error || "Gagal membuat sesi login.",
       };
     }
 
