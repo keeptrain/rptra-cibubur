@@ -47,17 +47,17 @@ export default function TodayScheduleSection({
   });
 
   return (
-    <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 px-5 text-left shadow-xs sm:p-5 sm:px-6">
+    <div className="space-y-4 border border-slate-200 bg-white p-4 px-5 text-left shadow-xs sm:p-5 sm:px-6">
       {/* CARD HEADER */}
       <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
         <span className="text-2xl font-black text-slate-900">
           {items.length}
         </span>
         <div>
-          <h3 className="text-xs font-black tracking-wider text-slate-900 uppercase">
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-900">
             AGENDA &amp; KUNJUNGAN HARI INI
           </h3>
-          <p className="text-[11px] font-semibold text-slate-400">
+          <p className="text-xs font-semibold text-slate-400">
             {todayDateStr}
           </p>
         </div>

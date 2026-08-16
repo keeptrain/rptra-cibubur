@@ -2,12 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { LayoutGrid, Menu, UserIcon } from "lucide-react";
-import { logoutAction } from "@/features/auth/actions/logoutAction";
-import { useRouter } from "next/navigation";
+import { LayoutGrid, Menu } from "lucide-react";
 
 export default function ProtectedBottomNav() {
-  const router = useRouter();
   const pathname = usePathname();
 
   const navItems = [
@@ -18,16 +15,10 @@ export default function ProtectedBottomNav() {
     },
     {
       name: "Menu",
-      href: "#",
+      href: "/menu",
       icon: Menu,
     },
-   
   ];
-
-  const handleLogout = async () => {
-    await logoutAction();
-    router.push("/login");
-  };
 
   return (
     <nav className="fixed right-0 bottom-0 left-0 z-40 border-t border-white/40 bg-white/40 backdrop-blur-xl transition-all duration-300 md:right-auto md:bottom-6 md:left-1/2 md:-translate-x-1/2 md:rounded-2xl md:border md:border-white/60 md:bg-white/40 md:p-2 md:shadow-2xl md:shadow-emerald-950/10 md:backdrop-blur-2xl">
@@ -38,8 +29,6 @@ export default function ProtectedBottomNav() {
             item.href !== "#" &&
             (pathname === item.href ||
               (item.href !== "/dashboard" && pathname.startsWith(item.href)));
-
-          
 
           return (
             <Link

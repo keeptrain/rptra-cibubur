@@ -38,7 +38,7 @@ export default function DashboardMetrics() {
         return (
           <div
             key={metric.title}
-            className="group relative flex flex-col justify-between rounded-xl border border-slate-200 bg-white px-4 sm:px-6 py-4 text-left shadow-xs transition-all hover:border-slate-300 hover:shadow-md sm:rounded-2xl"
+            className="group relative flex flex-col justify-between border border-slate-200 bg-white px-4 py-4 text-left shadow-xs transition-all hover:border-slate-300 hover:shadow-md sm:px-6"
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between">

@@ -1,7 +1,7 @@
 import { getLiveStatus } from "@/features/landing/api/getLiveStatus";
 import DashboardMetrics from "./admin/DashboardMetrics";
 import TodayScheduleSection from "./admin/TodayScheduleSection";
-import { AxeIcon, Clock } from "lucide-react";
+import { Clock, Settings2Icon } from "lucide-react";
 import Link from "next/link";
 import CloseParkForm from "./admin/CloseParkForm";
 
@@ -11,17 +11,17 @@ export default async function DashboardAdminSection() {
   return (
     <div className="space-y-5">
       {/* PARK STATUS CONTROL CARD */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 px-6 text-left shadow-xs">
+      <div className="border border-slate-200 bg-white p-5 px-6 text-left shadow-xs">
         <div className="mb-4 flex flex-col gap-2 border-b border-slate-100 pb-4">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">
+            <span className="text-xs font-semibold text-slate-500">
               STATUS OPERASIONAL HARI INI
             </span>
             <Link
-              href={"/settings"}
+              href={"/jam-operasional"}
               className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900"
             >
-              Settings <AxeIcon className="size-3.5" />
+              <Settings2Icon className="size-4" />
             </Link>
           </div>
 
