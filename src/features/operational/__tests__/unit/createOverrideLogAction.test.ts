@@ -1,8 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import {
-  createOverrideLogAction,
-  validateOverrideInput,
-} from "../../actions/createOverrideLogAction";
+import { createOverrideLogAction } from "../../actions/createOverrideLogAction";
+import { validateOverrideInput } from "../../utils/validateOverrideInput";
 
 // Mock next/headers
 vi.mock("next/headers", () => ({
@@ -47,7 +45,9 @@ describe("validateOverrideInput", () => {
       reasonNotice: "   ",
     });
     expect(res.isValid).toBe(false);
-    expect(res.message).toBe("Alasan penutupan wajib diisi untuk status CLOSED.");
+    expect(res.message).toBe(
+      "Alasan penutupan wajib diisi untuk status CLOSED.",
+    );
   });
 
   it("should reject MODIFIED status when custom times are missing", () => {
@@ -58,7 +58,9 @@ describe("validateOverrideInput", () => {
       customCloseTime: "12:00:00",
     });
     expect(res.isValid).toBe(false);
-    expect(res.message).toBe("Jam buka & jam tutup khusus wajib diisi untuk status MODIFIED.");
+    expect(res.message).toBe(
+      "Jam buka & jam tutup khusus wajib diisi untuk status MODIFIED.",
+    );
   });
 
   it("should pass validation for valid input", () => {
@@ -109,7 +111,9 @@ describe("createOverrideLogAction", () => {
       });
 
       expect(res.success).toBe(false);
-      expect(res.message).toBe("Akses ditolak. Memerlukan peran Administrator.");
+      expect(res.message).toBe(
+        "Akses ditolak. Memerlukan peran Administrator.",
+      );
     });
 
     it("should return database error message when insert query fails", async () => {
@@ -152,7 +156,9 @@ describe("createOverrideLogAction", () => {
       });
 
       expect(res.success).toBe(true);
-      expect(res.message).toBe("Override jadwal operasional berhasil disimpan!");
+      expect(res.message).toBe(
+        "Override jadwal operasional berhasil disimpan!",
+      );
       expect(mockInsert).toHaveBeenCalledWith({
         override_date: "2026-08-20",
         status: "CLOSED",
