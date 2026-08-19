@@ -12,10 +12,10 @@ import {
   AlertCircle,
   Search,
   AlertTriangle,
-  Loader2,
 } from "lucide-react";
 import { AgendaStatus, FILTER_MANAGEMENT_AGENDA } from "../constants/agendas";
 import FilterCard from "./management/FilterCard";
+import AgendaListSkeleton from "./skeleton/AgendaListSkeleton";
 
 export interface AgendaItem {
   id: string;
@@ -27,6 +27,12 @@ export interface AgendaItem {
   organizer: string;
   description: string;
   status: "UPCOMING" | "COMPLETED";
+}
+
+interface AgendaListSectionProps {
+  agendas: AgendaItem[];
+  initialMonth?: string;
+  initialYear?: string;
 }
 
 // Helper function to check if event date and end time has passed current WIB time
@@ -62,11 +68,6 @@ function isEventTimePassed(eventDateStr: string, endTimeStr: string): boolean {
 
   return nowWibMinutes >= endMinutes;
 }
-interface AgendaListSectionProps {
-  agendas: AgendaItem[];
-  initialMonth?: string;
-  initialYear?: string;
-}
 
 export default function AgendaListSection({
   agendas,
@@ -100,28 +101,10 @@ export default function AgendaListSection({
       .withOptions({ throttleMs: 300, shallow: false }),
   );
 
-  const handleStatusChange = (status: AgendaStatus) => {
+  const handleParamChange = <T,>(setter: (val: T) => void, val: T) => {
     startTransition(async () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      setActiveTab(status);
-    });
-  };
-
-  const handleMonthChange = (month: string) => {
-    startTransition(() => {
-      setSelectedMonth(month);
-    });
-  };
-
-  const handleYearChange = (year: string) => {
-    startTransition(() => {
-      setSelectedYear(year);
-    });
-  };
-
-  const handleSearchChange = (q: string) => {
-    startTransition(() => {
-      setSearchQuery(q);
+      setter(val);
     });
   };
 
@@ -188,7 +171,7 @@ export default function AgendaListSection({
             agenda={agenda}
             count={getCountForTab(agenda.activeTab)}
             isActive={activeTab === agenda.activeTab}
-            onSelect={handleStatusChange}
+            onSelect={(tab) => handleParamChange(setActiveTab, tab)}
           />
         ))}
       </div>
@@ -202,7 +185,7 @@ export default function AgendaListSection({
             type="text"
             placeholder="Cari berdasarkan judul kegiatan, lokasi, atau penyelenggara..."
             value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            onChange={(e) => handleParamChange(setSearchQuery, e.target.value)}
             className="w-full border border-slate-200 bg-slate-50/50 py-2 pr-4 pl-10 text-xs font-medium text-slate-900 outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
           />
         </div>
@@ -214,7 +197,9 @@ export default function AgendaListSection({
             <Calendar className="size-3.5 shrink-0 text-slate-400" />
             <select
               value={selectedMonth}
-              onChange={(e) => handleMonthChange(e.target.value)}
+              onChange={(e) =>
+                handleParamChange(setSelectedMonth, e.target.value)
+              }
               className="cursor-pointer bg-transparent font-bold text-slate-900 outline-none"
             >
               <option value="01">Januari</option>
@@ -236,7 +221,9 @@ export default function AgendaListSection({
           <div className="flex items-center gap-1.5 border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold text-slate-700">
             <select
               value={selectedYear}
-              onChange={(e) => handleYearChange(e.target.value)}
+              onChange={(e) =>
+                handleParamChange(setSelectedYear, e.target.value)
+              }
               className="cursor-pointer bg-transparent font-bold text-slate-900 outline-none"
             >
               <option value="2025">2025</option>
@@ -247,28 +234,19 @@ export default function AgendaListSection({
         </div>
       </div>
 
-      {/* AGENDA CARDS LIST WITH SOFT TRANSITION FEEDBACK */}
-      <div
-        className={`space-y-2.5 transition-opacity duration-200 ${
-          isPending ? "pointer-events-none opacity-50" : "opacity-100"
-        }`}
-      >
-        {isPending ? (
-          <div className="flex items-center justify-center gap-2 border border-emerald-200/80 bg-emerald-50/60 p-2.5 text-xs font-semibold text-emerald-800">
-            <Loader2 className="size-4 animate-spin text-emerald-600" />
-            <span>Memperbarui data server...</span>
-          </div>
-        ) : null}
-
-        {finalFilteredAgendas.length === 0 ? (
-          <div className="border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
-            <AlertCircle className="mx-auto mb-2 size-8 text-slate-300" />
-            <p className="text-xs font-semibold text-slate-500">
-              Tidak ada agenda kegiatan yang cocok pada bulan dan tahun ini.
-            </p>
-          </div>
-        ) : (
-          finalFilteredAgendas.map((item) => {
+      {/* AGENDA CARDS LIST WITH SKELETON FALLBACK WHEN PENDING */}
+      {isPending ? (
+        <AgendaListSkeleton />
+      ) : finalFilteredAgendas.length === 0 ? (
+        <div className="border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
+          <AlertCircle className="mx-auto mb-2 size-8 text-slate-300" />
+          <p className="text-xs font-semibold text-slate-500">
+            Tidak ada agenda kegiatan yang cocok pada bulan dan tahun ini.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-2.5">
+          {finalFilteredAgendas.map((item) => {
             const isCompleted = item.status === "COMPLETED";
             const timePassed = isEventTimePassed(item.eventDate, item.endTime);
             const needsConfirmation = !isCompleted && timePassed;
@@ -343,9 +321,9 @@ export default function AgendaListSection({
                 </div>
               </div>
             );
-          })
-        )}
-      </div>
+          })}
+        </div>
+      )}
     </>
   );
 }
