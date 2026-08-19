@@ -9,7 +9,6 @@ import {
   MapPin,
   User,
   CheckCircle2,
-  Share2,
   Trash2,
   Edit,
   ArrowLeft,
@@ -55,7 +54,7 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
       <main className="flex-1">
         <div className="mx-auto min-h-screen max-w-4xl p-6 text-center">
           <div className="border border-dashed border-slate-200 bg-slate-50 p-8">
-            <p className="text-sm font-semibold text-slate-600 mb-4">
+            <p className="mb-4 text-sm font-semibold text-slate-600">
               Agenda kegiatan telah berhasil dihapus.
             </p>
             <Link
@@ -81,18 +80,18 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
           description="Informasi rincian acara dan status pelaksanaan kegiatan RPTRA"
         />
 
-        <div className="p-4 space-y-5">
+        <div className="space-y-5 p-4">
           {/* MAIN CONTAINER CARD (NO ROUNDED) */}
           <div className="border border-slate-200 bg-white text-left shadow-2xs">
             {/* HERO BANNER IMAGE */}
-            <div className="relative aspect-21/9 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+            <div className="relative aspect-21/9 w-full overflow-hidden border-b border-slate-200 bg-slate-100">
               <img
                 src={agenda.bannerUrl}
                 alt={agenda.title}
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
-              
+
               {/* BADGE ON BANNER */}
               <div className="absolute bottom-3 left-4 flex flex-wrap items-center gap-2">
                 <span
@@ -118,11 +117,11 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
             </div>
 
             {/* CARD CONTENT BODY */}
-            <div className="p-5 space-y-6">
+            <div className="space-y-6 p-5">
               {/* TITLE & DATE TIME HEADER */}
               <div className="space-y-3 border-b border-slate-100 pb-4">
                 <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-slate-700">
-                  <span className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-2.5 py-1 border border-emerald-200">
+                  <span className="flex items-center gap-1.5 border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-emerald-700">
                     <Calendar className="size-4 text-emerald-600" />
                     {new Date(agenda.eventDate).toLocaleDateString("id-ID", {
                       weekday: "long",
@@ -132,7 +131,7 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
                     })}
                   </span>
 
-                  <span className="flex items-center gap-1.5 text-slate-700 bg-slate-100 px-2.5 py-1 border border-slate-200">
+                  <span className="flex items-center gap-1.5 border border-slate-200 bg-slate-100 px-2.5 py-1 text-slate-700">
                     <Clock className="size-4 text-slate-500" />
                     {agenda.startTime} - {agenda.endTime} WIB
                   </span>
@@ -144,14 +143,14 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
               </div>
 
               {/* META INFO GRID */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 bg-slate-50/60 p-4 border border-slate-200/80">
+              <div className="grid grid-cols-1 gap-4 border border-slate-200/80 bg-slate-50/60 p-4 sm:grid-cols-2">
                 {/* LOCATION */}
                 <div className="flex items-start gap-2.5">
-                  <div className="flex size-8 shrink-0 items-center justify-center bg-white border border-slate-200 text-slate-600">
+                  <div className="flex size-8 shrink-0 items-center justify-center border border-slate-200 bg-white text-slate-600">
                     <MapPin className="size-4 text-emerald-600" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-bold uppercase text-slate-400">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">
                       Lokasi / Area
                     </span>
                     <p className="text-xs font-bold text-slate-800">
@@ -162,11 +161,11 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
 
                 {/* ORGANIZER */}
                 <div className="flex items-start gap-2.5">
-                  <div className="flex size-8 shrink-0 items-center justify-center bg-white border border-slate-200 text-slate-600">
+                  <div className="flex size-8 shrink-0 items-center justify-center border border-slate-200 bg-white text-slate-600">
                     <User className="size-4 text-sky-600" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-bold uppercase text-slate-400">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">
                       Penyelenggara
                     </span>
                     <p className="text-xs font-bold text-slate-800">
@@ -177,11 +176,11 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
 
                 {/* TARGET AUDIENCE */}
                 <div className="flex items-start gap-2.5">
-                  <div className="flex size-8 shrink-0 items-center justify-center bg-white border border-slate-200 text-slate-600">
+                  <div className="flex size-8 shrink-0 items-center justify-center border border-slate-200 bg-white text-slate-600">
                     <Building2 className="size-4 text-amber-600" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-bold uppercase text-slate-400">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">
                       Target Peserta
                     </span>
                     <p className="text-xs font-bold text-slate-800">
@@ -192,11 +191,11 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
 
                 {/* CONTACT PERSON */}
                 <div className="flex items-start gap-2.5">
-                  <div className="flex size-8 shrink-0 items-center justify-center bg-white border border-slate-200 text-slate-600">
+                  <div className="flex size-8 shrink-0 items-center justify-center border border-slate-200 bg-white text-slate-600">
                     <Info className="size-4 text-indigo-600" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-bold uppercase text-slate-400">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">
                       Kontak Informasi
                     </span>
                     <p className="text-xs font-bold text-slate-800">
@@ -208,11 +207,11 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
 
               {/* FULL DESCRIPTION SECTION */}
               <div className="space-y-2">
-                <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-900">
+                <h3 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-900 uppercase">
                   <FileText className="size-4 text-slate-500" />
                   Deskripsi & Rincian Kegiatan
                 </h3>
-                <div className="border border-slate-200 bg-slate-50/50 p-4 text-xs font-medium text-slate-700 leading-relaxed whitespace-pre-line">
+                <div className="border border-slate-200 bg-slate-50/50 p-4 text-xs leading-relaxed font-medium whitespace-pre-line text-slate-700">
                   {agenda.description}
                 </div>
               </div>
@@ -244,7 +243,11 @@ Dihimbau peserta membawa botol minum sendiri dan mengenakan pakaian olahraga yan
                   <button
                     type="button"
                     onClick={() => {
-                      if (confirm("Apakah Anda yakin ingin menghapus agenda kegiatan ini?")) {
+                      if (
+                        confirm(
+                          "Apakah Anda yakin ingin menghapus agenda kegiatan ini?",
+                        )
+                      ) {
                         setIsDeleted(true);
                       }
                     }}
