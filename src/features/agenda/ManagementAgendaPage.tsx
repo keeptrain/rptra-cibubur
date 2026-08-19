@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import PageHeader from "@/components/shared/PageHeader";
 import ManagementAgendaContent from "./components/ManagementAgendaContent";
-import ManagementAgendaSkeleton from "./components/ManagementAgendaSkeleton";
 import { agendaSearchParamsCache } from "./params/agendaParams";
+import ManagementAgendaSkeleton from "./components/skeleton/ManagementAgendaSkeleton";
 
 interface ManagementAgendaPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
