@@ -6,12 +6,15 @@ import AgendaListSection, { AgendaItem } from "./AgendaListSection";
 
 interface AgendaManagementClientProps {
   initialAgendas: AgendaItem[];
+  initialPendingAgendas: AgendaItem[];
 }
 
 export default function AgendaManagementClient({
   initialAgendas,
+  initialPendingAgendas,
 }: AgendaManagementClientProps) {
   const [agendas, setAgendas] = useState<AgendaItem[]>(initialAgendas);
+  const [pendingAgendas, setPendingAgendas] = useState<AgendaItem[]>(initialPendingAgendas);
 
   const handleConfirmCompleted = (id: string) => {
     setAgendas((prev) =>
@@ -19,13 +22,14 @@ export default function AgendaManagementClient({
         item.id === id ? { ...item, status: "COMPLETED" } : item
       )
     );
+    setPendingAgendas((prev) => prev.filter((item) => item.id !== id));
   };
 
   return (
     <div className="space-y-6">
-      {/* SECTION 2: DEDICATED PENDING CONFIRMATION SECTION (FOR PAST UNCONFIRMED EVENTS) */}
+      {/* SECTION 2: DEDICATED PENDING CONFIRMATION SECTION (PRE-FILTERED ON SERVER) */}
       <PendingConfirmationSection
-        agendas={agendas}
+        pendingAgendas={pendingAgendas}
         onConfirmCompleted={handleConfirmCompleted}
       />
 

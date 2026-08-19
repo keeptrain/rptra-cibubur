@@ -4,6 +4,7 @@ import { AgendaItem } from "../components/AgendaListSection";
 
 export interface AgendaData {
   agendas: AgendaItem[];
+  pendingAgendas: AgendaItem[];
   metrics: {
     totalThisMonth: number;
     upcomingCount: number;
@@ -33,7 +34,7 @@ export function getCurrentWibDateString(): string {
 
 /**
  * Core cached database fetcher for park agendas with zero GC & O(1) request latency.
- * Reusable across landing page, public agenda widgets, and admin management pages.
+ * Pre-filters pendingAgendas (past unconfirmed events) inside unstable_cache on server.
  */
 export const getAgenda = unstable_cache(
   async (): Promise<AgendaData> => {
@@ -61,6 +62,7 @@ export const getAgenda = unstable_cache(
         console.error("Supabase Agenda Fetch Error:", error?.message);
         return {
           agendas: [],
+          pendingAgendas: [],
           metrics: { totalThisMonth: 0, upcomingCount: 0, completedCount: 0 },
           serverWibToday,
         };
@@ -68,13 +70,20 @@ export const getAgenda = unstable_cache(
 
       const agendas = data as unknown as AgendaItem[];
 
-      // Single-pass O(N) loop to compute metrics during cache warming
+      // Single-pass O(N) loop to compute metrics & pendingAgendas during cache warming
       let upcomingCount = 0;
       let completedCount = 0;
+      const pendingAgendas: AgendaItem[] = [];
+
       for (let i = 0; i < agendas.length; i++) {
-        if (agendas[i].status === "UPCOMING") {
+        const item = agendas[i];
+        if (item.status === "UPCOMING") {
           upcomingCount++;
-        } else if (agendas[i].status === "COMPLETED") {
+          // Event date has passed current WIB date but status is still UPCOMING
+          if (item.eventDate < serverWibToday) {
+            pendingAgendas.push(item);
+          }
+        } else if (item.status === "COMPLETED") {
           completedCount++;
         }
       }
@@ -85,11 +94,12 @@ export const getAgenda = unstable_cache(
         completedCount,
       };
 
-      return { agendas, metrics, serverWibToday };
+      return { agendas, pendingAgendas, metrics, serverWibToday };
     } catch (err) {
       console.error("Cache Fetch Error:", err);
       return {
         agendas: [],
+        pendingAgendas: [],
         metrics: { totalThisMonth: 0, upcomingCount: 0, completedCount: 0 },
         serverWibToday,
       };

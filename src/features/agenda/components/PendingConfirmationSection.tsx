@@ -5,89 +5,41 @@ import { Calendar, Clock, MapPin, User, CheckCircle2 } from "lucide-react";
 import { AgendaItem } from "./AgendaListSection";
 
 interface PendingConfirmationSectionProps {
-  agendas: AgendaItem[];
-  onConfirmCompleted: (id: string) => void;
+  pendingAgendas: AgendaItem[];
+  onConfirmCompleted?: (id: string) => void;
 }
 
 export default function PendingConfirmationSection({
-  agendas,
+  pendingAgendas,
   onConfirmCompleted,
 }: PendingConfirmationSectionProps) {
-  // Filter items where date & time has passed but status is still UPCOMING
-  const pendingItems = agendas.filter((item) => {
-    if (item.status === "COMPLETED") return false;
-
-    // Check if event time has passed WIB
-    const now = new Date();
-    const wibFormatter = new Intl.DateTimeFormat("en-US", {
-      timeZone: "Asia/Jakarta",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-
-    const parts = wibFormatter.formatToParts(now);
-    const partMap: Record<string, string> = {};
-    parts.forEach((p) => {
-      partMap[p.type] = p.value;
-    });
-
-    const currentTodayStr = `${partMap.year}-${partMap.month}-${partMap.day}`;
-    const currentTotalMinutes =
-      (parseInt(partMap.hour, 10) % 24) * 60 + parseInt(partMap.minute, 10);
-
-    if (item.eventDate < currentTodayStr) return true;
-    if (item.eventDate > currentTodayStr) return false;
-
-    const [eHour, eMin] = item.endTime.slice(0, 5).split(":").map(Number);
-    const eventEndMinutes = (eHour || 0) * 60 + (eMin || 0);
-
-    return currentTotalMinutes >= eventEndMinutes;
-  });
-
-  if (pendingItems.length === 0) return null;
+  if (!pendingAgendas || pendingAgendas.length === 0) return null;
 
   return (
     <div className="border border-emerald-300 bg-white p-5 text-left shadow-2xs">
       {/* SECTION HEADER */}
       <div className="mb-4 flex flex-col gap-2 border-b border-emerald-200/60 pb-3">
         <h3 className="text-xs font-black tracking-wider text-emerald-950 uppercase">
-          MEMERLUKAN KONFIRMASI KETERLAKSANAAN ({pendingItems.length})
+          MEMERLUKAN KONFIRMASI KETERLAKSANAAN ({pendingAgendas.length})
         </h3>
         <p className="text-xs font-medium text-emerald-800">
-          Jadwal berikut telah melewati jam pelaksanaan WIB. Apakah kegiatan
-          sudah terlaksana?
+          Jadwal berikut telah melewati jam pelaksanaan WIB. Apakah kegiatan sudah terlaksana?
         </p>
       </div>
 
       {/* PENDING ITEMS LIST */}
       <div className="space-y-3">
-        {pendingItems.map((item) => (
+        {pendingAgendas.map((item) => (
           <div
             key={item.id}
             className="flex flex-col gap-3 border border-emerald-200 bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="space-y-1 text-left">
               <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="inline-flex items-center gap-1 bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-800">
-                  <Clock className="size-3" />
-                  Jam Lewat
+                <span className="bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
+                  Perlu Konfirmasi
                 </span>
-                <span className="flex items-center gap-1 font-bold text-slate-700">
-                  <Calendar className="size-3.5 text-slate-400" />
-                  {new Date(item.eventDate).toLocaleDateString("id-ID", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                  })}
-                </span>
-                <span className="text-slate-300">•</span>
-                <span className="font-medium text-slate-600">
-                  {item.startTime} - {item.endTime} WIB
-                </span>
+                <span className="font-semibold text-slate-500">{item.eventDate}</span>
               </div>
 
               <Link
@@ -97,27 +49,30 @@ export default function PendingConfirmationSection({
                 {item.title}
               </Link>
 
-              <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-500">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
                 <span className="flex items-center gap-1">
-                  <MapPin className="size-3.5 text-slate-400" />
+                  <Clock className="size-3 text-slate-400" />
+                  {item.startTime} - {item.endTime} WIB
+                </span>
+                <span className="flex items-center gap-1">
+                  <MapPin className="size-3 text-slate-400" />
                   {item.location}
                 </span>
-                <span className="text-slate-300">•</span>
                 <span className="flex items-center gap-1">
-                  <User className="size-3.5 text-slate-400" />
+                  <User className="size-3 text-slate-400" />
                   {item.organizer}
                 </span>
               </div>
             </div>
 
-            {/* CONFIRMATION ACTION BUTTON */}
-            <div className="flex shrink-0 items-center gap-2 pt-2 sm:pt-0">
+            {/* ACTION BUTTON TO TOGGLE COMPLETED */}
+            <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0">
               <button
                 type="button"
-                onClick={() => onConfirmCompleted(item.id)}
-                className="inline-flex items-center gap-1.5 bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-2xs transition-colors hover:bg-emerald-700"
+                onClick={() => onConfirmCompleted?.(item.id)}
+                className="inline-flex items-center gap-1.5 bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-2xs transition-colors hover:bg-emerald-700"
               >
-                <CheckCircle2 className="size-4" />
+                <CheckCircle2 className="size-3.5" />
                 Tandai Terlaksana
               </button>
             </div>
