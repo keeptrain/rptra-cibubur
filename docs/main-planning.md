@@ -30,4 +30,6 @@
 
 ## Planning
 
-- Install nuqs, setup 
+- Install nuqs, wrap NuqsAdapter ke root layout
+- Beri saya saran ketika masuk ke halaman manajemen-agenda langsung inisiasi cari?q= default blabal atau tunggu trigger dulu dari client
+- Setelah itu rewrite semua state yang berhubuungan yang ada di manajemen agenda ke nuqs priority server dulu ya
