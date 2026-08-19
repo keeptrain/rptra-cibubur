@@ -1,9 +1,9 @@
 import AgendaManagementClient from "./AgendaManagementClient";
-import { getManagementAgendaPageData } from "../api/getManagementAgendaPageData";
+import { getManagementAgenda } from "../api/getManagementAgenda";
 
 export default async function ManagementAgendaContent() {
   // Execute BFF Server Data Resolution
-  const { agendas } = await getManagementAgendaPageData();
+  const { agendas } = await getManagementAgenda();
 
   return (
     <div className="space-y-6">
