@@ -26,7 +26,7 @@ export default function MenuSection({ isAdmin, userEmail }: MenuSectionProps) {
     {
       title: "Agenda Kegiatan Warga",
       description: "Jadwal & kalender kegiatan publik RPTRA",
-      href: "/agenda",
+      href: "/manajemen-agenda",
       icon: CalendarDays,
       iconBg: "bg-sky-50 text-sky-600 border border-sky-200/60",
     },
