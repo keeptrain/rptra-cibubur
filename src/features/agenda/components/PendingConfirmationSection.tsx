@@ -1,14 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  AlertTriangle,
-  Calendar,
-  Clock,
-  MapPin,
-  User,
-  CheckCircle2,
-} from "lucide-react";
+import { Calendar, Clock, MapPin, User, CheckCircle2 } from "lucide-react";
 import { AgendaItem } from "./AgendaListSection";
 
 interface PendingConfirmationSectionProps {
@@ -58,20 +51,16 @@ export default function PendingConfirmationSection({
   if (pendingItems.length === 0) return null;
 
   return (
-    <div className="border border-emerald-300 bg-emerald-50/40 p-5 text-left shadow-2xs">
+    <div className="border border-emerald-300 bg-white p-5 text-left shadow-2xs">
       {/* SECTION HEADER */}
-      <div className="flex items-center gap-2 border-b border-emerald-200/60 pb-3 mb-4">
-        <div className="flex size-7 items-center justify-center rounded-lg bg-emerald-600 text-white">
-          <AlertTriangle className="size-4" />
-        </div>
-        <div>
-          <h3 className="text-xs font-black tracking-wider text-emerald-950 uppercase">
-            MEMERLUKAN KONFIRMASI KETERLAKSANAAN ({pendingItems.length})
-          </h3>
-          <p className="text-xs font-medium text-emerald-800">
-            Jadwal berikut telah melewati jam pelaksanaan WIB. Apakah kegiatan sudah terlaksana?
-          </p>
-        </div>
+      <div className="mb-4 flex flex-col gap-2 border-b border-emerald-200/60 pb-3">
+        <h3 className="text-xs font-black tracking-wider text-emerald-950 uppercase">
+          MEMERLUKAN KONFIRMASI KETERLAKSANAAN ({pendingItems.length})
+        </h3>
+        <p className="text-xs font-medium text-emerald-800">
+          Jadwal berikut telah melewati jam pelaksanaan WIB. Apakah kegiatan
+          sudah terlaksana?
+        </p>
       </div>
 
       {/* PENDING ITEMS LIST */}
@@ -79,7 +68,7 @@ export default function PendingConfirmationSection({
         {pendingItems.map((item) => (
           <div
             key={item.id}
-            className="flex flex-col gap-3 border border-emerald-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between shadow-2xs"
+            className="flex flex-col gap-3 border border-emerald-200 bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="space-y-1 text-left">
               <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -103,7 +92,7 @@ export default function PendingConfirmationSection({
 
               <Link
                 href={`/manajemen-agenda/${item.id}`}
-                className="inline-block text-sm font-bold text-slate-900 hover:text-emerald-600 transition-colors"
+                className="inline-block text-sm font-bold text-slate-900 transition-colors hover:text-emerald-600"
               >
                 {item.title}
               </Link>
