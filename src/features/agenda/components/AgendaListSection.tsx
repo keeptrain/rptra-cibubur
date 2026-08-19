@@ -1,5 +1,6 @@
 "use client";
 
+import { useTransition } from "react";
 import Link from "next/link";
 import { useQueryState, parseAsString, parseAsStringEnum } from "nuqs";
 import {
@@ -11,12 +12,10 @@ import {
   AlertCircle,
   Search,
   AlertTriangle,
+  Loader2,
 } from "lucide-react";
-import {
-  AgendaStatus,
-  FILTER_MANAGEMENT_AGENDA,
-  FilterManagementAgenda,
-} from "../constants/agendas";
+import { AgendaStatus, FILTER_MANAGEMENT_AGENDA } from "../constants/agendas";
+import FilterCard from "./management/FilterCard";
 
 export interface AgendaItem {
   id: string;
@@ -28,12 +27,6 @@ export interface AgendaItem {
   organizer: string;
   description: string;
   status: "UPCOMING" | "COMPLETED";
-}
-
-interface AgendaListSectionProps {
-  agendas: AgendaItem[];
-  initialMonth?: string;
-  initialYear?: string;
 }
 
 // Helper function to check if event date and end time has passed current WIB time
@@ -69,46 +62,10 @@ function isEventTimePassed(eventDateStr: string, endTimeStr: string): boolean {
 
   return nowWibMinutes >= endMinutes;
 }
-
-interface FilterCardProps {
-  agenda: FilterManagementAgenda;
-  count: number;
-  isActive: boolean;
-  onSelect: (tab: AgendaStatus) => void;
-}
-
-function FilterCard({ agenda, count, isActive, onSelect }: FilterCardProps) {
-  const IconComponent = agenda.icon;
-
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(agenda.activeTab)}
-      className={`flex cursor-pointer items-center justify-between border p-3 text-left shadow-2xs transition-all sm:p-4 ${
-        isActive
-          ? "border-slate-900 bg-slate-50/80 ring-1 ring-slate-900"
-          : "border-slate-200 bg-white hover:border-slate-300"
-      }`}
-    >
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        <div
-          className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors sm:size-10 ${
-            isActive ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"
-          }`}
-        >
-          <IconComponent className="size-4 sm:size-5" />
-        </div>
-        <div>
-          <span className="block text-base leading-tight font-black text-slate-900 sm:text-xl">
-            {count}
-          </span>
-          <span className="text-[11px] font-semibold text-slate-500 sm:text-xs">
-            {agenda.title}
-          </span>
-        </div>
-      </div>
-    </button>
-  );
+interface AgendaListSectionProps {
+  agendas: AgendaItem[];
+  initialMonth?: string;
+  initialYear?: string;
 }
 
 export default function AgendaListSection({
@@ -116,31 +73,57 @@ export default function AgendaListSection({
   initialMonth = "08",
   initialYear = "2026",
 }: AgendaListSectionProps) {
-  // nuqs type-safe query state synchronization
+  const [isPending, startTransition] = useTransition();
+
+  // nuqs with shallow: false triggers Server Component (RSC) re-evaluations
   const [activeTab, setActiveTab] = useQueryState(
     "status",
-    parseAsStringEnum<AgendaStatus>([
-      "ALL",
-      "UPCOMING",
-      "COMPLETED",
-      "PENDING",
-    ]).withDefault("ALL"),
+    parseAsStringEnum<AgendaStatus>(["ALL", "UPCOMING", "COMPLETED", "PENDING"])
+      .withDefault("ALL")
+      .withOptions({ shallow: false }),
   );
 
   const [selectedMonth, setSelectedMonth] = useQueryState(
     "month",
-    parseAsString.withDefault(initialMonth),
+    parseAsString.withDefault(initialMonth).withOptions({ shallow: false }),
   );
 
   const [selectedYear, setSelectedYear] = useQueryState(
     "year",
-    parseAsString.withDefault(initialYear),
+    parseAsString.withDefault(initialYear).withOptions({ shallow: false }),
   );
 
   const [searchQuery, setSearchQuery] = useQueryState(
     "q",
-    parseAsString.withDefault("").withOptions({ throttleMs: 300 }),
+    parseAsString
+      .withDefault("")
+      .withOptions({ throttleMs: 300, shallow: false }),
   );
+
+  const handleStatusChange = (status: AgendaStatus) => {
+    startTransition(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setActiveTab(status);
+    });
+  };
+
+  const handleMonthChange = (month: string) => {
+    startTransition(() => {
+      setSelectedMonth(month);
+    });
+  };
+
+  const handleYearChange = (year: string) => {
+    startTransition(() => {
+      setSelectedYear(year);
+    });
+  };
+
+  const handleSearchChange = (q: string) => {
+    startTransition(() => {
+      setSearchQuery(q);
+    });
+  };
 
   // 1. Filter by selected Month & Year
   const monthYearFiltered = agendas.filter((item) => {
@@ -201,10 +184,11 @@ export default function AgendaListSection({
         {FILTER_MANAGEMENT_AGENDA.map((agenda) => (
           <FilterCard
             key={agenda.activeTab}
+            isPending={isPending}
             agenda={agenda}
             count={getCountForTab(agenda.activeTab)}
             isActive={activeTab === agenda.activeTab}
-            onSelect={(tab) => setActiveTab(tab)}
+            onSelect={handleStatusChange}
           />
         ))}
       </div>
@@ -218,7 +202,7 @@ export default function AgendaListSection({
             type="text"
             placeholder="Cari berdasarkan judul kegiatan, lokasi, atau penyelenggara..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="w-full border border-slate-200 bg-slate-50/50 py-2 pr-4 pl-10 text-xs font-medium text-slate-900 outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
           />
         </div>
@@ -230,7 +214,7 @@ export default function AgendaListSection({
             <Calendar className="size-3.5 shrink-0 text-slate-400" />
             <select
               value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
+              onChange={(e) => handleMonthChange(e.target.value)}
               className="cursor-pointer bg-transparent font-bold text-slate-900 outline-none"
             >
               <option value="01">Januari</option>
@@ -252,7 +236,7 @@ export default function AgendaListSection({
           <div className="flex items-center gap-1.5 border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold text-slate-700">
             <select
               value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
+              onChange={(e) => handleYearChange(e.target.value)}
               className="cursor-pointer bg-transparent font-bold text-slate-900 outline-none"
             >
               <option value="2025">2025</option>
@@ -263,17 +247,28 @@ export default function AgendaListSection({
         </div>
       </div>
 
-      {/* AGENDA CARDS LIST */}
-      {finalFilteredAgendas.length === 0 ? (
-        <div className="border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
-          <AlertCircle className="mx-auto mb-2 size-8 text-slate-300" />
-          <p className="text-xs font-semibold text-slate-500">
-            Tidak ada agenda kegiatan yang cocok pada bulan dan tahun ini.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-2.5">
-          {finalFilteredAgendas.map((item) => {
+      {/* AGENDA CARDS LIST WITH SOFT TRANSITION FEEDBACK */}
+      <div
+        className={`space-y-2.5 transition-opacity duration-200 ${
+          isPending ? "pointer-events-none opacity-50" : "opacity-100"
+        }`}
+      >
+        {isPending ? (
+          <div className="flex items-center justify-center gap-2 border border-emerald-200/80 bg-emerald-50/60 p-2.5 text-xs font-semibold text-emerald-800">
+            <Loader2 className="size-4 animate-spin text-emerald-600" />
+            <span>Memperbarui data server...</span>
+          </div>
+        ) : null}
+
+        {finalFilteredAgendas.length === 0 ? (
+          <div className="border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
+            <AlertCircle className="mx-auto mb-2 size-8 text-slate-300" />
+            <p className="text-xs font-semibold text-slate-500">
+              Tidak ada agenda kegiatan yang cocok pada bulan dan tahun ini.
+            </p>
+          </div>
+        ) : (
+          finalFilteredAgendas.map((item) => {
             const isCompleted = item.status === "COMPLETED";
             const timePassed = isEventTimePassed(item.eventDate, item.endTime);
             const needsConfirmation = !isCompleted && timePassed;
@@ -348,9 +343,9 @@ export default function AgendaListSection({
                 </div>
               </div>
             );
-          })}
-        </div>
-      )}
+          })
+        )}
+      </div>
     </>
   );
 }
