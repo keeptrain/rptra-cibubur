@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Calendar,
-  CalendarDays,
   Clock,
   MapPin,
   User,
@@ -15,6 +14,11 @@ import {
   AlertTriangle,
   ArrowUpRight,
 } from "lucide-react";
+import {
+  AgendaStatus,
+  FILTER_MANAGEMENT_AGENDA,
+  FilterManagementAgenda,
+} from "../constants/agendas";
 
 export interface AgendaItem {
   id: string;
@@ -51,23 +55,23 @@ function isEventTimePassed(eventDateStr: string, endTimeStr: string): boolean {
     partMap[p.type] = p.value;
   });
 
-  const currentTodayStr = `${partMap.year}-${partMap.month}-${partMap.day}`;
-  const currentTotalMinutes =
-    (parseInt(partMap.hour, 10) % 24) * 60 + parseInt(partMap.minute, 10);
+  const todayWibStr = `${partMap.year}-${partMap.month}-${partMap.day}`;
+  const nowWibMinutes =
+    parseInt(partMap.hour || "0", 10) * 60 +
+    parseInt(partMap.minute || "0", 10);
 
-  if (eventDateStr < currentTodayStr) return true;
-  if (eventDateStr > currentTodayStr) return false;
+  if (eventDateStr < todayWibStr) return true;
+  if (eventDateStr > todayWibStr) return false;
 
-  const [eHour, eMin] = endTimeStr.slice(0, 5).split(":").map(Number);
-  const eventEndMinutes = (eHour || 0) * 60 + (eMin || 0);
+  const cleanEnd = (endTimeStr || "00:00").slice(0, 5);
+  const [eH, eM] = cleanEnd.split(":").map(Number);
+  const endMinutes = (eH || 0) * 60 + (eM || 0);
 
-  return currentTotalMinutes >= eventEndMinutes;
+  return nowWibMinutes >= endMinutes;
 }
 
 export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
-  const [activeTab, setActiveTab] = useState<"ALL" | "UPCOMING" | "COMPLETED">(
-    "ALL"
-  );
+  const [activeTab, setActiveTab] = useState<AgendaStatus>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("08");
   const [selectedYear, setSelectedYear] = useState("2026");
@@ -81,13 +85,39 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
 
   // 2. Dynamic metrics based on selected Month & Year
   const totalThisMonth = monthYearFiltered.length;
-  const upcomingCount = monthYearFiltered.filter((a) => a.status === "UPCOMING").length;
-  const completedCount = monthYearFiltered.filter((a) => a.status === "COMPLETED").length;
+  const upcomingCount = monthYearFiltered.filter(
+    (a) => a.status === "UPCOMING",
+  ).length;
+  const completedCount = monthYearFiltered.filter(
+    (a) => a.status === "COMPLETED",
+  ).length;
+  const pendingCount = monthYearFiltered.filter(
+    (a) => a.status === "UPCOMING" && isEventTimePassed(a.eventDate, a.endTime),
+  ).length;
+
+  const getCountForTab = (tab: AgendaStatus) => {
+    switch (tab) {
+      case "ALL":
+        return totalThisMonth;
+      case "UPCOMING":
+        return upcomingCount;
+      case "COMPLETED":
+        return completedCount;
+      case "PENDING":
+        return pendingCount;
+    }
+  };
 
   // 3. Filter by Tab & Search Query
   const finalFilteredAgendas = monthYearFiltered.filter((item) => {
     const matchesTab =
-      activeTab === "ALL" ? true : item.status === activeTab;
+      activeTab === "ALL"
+        ? true
+        : activeTab === "PENDING"
+          ? item.status === "UPCOMING" &&
+            isEventTimePassed(item.eventDate, item.endTime)
+          : item.status === activeTab;
+
     const matchesSearch =
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -98,85 +128,17 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
 
   return (
     <div className="space-y-6 text-left">
-      {/* SECTION 1: CLICKABLE DYNAMIC METRICS CARDS AS PRIMARY FILTERS */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
-        {/* CARD 1: TOTAL AGENDAS (CLICKABLE -> ALL) */}
-        <button
-          type="button"
-          onClick={() => setActiveTab("ALL")}
-          className={`flex flex-col justify-between border p-3 text-left shadow-2xs transition-all sm:p-4 cursor-pointer ${
-            activeTab === "ALL"
-              ? "border-amber-500 bg-amber-50/40 ring-1 ring-amber-500"
-              : "border-slate-200 bg-white hover:border-slate-300"
-          }`}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 sm:size-10">
-              <CalendarDays className="size-4.5 sm:size-5" />
-            </div>
-            <ArrowUpRight className="size-3.5 text-slate-400" />
-          </div>
-          <div className="flex items-baseline gap-1.5 flex-wrap">
-            <span className="text-xl font-black text-slate-900 sm:text-2xl">
-              {totalThisMonth}
-            </span>
-            <span className="text-xs font-semibold text-slate-500">
-              Agenda
-            </span>
-          </div>
-        </button>
-
-        {/* CARD 2: UPCOMING AGENDAS (CLICKABLE -> UPCOMING) */}
-        <button
-          type="button"
-          onClick={() => setActiveTab("UPCOMING")}
-          className={`flex flex-col justify-between border p-3 text-left shadow-2xs transition-all sm:p-4 cursor-pointer ${
-            activeTab === "UPCOMING"
-              ? "border-sky-500 bg-sky-50/40 ring-1 ring-sky-500"
-              : "border-slate-200 bg-white hover:border-slate-300"
-          }`}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-sky-50 text-sky-600 sm:size-10">
-              <Clock className="size-4.5 sm:size-5" />
-            </div>
-            <ArrowUpRight className="size-3.5 text-slate-400" />
-          </div>
-          <div className="flex items-baseline gap-1.5 flex-wrap">
-            <span className="text-xl font-black text-slate-900 sm:text-2xl">
-              {upcomingCount}
-            </span>
-            <span className="text-xs font-semibold text-slate-500">
-              Mendatang
-            </span>
-          </div>
-        </button>
-
-        {/* CARD 3: COMPLETED AGENDAS (CLICKABLE -> COMPLETED) */}
-        <button
-          type="button"
-          onClick={() => setActiveTab("COMPLETED")}
-          className={`flex flex-col justify-between border p-3 text-left shadow-2xs transition-all sm:p-4 cursor-pointer ${
-            activeTab === "COMPLETED"
-              ? "border-emerald-500 bg-emerald-50/40 ring-1 ring-emerald-500"
-              : "border-slate-200 bg-white hover:border-slate-300"
-          }`}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 sm:size-10">
-              <CheckCircle2 className="size-4.5 sm:size-5" />
-            </div>
-            <ArrowUpRight className="size-3.5 text-slate-400" />
-          </div>
-          <div className="flex items-baseline gap-1.5 flex-wrap">
-            <span className="text-xl font-black text-slate-900 sm:text-2xl">
-              {completedCount}
-            </span>
-            <span className="text-xs font-semibold text-slate-500">
-              Terlaksana
-            </span>
-          </div>
-        </button>
+      {/* SECTION 1: CLICKABLE DYNAMIC METRICS CARDS AS PRIMARY FILTERS (4-COLUMN ROW) */}
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+        {FILTER_MANAGEMENT_AGENDA.map((agenda) => (
+          <FilterCard
+            key={agenda.activeTab}
+            agenda={agenda}
+            count={getCountForTab(agenda.activeTab)}
+            isActive={activeTab === agenda.activeTab}
+            onSelect={setActiveTab}
+          />
+        ))}
       </div>
 
       {/* SECTION 2: MAIN AGENDA LIST & FILTERS CONTAINER */}
@@ -195,7 +157,7 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
           {/* CREATE AGENDA BUTTON LINK TO SEPARATE PAGE */}
           <Link
             href="/manajemen-agenda/form"
-            className="inline-flex items-center gap-1.5 bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-emerald-700 self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 self-start bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs transition-colors hover:bg-emerald-700 sm:self-auto"
           >
             <PlusIcon className="size-4" />
             Buat Agenda Baru
@@ -203,16 +165,16 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
         </div>
 
         {/* SEARCH & MONTH/YEAR SELECTORS ROW */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-1">
+        <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
           {/* SEARCH BAR */}
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="Cari berdasarkan judul kegiatan, lokasi, atau penyelenggara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full border border-slate-200 bg-slate-50/50 pl-10 pr-4 py-2 text-xs font-medium text-slate-900 outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="w-full border border-slate-200 bg-slate-50/50 py-2 pr-4 pl-10 text-xs font-medium text-slate-900 outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
             />
           </div>
 
@@ -220,11 +182,11 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
           <div className="flex items-center gap-2">
             {/* MONTH DROPDOWN */}
             <div className="flex items-center gap-1.5 border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold text-slate-700">
-              <Calendar className="size-3.5 text-slate-400 shrink-0" />
+              <Calendar className="size-3.5 shrink-0 text-slate-400" />
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="bg-transparent font-bold text-slate-900 outline-none cursor-pointer"
+                className="cursor-pointer bg-transparent font-bold text-slate-900 outline-none"
               >
                 <option value="01">Januari</option>
                 <option value="02">Februari</option>
@@ -242,11 +204,11 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
             </div>
 
             {/* YEAR DROPDOWN */}
-            <div className="border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold text-slate-700">
+            <div className="flex items-center gap-1.5 border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold text-slate-700">
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="bg-transparent font-bold text-slate-900 outline-none cursor-pointer"
+                className="cursor-pointer bg-transparent font-bold text-slate-900 outline-none"
               >
                 <option value="2025">2025</option>
                 <option value="2026">2026</option>
@@ -259,7 +221,7 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
         {/* AGENDA CARDS LIST */}
         {finalFilteredAgendas.length === 0 ? (
           <div className="border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
-            <AlertCircle className="mx-auto size-8 text-slate-300 mb-2" />
+            <AlertCircle className="mx-auto mb-2 size-8 text-slate-300" />
             <p className="text-xs font-semibold text-slate-500">
               Tidak ada agenda kegiatan yang cocok pada bulan dan tahun ini.
             </p>
@@ -268,85 +230,79 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
           <div className="space-y-2.5">
             {finalFilteredAgendas.map((item) => {
               const isCompleted = item.status === "COMPLETED";
-              const timePassed = isEventTimePassed(item.eventDate, item.endTime);
+              const timePassed = isEventTimePassed(
+                item.eventDate,
+                item.endTime,
+              );
               const needsConfirmation = !isCompleted && timePassed;
 
               return (
                 <div
                   key={item.id}
-                  className={`border p-3.5 transition-all hover:border-slate-300 ${
+                  className={`flex flex-col gap-3 border p-4 shadow-2xs transition-all sm:flex-row sm:items-center sm:justify-between ${
                     isCompleted
                       ? "border-slate-200 bg-slate-50/60 opacity-80"
                       : needsConfirmation
-                      ? "border-l-4 border-l-amber-500 border-slate-200 bg-amber-50/20"
-                      : "border-slate-200 bg-white"
+                        ? "border-l-4 border-slate-200 border-l-amber-500 bg-amber-50/20"
+                        : "border-slate-200 bg-white"
                   }`}
                 >
                   <div className="space-y-1.5 text-left">
-                    {/* STATUS & DATE ROW */}
                     <div className="flex flex-wrap items-center gap-2 text-xs">
                       {/* ACCURATE STATUS BADGES */}
                       {isCompleted ? (
-                        <span className="inline-flex items-center gap-1 bg-sky-100 text-sky-800 px-2.5 py-0.5 text-[11px] font-bold">
+                        <span className="inline-flex items-center gap-1 bg-sky-100 px-2.5 py-0.5 text-[11px] font-bold text-sky-800">
                           <CheckCircle2 className="size-3" />
                           Terlaksana
                         </span>
                       ) : needsConfirmation ? (
-                        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 px-2.5 py-0.5 text-[11px] font-bold">
+                        <span className="inline-flex items-center gap-1 bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-900">
                           <AlertTriangle className="size-3 text-amber-700" />
                           Menunggu Konfirmasi
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2.5 py-0.5 text-[11px] font-bold">
+                        <span className="inline-flex items-center gap-1 bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-800">
                           <Clock className="size-3" />
                           Akan Datang
                         </span>
                       )}
 
-                      {/* DATE */}
-                      <span className="flex items-center gap-1 font-bold text-slate-700">
-                        <Calendar className="size-3.5 text-slate-400" />
-                        {new Date(item.eventDate).toLocaleDateString("id-ID", {
-                          weekday: "short",
-                          day: "numeric",
-                          month: "short",
-                        })}
-                      </span>
-
-                      <span className="text-slate-300">•</span>
-
-                      {/* TIME */}
-                      <span className="font-medium text-slate-600">
-                        {item.startTime} - {item.endTime} WIB
+                      <span className="font-semibold text-slate-500">
+                        {item.eventDate}
                       </span>
                     </div>
 
-                    {/* PROMINENT TITLE LINKING TO DETAIL PAGE */}
-                    <h4>
-                      <Link
-                        href={`/manajemen-agenda/${item.id}`}
-                        className={`text-sm font-bold transition-colors hover:text-emerald-600 ${
-                          isCompleted
-                            ? "text-slate-600 line-through decoration-slate-300"
-                            : "text-slate-900"
-                        }`}
-                      >
-                        {item.title}
-                      </Link>
-                    </h4>
+                    <Link
+                      href={`/manajemen-agenda/${item.id}`}
+                      className="inline-block text-sm font-bold text-slate-900 transition-colors hover:text-emerald-600"
+                    >
+                      {item.title}
+                    </Link>
 
-                    {/* LOCATION & ORGANIZER */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-500">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
                       <span className="flex items-center gap-1">
-                        <MapPin className="size-3.5 text-slate-400" />
+                        <Clock className="size-3 text-slate-400" />
+                        {item.startTime} - {item.endTime} WIB
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="size-3 text-slate-400" />
                         {item.location}
                       </span>
-                      <span className="text-slate-300">•</span>
                       <span className="flex items-center gap-1">
-                        <User className="size-3.5 text-slate-400" />
+                        <User className="size-3 text-slate-400" />
                         {item.organizer}
                       </span>
                     </div>
+                  </div>
+
+                  {/* ACTION BUTTON */}
+                  <div className="flex shrink-0 items-center gap-2 pt-2 sm:pt-0">
+                    <Link
+                      href={`/manajemen-agenda/${item.id}`}
+                      className="border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50"
+                    >
+                      Rincian
+                    </Link>
                   </div>
                 </div>
               );
@@ -355,5 +311,51 @@ export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
         )}
       </div>
     </div>
+  );
+}
+
+interface FilterCardProps {
+  agenda: FilterManagementAgenda;
+  count: number;
+  isActive: boolean;
+  onSelect: (tab: AgendaStatus) => void;
+}
+
+function FilterCard({ agenda, count, isActive, onSelect }: FilterCardProps) {
+  const IconComponent = agenda.icon;
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(agenda.activeTab)}
+      className={`flex cursor-pointer items-center justify-between border p-3 text-left shadow-2xs transition-all sm:p-4 ${
+        isActive
+          ? "border-slate-900 bg-slate-50/80 ring-1 ring-slate-900"
+          : "border-slate-200 bg-white hover:border-slate-300"
+      }`}
+    >
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        <div
+          className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors sm:size-10 ${
+            isActive ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"
+          }`}
+        >
+          <IconComponent className="size-4 sm:size-5" />
+        </div>
+        <div>
+          <span className="block text-base leading-tight font-black text-slate-900 sm:text-xl">
+            {count}
+          </span>
+          <span className="text-[11px] font-semibold text-slate-500 sm:text-xs">
+            {agenda.title}
+          </span>
+        </div>
+      </div>
+      <ArrowUpRight
+        className={`hidden size-4 shrink-0 transition-colors sm:block ${
+          isActive ? "text-slate-900" : "text-slate-400"
+        }`}
+      />
+    </button>
   );
 }
