@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useQueryState, parseAsString, parseAsStringEnum } from "nuqs";
 import {
   Calendar,
   Clock,
@@ -11,7 +11,6 @@ import {
   AlertCircle,
   Search,
   AlertTriangle,
-  ArrowUpRight,
 } from "lucide-react";
 import {
   AgendaStatus,
@@ -71,15 +70,77 @@ function isEventTimePassed(eventDateStr: string, endTimeStr: string): boolean {
   return nowWibMinutes >= endMinutes;
 }
 
+interface FilterCardProps {
+  agenda: FilterManagementAgenda;
+  count: number;
+  isActive: boolean;
+  onSelect: (tab: AgendaStatus) => void;
+}
+
+function FilterCard({ agenda, count, isActive, onSelect }: FilterCardProps) {
+  const IconComponent = agenda.icon;
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(agenda.activeTab)}
+      className={`flex cursor-pointer items-center justify-between border p-3 text-left shadow-2xs transition-all sm:p-4 ${
+        isActive
+          ? "border-slate-900 bg-slate-50/80 ring-1 ring-slate-900"
+          : "border-slate-200 bg-white hover:border-slate-300"
+      }`}
+    >
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        <div
+          className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors sm:size-10 ${
+            isActive ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"
+          }`}
+        >
+          <IconComponent className="size-4 sm:size-5" />
+        </div>
+        <div>
+          <span className="block text-base leading-tight font-black text-slate-900 sm:text-xl">
+            {count}
+          </span>
+          <span className="text-[11px] font-semibold text-slate-500 sm:text-xs">
+            {agenda.title}
+          </span>
+        </div>
+      </div>
+    </button>
+  );
+}
+
 export default function AgendaListSection({
   agendas,
   initialMonth = "08",
   initialYear = "2026",
 }: AgendaListSectionProps) {
-  const [activeTab, setActiveTab] = useState<AgendaStatus>("ALL");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
-  const [selectedYear, setSelectedYear] = useState(initialYear);
+  // nuqs type-safe query state synchronization
+  const [activeTab, setActiveTab] = useQueryState(
+    "status",
+    parseAsStringEnum<AgendaStatus>([
+      "ALL",
+      "UPCOMING",
+      "COMPLETED",
+      "PENDING",
+    ]).withDefault("ALL"),
+  );
+
+  const [selectedMonth, setSelectedMonth] = useQueryState(
+    "month",
+    parseAsString.withDefault(initialMonth),
+  );
+
+  const [selectedYear, setSelectedYear] = useQueryState(
+    "year",
+    parseAsString.withDefault(initialYear),
+  );
+
+  const [searchQuery, setSearchQuery] = useQueryState(
+    "q",
+    parseAsString.withDefault("").withOptions({ throttleMs: 300 }),
+  );
 
   // 1. Filter by selected Month & Year
   const monthYearFiltered = agendas.filter((item) => {
@@ -123,10 +184,12 @@ export default function AgendaListSection({
             isEventTimePassed(item.eventDate, item.endTime)
           : item.status === activeTab;
 
+    const query = searchQuery.trim().toLowerCase();
     const matchesSearch =
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.organizer.toLowerCase().includes(searchQuery.toLowerCase());
+      query === "" ||
+      item.title.toLowerCase().includes(query) ||
+      item.location.toLowerCase().includes(query) ||
+      item.organizer.toLowerCase().includes(query);
 
     return matchesTab && matchesSearch;
   });
@@ -141,7 +204,7 @@ export default function AgendaListSection({
             agenda={agenda}
             count={getCountForTab(agenda.activeTab)}
             isActive={activeTab === agenda.activeTab}
-            onSelect={setActiveTab}
+            onSelect={(tab) => setActiveTab(tab)}
           />
         ))}
       </div>
@@ -289,51 +352,5 @@ export default function AgendaListSection({
         </div>
       )}
     </>
-  );
-}
-
-interface FilterCardProps {
-  agenda: FilterManagementAgenda;
-  count: number;
-  isActive: boolean;
-  onSelect: (tab: AgendaStatus) => void;
-}
-
-function FilterCard({ agenda, count, isActive, onSelect }: FilterCardProps) {
-  const IconComponent = agenda.icon;
-
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(agenda.activeTab)}
-      className={`flex cursor-pointer items-center justify-between border p-3 text-left shadow-2xs transition-all sm:p-4 ${
-        isActive
-          ? "border-slate-900 bg-slate-50/80 ring-1 ring-slate-900"
-          : "border-slate-200 bg-white hover:border-slate-300"
-      }`}
-    >
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        <div
-          className={`flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors sm:size-10 ${
-            isActive ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600"
-          }`}
-        >
-          <IconComponent className="size-4 sm:size-5" />
-        </div>
-        <div>
-          <span className="block text-base leading-tight font-black text-slate-900 sm:text-xl">
-            {count}
-          </span>
-          <span className="text-[11px] font-semibold text-slate-500 sm:text-xs">
-            {agenda.title}
-          </span>
-        </div>
-      </div>
-      <ArrowUpRight
-        className={`hidden size-4 shrink-0 transition-colors sm:block ${
-          isActive ? "text-slate-900" : "text-slate-400"
-        }`}
-      />
-    </button>
   );
 }

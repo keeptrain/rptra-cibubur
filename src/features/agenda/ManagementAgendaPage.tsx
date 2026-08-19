@@ -2,8 +2,17 @@ import { Suspense } from "react";
 import PageHeader from "@/components/shared/PageHeader";
 import ManagementAgendaContent from "./components/ManagementAgendaContent";
 import ManagementAgendaSkeleton from "./components/ManagementAgendaSkeleton";
+import { agendaSearchParamsCache } from "./params/agendaParams";
 
-export default function ManagementAgendaPage() {
+interface ManagementAgendaPageProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export default async function ManagementAgendaPage({
+  searchParams,
+}: ManagementAgendaPageProps) {
+  const parsedParams = await agendaSearchParamsCache.parse(searchParams);
+
   return (
     <main className="flex-1">
       <div className="mx-auto min-h-screen max-w-4xl">
@@ -16,7 +25,7 @@ export default function ManagementAgendaPage() {
 
         {/* SUSPENSE BOUNDARY FOR CONTENT BELOW PAGE HEADER */}
         <Suspense fallback={<ManagementAgendaSkeleton />}>
-          <ManagementAgendaContent />
+          <ManagementAgendaContent initialParams={parsedParams} />
         </Suspense>
       </div>
     </main>
