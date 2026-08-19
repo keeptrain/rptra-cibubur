@@ -30,5 +30,10 @@
 
 ## Planning
 
-1. server-auth-actions (Tinggi):
-   - Setiap Server Action memverifikasi sesi otentikasi pengguna (supabase.auth.getUser()) dan peran otorisasi (role === 'admin') secara independen di sisi server sebelum melakukan mutasi data.
+- install valibot
+- feature Management Agenda:
+  - Buat structure table management agenda di supabase sesuai dengan fields yang dibutuhkan pastikan scalable, ga over-engineered, dan mudah kedepannya jika ingin menggunakan rich text editor.
+  - CRUD management agenda (Create, Read, Update, Delete)
+    - wrapping get seperti read pakai unstable_cache seperti pada modul sebelumnya
+    - create, update , delete pakai react action , jangan lupa pakai valibot untuk validasi data , taruh di folder features/schemas
+    - error dari valibot jadikan satu kesatuan di atas form lalu di list karna tidak menggunakan rhf dan pastikan minim state
