@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { unstable_cache } from "next/cache";
 import { AgendaItem } from "../components/AgendaListSection";
+import { getCurrentWibDateDetails } from "../utils/utils";
 
 export interface AgendaData {
   agendas: AgendaItem[];
@@ -11,25 +12,8 @@ export interface AgendaData {
     completedCount: number;
   };
   serverWibToday: string;
-}
-
-// Helper to get current today YYYY-MM-DD in Asia/Jakarta (WIB) timezone
-export function getCurrentWibDateString(): string {
-  const now = new Date();
-  const wibFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Jakarta",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  const parts = wibFormatter.formatToParts(now);
-  const partMap: Record<string, string> = {};
-  parts.forEach((p) => {
-    partMap[p.type] = p.value;
-  });
-
-  return `${partMap.year}-${partMap.month}-${partMap.day}`;
+  currentMonth: string;
+  currentYear: string;
 }
 
 /**
@@ -38,13 +22,15 @@ export function getCurrentWibDateString(): string {
  */
 export const getAgenda = unstable_cache(
   async (): Promise<AgendaData> => {
-    const serverWibToday = getCurrentWibDateString();
+    const { fullDate: serverWibToday, month: currentMonth, year: currentYear } =
+      getCurrentWibDateDetails();
 
     try {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("park_agendas")
-        .select(`
+        .select(
+          `
           id,
           title,
           eventDate:event_date,
@@ -54,7 +40,8 @@ export const getAgenda = unstable_cache(
           organizer,
           description,
           status
-        `)
+        `
+        )
         .is("deleted_at", null)
         .order("event_date", { ascending: false });
 
@@ -65,6 +52,8 @@ export const getAgenda = unstable_cache(
           pendingAgendas: [],
           metrics: { totalThisMonth: 0, upcomingCount: 0, completedCount: 0 },
           serverWibToday,
+          currentMonth,
+          currentYear,
         };
       }
 
@@ -94,7 +83,14 @@ export const getAgenda = unstable_cache(
         completedCount,
       };
 
-      return { agendas, pendingAgendas, metrics, serverWibToday };
+      return {
+        agendas,
+        pendingAgendas,
+        metrics,
+        serverWibToday,
+        currentMonth,
+        currentYear,
+      };
     } catch (err) {
       console.error("Cache Fetch Error:", err);
       return {
@@ -102,6 +98,8 @@ export const getAgenda = unstable_cache(
         pendingAgendas: [],
         metrics: { totalThisMonth: 0, upcomingCount: 0, completedCount: 0 },
         serverWibToday,
+        currentMonth,
+        currentYear,
       };
     }
   },

@@ -34,6 +34,8 @@ export interface AgendaItem {
 
 interface AgendaListSectionProps {
   agendas: AgendaItem[];
+  initialMonth?: string;
+  initialYear?: string;
 }
 
 // Helper function to check if event date and end time has passed current WIB time
@@ -70,11 +72,15 @@ function isEventTimePassed(eventDateStr: string, endTimeStr: string): boolean {
   return nowWibMinutes >= endMinutes;
 }
 
-export default function AgendaListSection({ agendas }: AgendaListSectionProps) {
+export default function AgendaListSection({
+  agendas,
+  initialMonth = "08",
+  initialYear = "2026",
+}: AgendaListSectionProps) {
   const [activeTab, setActiveTab] = useState<AgendaStatus>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("08");
-  const [selectedYear, setSelectedYear] = useState("2026");
+  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
+  const [selectedYear, setSelectedYear] = useState(initialYear);
 
   // 1. Filter by selected Month & Year
   const monthYearFiltered = agendas.filter((item) => {
