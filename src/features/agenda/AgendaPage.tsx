@@ -1,5 +1,5 @@
 import { getAgenda } from "./api/getAgenda";
-import { MOCK_AGENDAS, AgendaItem as PublicAgendaItem } from "./constants/agendas";
+import { AgendaItem as PublicAgendaItem } from "./constants/agendas";
 import TodayHighlight from "./components/TodayHighlight";
 import SevenDaySchedule from "./components/SevenDaySchedule";
 import FullCalendarView from "./components/FullCalendarView";
@@ -34,13 +34,13 @@ export default async function AgendaPage() {
             isOngoing: isToday,
           };
         })
-      : MOCK_AGENDAS;
+      : [];
 
   const todayAgenda =
     formattedAgendas.find((a) => a.isToday) || formattedAgendas[0];
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
+    <main className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <div className="mt-8 space-y-12">
         {/* Today's Spotlight Hero Banner */}
         {todayAgenda ? <TodayHighlight agenda={todayAgenda} /> : null}
