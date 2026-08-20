@@ -11,17 +11,15 @@ interface AgendaPageProps {
 }
 
 export default async function AgendaPage({ searchParams }: AgendaPageProps) {
-  const { formattedAgendas, currentMonthName, next7Days } =
-    await getPublicAgendas();
-
-  const defaultDayDate = next7Days[0]?.dateStr || "";
-
   const resolvedSearchParams = await searchParams;
-  const selectedDay = (resolvedSearchParams?.day as string) || defaultDayDate;
+  const selectedDayParam = resolvedSearchParams?.day as string | undefined;
+
+  const { agendas, currentMonthName, next7Days, activeDay } =
+    await getPublicAgendas(selectedDayParam);
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 pt-8 pb-40 sm:px-6 lg:px-8">
-      <div className="space-y-6">
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-8 pb-40 sm:px-6 lg:px-8">
+      <div className="flex flex-1 flex-col space-y-6">
         {/* FILTER AREA (MONTH TITLE & 7-DAY PILL STRIP FULL WIDTH) */}
         <FilterUpcomingEventCard
           next7Days={next7Days}
@@ -29,42 +27,31 @@ export default async function AgendaPage({ searchParams }: AgendaPageProps) {
         />
 
         {/* SUSPENSE BOUNDARY FOR TRANSITION SKELETON */}
-        <Suspense key={selectedDay} fallback={<EventCardSkeleton />}>
-          <AsyncAgendaList
-            selectedDay={selectedDay}
-            formattedAgendas={formattedAgendas}
-          />
-        </Suspense>
+        <div className="min-h-95">
+          <Suspense key={activeDay} fallback={<EventCardSkeleton />}>
+            <AsyncAgendaList agendas={agendas} />
+          </Suspense>
+        </div>
       </div>
     </main>
   );
 }
 
 /**
- * Async Server Component for rendering filtered agenda list.
- * Awaits data resolution to trigger Suspense fallback stream during URL query param transitions.
+ * Async Server Component for rendering pre-filtered agenda list.
+ * Receives filtered agendas from single getPublicAgendas call.
  */
-async function AsyncAgendaList({
-  selectedDay,
-  formattedAgendas,
-}: {
-  selectedDay: string;
-  formattedAgendas: PublicAgendaItem[];
-}) {
+async function AsyncAgendaList({ agendas }: { agendas: PublicAgendaItem[] }) {
   // Artificial 500ms delay to demonstrate Suspense streaming skeleton fallback
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  const filteredAgendas = formattedAgendas.filter(
-    (item) => item.date === selectedDay || item.dayName === selectedDay,
-  );
-
-  if (filteredAgendas.length === 0) {
+  if (agendas.length === 0) {
     return <Empty />;
   }
 
   return (
     <div className="space-y-3">
-      {filteredAgendas.map((item) => (
+      {agendas.map((item) => (
         <EventCard key={item.id} item={item} />
       ))}
     </div>
@@ -73,7 +60,7 @@ async function AsyncAgendaList({
 
 function Empty() {
   return (
-    <div className="p-8 text-center">
+    <div className="flex min-h-50 flex-col items-center justify-center p-8 text-center">
       <Calendar className="mx-auto size-8 text-slate-300" />
       <p className="mt-2 text-base text-slate-500">
         Tidak ada agenda kegiatan pada tanggal ini.

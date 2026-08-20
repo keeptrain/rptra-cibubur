@@ -14,6 +14,8 @@ export interface AgendaItem {
   date: string; // YYYY-MM-DD
   dayName: string;
   time: string;
+  startTime?: string;
+  endTime?: string;
   location: string;
   instructor?: string;
   targetAudience: string;
