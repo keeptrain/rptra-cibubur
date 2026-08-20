@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
-import { createClient } from "@/lib/supabase/client";
 import { WibDateDetails } from "../utils/utils";
+import { isEventTimePassed } from "../utils/isEventTimePassed";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export interface AgendaData {
   agendas: Array<{
@@ -19,18 +20,30 @@ export interface AgendaData {
   currentYear: string;
 }
 
+export interface AgendaMetrics {
+  totalThisMonth: number;
+  upcomingCount: number;
+  completedCount: number;
+  pendingCount: number;
+}
+
 /**
- * Core cached data fetching function for raw agendas.
- * Returns raw agendas from Supabase cached for 1 hour.
+ * Core cached data fetching function for active agendas.
+ * Accepts injected SupabaseClient instance and wibDate.
  */
-export function getAgenda(wibDate: WibDateDetails) {
-  const { fullDate: serverWibToday, month: currentMonth, year: currentYear } =
-    wibDate;
+export function getAgendaQuery(
+  supabase: SupabaseClient,
+  wibDate: WibDateDetails,
+) {
+  const {
+    fullDate: serverWibToday,
+    month: currentMonth,
+    year: currentYear,
+  } = wibDate;
 
   return unstable_cache(
     async (): Promise<AgendaData> => {
       try {
-        const supabase = createClient();
         const { data, error } = await supabase
           .from("park_agendas")
           .select(
@@ -81,4 +94,43 @@ export function getAgenda(wibDate: WibDateDetails) {
       tags: ["park-agendas", `park-agendas-${currentYear}-${currentMonth}`],
     },
   )();
+}
+
+/**
+ * Reusable helper to compute monthly agenda metrics (total, upcoming, completed, pending).
+ */
+export function computeAgendaMetrics(
+  agendas: AgendaData["agendas"],
+  targetMonth: string,
+  targetYear: string,
+  overridePendingCount?: number,
+): AgendaMetrics {
+  const monthYearAgendas = agendas.filter((item) => {
+    const itemYearMonth = item.eventDate.slice(0, 7);
+    return itemYearMonth === `${targetYear}-${targetMonth}`;
+  });
+
+  const totalThisMonth = monthYearAgendas.length;
+  const upcomingCount = monthYearAgendas.filter(
+    (a) => a.status === "UPCOMING",
+  ).length;
+  const completedCount = monthYearAgendas.filter(
+    (a) => a.status === "COMPLETED",
+  ).length;
+
+  const pendingCount =
+    overridePendingCount !== undefined
+      ? overridePendingCount
+      : monthYearAgendas.filter(
+          (a) =>
+            a.status === "UPCOMING" &&
+            isEventTimePassed(a.eventDate, a.endTime),
+        ).length;
+
+  return {
+    totalThisMonth,
+    upcomingCount,
+    completedCount,
+    pendingCount,
+  };
 }
