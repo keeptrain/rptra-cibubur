@@ -4,9 +4,6 @@ import {
   parseAsStringEnum,
 } from "nuqs/server";
 import { AgendaStatus } from "../constants/agendas";
-import { getCurrentWibDateDetails } from "../utils/utils";
-
-const wibDate = getCurrentWibDateDetails();
 
 export const agendaSearchParams = {
   status: parseAsStringEnum<AgendaStatus>([
@@ -15,8 +12,8 @@ export const agendaSearchParams = {
     "COMPLETED",
     "PENDING",
   ]).withDefault("ALL"),
-  month: parseAsString.withDefault(wibDate.month),
-  year: parseAsString.withDefault(wibDate.year),
+  month: parseAsString,
+  year: parseAsString,
   q: parseAsString.withDefault(""),
 };
 

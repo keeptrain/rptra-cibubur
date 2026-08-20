@@ -3,6 +3,7 @@ import { AgendaItem as PublicAgendaItem } from "./constants/agendas";
 import TodayHighlight from "./components/TodayHighlight";
 import SevenDaySchedule from "./components/SevenDaySchedule";
 import FullCalendarView from "./components/FullCalendarView";
+import { getCurrentWibDateDetails } from "./utils/utils";
 
 function getDayNameIndonesian(dateStr: string): string {
   if (!dateStr) return "Hari Ini";
@@ -12,7 +13,8 @@ function getDayNameIndonesian(dateStr: string): string {
 }
 
 export default async function AgendaPage() {
-  const { agendas: dbAgendas, serverWibToday } = await getAgenda();
+  const wibDate = getCurrentWibDateDetails();
+  const { agendas: dbAgendas, serverWibToday } = await getAgenda(wibDate);
 
   const formattedAgendas: PublicAgendaItem[] =
     dbAgendas.length > 0
