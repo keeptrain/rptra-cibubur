@@ -19,10 +19,13 @@ export default async function ManagementAgendaPage({
   const wibDate = getCurrentWibDateDetails();
 
   const parsedParams = await agendaSearchParamsCache.parse(searchParams);
-  const { agendas } = await getManagementAgenda(wibDate);
-
-  const selectedMonth = parsedParams.month || wibDate.month;
-  const selectedYear = parsedParams.year || wibDate.year;
+  const { agendas, metrics, currentMonth, currentYear } =
+    await getManagementAgenda(wibDate, {
+      status: parsedParams.status,
+      month: parsedParams.month || wibDate.month,
+      year: parsedParams.year || wibDate.year,
+      q: parsedParams.q,
+    });
 
   return (
     <main className="flex-1">
@@ -60,8 +63,9 @@ export default async function ManagementAgendaPage({
             <Suspense fallback={<ManagementAgendaSkeleton />}>
               <AgendaListSection
                 agendas={agendas}
-                initialMonth={selectedMonth}
-                initialYear={selectedYear}
+                metrics={metrics}
+                initialMonth={currentMonth}
+                initialYear={currentYear}
               />
             </Suspense>
           </div>

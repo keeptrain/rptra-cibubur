@@ -14,37 +14,18 @@ export interface AgendaData {
     description: string;
     status: "UPCOMING" | "COMPLETED";
   }>;
-  pendingAgendas: Array<{
-    id: string;
-    title: string;
-    eventDate: string;
-    startTime: string;
-    endTime: string;
-    location: string;
-    organizer: string;
-    description: string;
-    status: "UPCOMING" | "COMPLETED";
-  }>;
-  metrics: {
-    totalThisMonth: number;
-    upcomingCount: number;
-    completedCount: number;
-  };
   serverWibToday: string;
   currentMonth: string;
   currentYear: string;
 }
 
 /**
- * Core cached data fetching function for agendas.
- * Accepts wibDate dynamically passed from top-level Page orchestrator.
+ * Core cached data fetching function for raw agendas.
+ * Returns raw agendas from Supabase cached for 1 hour.
  */
 export function getAgenda(wibDate: WibDateDetails) {
-  const {
-    fullDate: serverWibToday,
-    month: currentMonth,
-    year: currentYear,
-  } = wibDate;
+  const { fullDate: serverWibToday, month: currentMonth, year: currentYear } =
+    wibDate;
 
   return unstable_cache(
     async (): Promise<AgendaData> => {
@@ -72,42 +53,14 @@ export function getAgenda(wibDate: WibDateDetails) {
           console.error("Supabase Agenda Fetch Error:", error?.message);
           return {
             agendas: [],
-            pendingAgendas: [],
-            metrics: { totalThisMonth: 0, upcomingCount: 0, completedCount: 0 },
             serverWibToday,
             currentMonth,
             currentYear,
           };
         }
 
-        const agendas = data as AgendaData["agendas"];
-
-        // 1. Separate pending agendas (UPCOMING status but event date/time has passed WIB)
-        const pendingAgendas: AgendaData["agendas"] = [];
-        let upcomingCount = 0;
-        let completedCount = 0;
-
-        for (const item of agendas) {
-          if (item.status === "COMPLETED") {
-            completedCount++;
-          } else if (item.status === "UPCOMING") {
-            upcomingCount++;
-            if (item.eventDate < serverWibToday) {
-              pendingAgendas.push(item);
-            }
-          }
-        }
-
-        const metrics = {
-          totalThisMonth: agendas.length,
-          upcomingCount,
-          completedCount,
-        };
-
         return {
-          agendas,
-          pendingAgendas,
-          metrics,
+          agendas: data as AgendaData["agendas"],
           serverWibToday,
           currentMonth,
           currentYear,
@@ -116,8 +69,6 @@ export function getAgenda(wibDate: WibDateDetails) {
         console.error("Cache Fetch Error:", err);
         return {
           agendas: [],
-          pendingAgendas: [],
-          metrics: { totalThisMonth: 0, upcomingCount: 0, completedCount: 0 },
           serverWibToday,
           currentMonth,
           currentYear,

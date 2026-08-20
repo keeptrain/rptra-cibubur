@@ -16,6 +16,7 @@ import {
 import { AgendaStatus, FILTER_MANAGEMENT_AGENDA } from "../constants/agendas";
 import FilterCard from "./management/FilterCard";
 import AgendaListSkeleton from "./skeleton/AgendaListSkeleton";
+import { isEventTimePassed } from "../utils/isEventTimePassed";
 
 export interface AgendaItem {
   id: string;
@@ -31,46 +32,19 @@ export interface AgendaItem {
 
 interface AgendaListSectionProps {
   agendas: AgendaItem[];
+  metrics: {
+    totalThisMonth: number;
+    upcomingCount: number;
+    completedCount: number;
+    pendingCount: number;
+  };
   initialMonth?: string;
   initialYear?: string;
 }
 
-// Helper function to check if event date and end time has passed current WIB time
-function isEventTimePassed(eventDateStr: string, endTimeStr: string): boolean {
-  const now = new Date();
-  const wibFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Jakarta",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-
-  const parts = wibFormatter.formatToParts(now);
-  const partMap: Record<string, string> = {};
-  parts.forEach((p) => {
-    partMap[p.type] = p.value;
-  });
-
-  const todayWibStr = `${partMap.year}-${partMap.month}-${partMap.day}`;
-  const nowWibMinutes =
-    parseInt(partMap.hour || "0", 10) * 60 +
-    parseInt(partMap.minute || "0", 10);
-
-  if (eventDateStr < todayWibStr) return true;
-  if (eventDateStr > todayWibStr) return false;
-
-  const cleanEnd = (endTimeStr || "00:00").slice(0, 5);
-  const [eH, eM] = cleanEnd.split(":").map(Number);
-  const endMinutes = (eH || 0) * 60 + (eM || 0);
-
-  return nowWibMinutes >= endMinutes;
-}
-
 export default function AgendaListSection({
   agendas,
+  metrics,
   initialMonth = "08",
   initialYear = "2026",
 }: AgendaListSectionProps) {
@@ -102,63 +76,23 @@ export default function AgendaListSection({
   );
 
   const handleParamChange = <T,>(setter: (val: T) => void, val: T) => {
-    startTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    startTransition(() => {
       setter(val);
     });
   };
 
-  // 1. Filter by selected Month & Year
-  const monthYearFiltered = agendas.filter((item) => {
-    const itemYearMonth = item.eventDate.slice(0, 7);
-    const filterYearMonth = `${selectedYear}-${selectedMonth}`;
-    return itemYearMonth === filterYearMonth;
-  });
-
-  // 2. Dynamic metrics based on selected Month & Year
-  const totalThisMonth = monthYearFiltered.length;
-  const upcomingCount = monthYearFiltered.filter(
-    (a) => a.status === "UPCOMING",
-  ).length;
-  const completedCount = monthYearFiltered.filter(
-    (a) => a.status === "COMPLETED",
-  ).length;
-  const pendingCount = monthYearFiltered.filter(
-    (a) => a.status === "UPCOMING" && isEventTimePassed(a.eventDate, a.endTime),
-  ).length;
-
   const getCountForTab = (tab: AgendaStatus) => {
     switch (tab) {
       case "ALL":
-        return totalThisMonth;
+        return metrics.totalThisMonth;
       case "UPCOMING":
-        return upcomingCount;
+        return metrics.upcomingCount;
       case "COMPLETED":
-        return completedCount;
+        return metrics.completedCount;
       case "PENDING":
-        return pendingCount;
+        return metrics.pendingCount;
     }
   };
-
-  // 3. Filter by Tab & Search Query
-  const finalFilteredAgendas = monthYearFiltered.filter((item) => {
-    const matchesTab =
-      activeTab === "ALL"
-        ? true
-        : activeTab === "PENDING"
-          ? item.status === "UPCOMING" &&
-            isEventTimePassed(item.eventDate, item.endTime)
-          : item.status === activeTab;
-
-    const query = searchQuery.trim().toLowerCase();
-    const matchesSearch =
-      query === "" ||
-      item.title.toLowerCase().includes(query) ||
-      item.location.toLowerCase().includes(query) ||
-      item.organizer.toLowerCase().includes(query);
-
-    return matchesTab && matchesSearch;
-  });
 
   return (
     <>
@@ -237,7 +171,7 @@ export default function AgendaListSection({
       {/* AGENDA CARDS LIST WITH SKELETON FALLBACK WHEN PENDING */}
       {isPending ? (
         <AgendaListSkeleton />
-      ) : finalFilteredAgendas.length === 0 ? (
+      ) : agendas.length === 0 ? (
         <div className="border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
           <AlertCircle className="mx-auto mb-2 size-8 text-slate-300" />
           <p className="text-xs font-semibold text-slate-500">
@@ -246,7 +180,7 @@ export default function AgendaListSection({
         </div>
       ) : (
         <div className="space-y-2.5">
-          {finalFilteredAgendas.map((item) => {
+          {agendas.map((item) => {
             const isCompleted = item.status === "COMPLETED";
             const timePassed = isEventTimePassed(item.eventDate, item.endTime);
             const needsConfirmation = !isCompleted && timePassed;
