@@ -1,36 +1,45 @@
-/**
- * High-level Big Picture Loading Skeleton for Detail Agenda page.
- * Used inside React Suspense fallback while async Server Component loads.
- */
-export default function DetailAgendaSkeleton() {
-  return (
-    <div className="border border-slate-200 bg-white text-left shadow-2xs animate-pulse">
-      {/* HERO BANNER SKELETON */}
-      <div className="aspect-21/9 w-full bg-slate-200" />
+interface DetailAgendaSkeletonProps {
+  isRounded?: boolean;
+}
 
-      {/* BODY CONTENT SKELETON */}
-      <div className="space-y-6 p-5">
-        {/* TITLE & BADGES SKELETON */}
-        <div className="space-y-3 border-b border-slate-100 pb-4">
-          <div className="flex gap-2">
-            <div className="h-6 w-32 rounded-xs bg-slate-200" />
-            <div className="h-6 w-24 rounded-xs bg-slate-200" />
+/**
+ * Loading Skeleton for Detail Agenda page.
+ * Supports isRounded prop: renders rounded-xl for public view, and sharp corners for admin view.
+ */
+export default function DetailAgendaSkeleton({
+  isRounded = false,
+}: DetailAgendaSkeletonProps) {
+  return (
+    <div
+      className={`animate-pulse border border-zinc-200 bg-white p-6 text-left shadow-2xs sm:p-8 ${
+        isRounded ? "rounded-xl" : ""
+      }`}
+    >
+      <div className="space-y-6">
+        {/* HEADER SKELETON */}
+        <div className="space-y-3 border-b border-zinc-100 pb-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex gap-2">
+              <div className="h-6 w-36 rounded-md bg-zinc-200" />
+              <div className="h-6 w-28 rounded-md bg-zinc-200" />
+            </div>
+            <div className="h-6 w-24 rounded-full bg-zinc-200" />
           </div>
-          <div className="h-7 w-3/4 rounded-xs bg-slate-200" />
+          <div className="h-8 w-3/4 rounded-md bg-zinc-200" />
         </div>
 
         {/* META GRID SKELETON */}
-        <div className="grid grid-cols-1 gap-4 border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2">
-          <div className="h-10 rounded-xs bg-slate-200" />
-          <div className="h-10 rounded-xs bg-slate-200" />
-          <div className="h-10 rounded-xs bg-slate-200" />
-          <div className="h-10 rounded-xs bg-slate-200" />
+        <div className="grid grid-cols-1 gap-4 rounded-xl border border-zinc-200 bg-zinc-50/70 p-4 sm:grid-cols-2">
+          <div className="h-12 rounded-lg bg-zinc-200" />
+          <div className="h-12 rounded-lg bg-zinc-200" />
+          <div className="h-12 rounded-lg bg-zinc-200" />
+          <div className="h-12 rounded-lg bg-zinc-200" />
         </div>
 
         {/* DESCRIPTION SKELETON */}
         <div className="space-y-2">
-          <div className="h-4 w-40 rounded-xs bg-slate-200" />
-          <div className="h-28 w-full border border-slate-200 bg-slate-100 rounded-xs" />
+          <div className="h-4 w-40 rounded-md bg-zinc-200" />
+          <div className="h-28 w-full rounded-xl border border-zinc-200 bg-zinc-100" />
         </div>
       </div>
     </div>
