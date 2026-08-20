@@ -2,7 +2,6 @@ import { getAgenda } from "./api/getAgenda";
 import { AgendaItem as PublicAgendaItem } from "./constants/agendas";
 import TodayHighlight from "./components/TodayHighlight";
 import SevenDaySchedule from "./components/SevenDaySchedule";
-import FullCalendarView from "./components/FullCalendarView";
 import { getCurrentWibDateDetails } from "./utils/utils";
 
 function getDayNameIndonesian(dateStr: string): string {
@@ -53,14 +52,6 @@ export default async function AgendaPage() {
             JADWAL 7 HARI KE DEPAN
           </h3>
           <SevenDaySchedule agendas={formattedAgendas} />
-        </section>
-
-        {/* Full Monthly Calendar View */}
-        <section className="space-y-4">
-          <h3 className="text-xl font-black tracking-tight text-emerald-950 uppercase sm:text-2xl">
-            KALENDER KEGIATAN BULANAN
-          </h3>
-          <FullCalendarView agendas={formattedAgendas} />
         </section>
       </div>
     </main>
