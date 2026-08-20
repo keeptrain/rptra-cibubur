@@ -25,12 +25,14 @@ export default async function DetailAgendaPage({
 
         {/* REACT SUSPENSE BOUNDARY WITH SKELETON FALLBACK */}
         <Suspense fallback={<DetailAgendaSkeleton />}>
-          <AgendaDetailContent
-            id={targetId}
-            renderActions={(agenda) => (
-              <DetailAgendaActions id={agenda.id} status={agenda.status} />
-            )}
-          />
+          <div className="rounded-xl border border-zinc-200 bg-white p-6 text-left shadow-2xs sm:p-8">
+            <AgendaDetailContent
+              id={targetId}
+              renderActions={(agenda) => (
+                <DetailAgendaActions id={agenda.id} status={agenda.status} />
+              )}
+            />
+          </div>
         </Suspense>
       </div>
     </main>
