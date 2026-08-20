@@ -40,8 +40,11 @@ export interface AgendaData {
  * Accepts wibDate dynamically passed from top-level Page orchestrator.
  */
 export function getAgenda(wibDate: WibDateDetails) {
-  const { fullDate: serverWibToday, month: currentMonth, year: currentYear } =
-    wibDate;
+  const {
+    fullDate: serverWibToday,
+    month: currentMonth,
+    year: currentYear,
+  } = wibDate;
 
   return unstable_cache(
     async (): Promise<AgendaData> => {
