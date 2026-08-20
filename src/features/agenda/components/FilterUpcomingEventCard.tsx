@@ -1,6 +1,5 @@
 "use client";
 
-import { useTransition } from "react";
 import { useQueryState, parseAsString } from "nuqs";
 import { WibDayItem } from "../utils/utils";
 
@@ -17,7 +16,6 @@ export default function FilterUpcomingEventCard({
   next7Days,
   currentMonthName,
 }: FilterUpcomingEventCardProps) {
-  const [isPending, startTransition] = useTransition();
   const defaultDayDate = next7Days[0]?.dateStr || "";
 
   // nuqs with shallow: false triggers Server Component (RSC) re-evaluations
@@ -27,9 +25,7 @@ export default function FilterUpcomingEventCard({
   );
 
   const handleDaySelect = (dateStr: string) => {
-    startTransition(async () => {
-      setSelectedDay(dateStr);
-    });
+    setSelectedDay(dateStr);
   };
 
   return (
@@ -49,9 +45,8 @@ export default function FilterUpcomingEventCard({
             <button
               key={day.dateStr}
               type="button"
-              disabled={isPending}
               onClick={() => handleDaySelect(day.dateStr)}
-              className={`flex min-w-[52px] flex-1 cursor-pointer flex-col items-center justify-center rounded-2xl px-2.5 py-3 text-center transition-all ${
+              className={`flex min-w-13 flex-1 cursor-pointer flex-col items-center justify-center rounded-2xl px-2.5 py-3 text-center transition-all ${
                 isActive
                   ? "bg-emerald-500 font-black text-slate-950 shadow-md ring-2 ring-emerald-400"
                   : day.isToday

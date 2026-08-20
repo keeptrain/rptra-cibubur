@@ -4,7 +4,7 @@
 export default function EventCardSkeleton() {
   return (
     <div className="space-y-3 text-left">
-      {[1, 2, 3].map((i) => (
+      {[1, 2].map((i) => (
         <div
           key={i}
           className="flex flex-col justify-between border border-slate-200 bg-white p-4 shadow-2xs"

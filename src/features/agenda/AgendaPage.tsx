@@ -4,6 +4,7 @@ import FilterUpcomingEventCard from "./components/FilterUpcomingEventCard";
 import EventCard from "./components/EventCard";
 import { getPublicAgendas } from "./api/getPublicAgendas";
 import EventCardSkeleton from "./components/skeleton/EventCardSkeleton";
+import { AgendaItem as PublicAgendaItem } from "./constants/agendas";
 
 interface AgendaPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -18,11 +19,6 @@ export default async function AgendaPage({ searchParams }: AgendaPageProps) {
   const resolvedSearchParams = await searchParams;
   const selectedDay = (resolvedSearchParams?.day as string) || defaultDayDate;
 
-  // Server-side filtering for optimal SEO rendering & zero client JS delay
-  const filteredAgendas = formattedAgendas.filter(
-    (item) => item.date === selectedDay || item.dayName === selectedDay,
-  );
-
   return (
     <main className="mx-auto w-full max-w-7xl px-4 pt-8 pb-40 sm:px-6 lg:px-8">
       <div className="space-y-6">
@@ -34,23 +30,54 @@ export default async function AgendaPage({ searchParams }: AgendaPageProps) {
 
         {/* SUSPENSE BOUNDARY FOR TRANSITION SKELETON */}
         <Suspense key={selectedDay} fallback={<EventCardSkeleton />}>
-          {/* SERVER-SIDE RENDERED AGENDA CARDS LIST (EXPLICIT MAP FOR SEO) */}
-          <div className="space-y-3 text-left">
-            {filteredAgendas.length === 0 ? (
-              <div className="border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
-                <Calendar className="mx-auto size-8 text-slate-300" />
-                <p className="mt-2 text-xs font-semibold text-slate-500">
-                  Tidak ada agenda kegiatan pada tanggal ini.
-                </p>
-              </div>
-            ) : (
-              filteredAgendas.map((item) => (
-                <EventCard key={item.id} item={item} />
-              ))
-            )}
-          </div>
+          <AsyncAgendaList
+            selectedDay={selectedDay}
+            formattedAgendas={formattedAgendas}
+          />
         </Suspense>
       </div>
     </main>
+  );
+}
+
+/**
+ * Async Server Component for rendering filtered agenda list.
+ * Awaits data resolution to trigger Suspense fallback stream during URL query param transitions.
+ */
+async function AsyncAgendaList({
+  selectedDay,
+  formattedAgendas,
+}: {
+  selectedDay: string;
+  formattedAgendas: PublicAgendaItem[];
+}) {
+  // Artificial 500ms delay to demonstrate Suspense streaming skeleton fallback
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  const filteredAgendas = formattedAgendas.filter(
+    (item) => item.date === selectedDay || item.dayName === selectedDay,
+  );
+
+  if (filteredAgendas.length === 0) {
+    return <Empty />;
+  }
+
+  return (
+    <div className="space-y-3">
+      {filteredAgendas.map((item) => (
+        <EventCard key={item.id} item={item} />
+      ))}
+    </div>
+  );
+}
+
+function Empty() {
+  return (
+    <div className="p-8 text-center">
+      <Calendar className="mx-auto size-8 text-slate-300" />
+      <p className="mt-2 text-base text-slate-500">
+        Tidak ada agenda kegiatan pada tanggal ini.
+      </p>
+    </div>
   );
 }
