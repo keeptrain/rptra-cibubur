@@ -48,7 +48,7 @@ export function getCurrentWibDateString(): string {
   return getCurrentWibDateDetails().fullDate;
 }
 
-export function getIndonesianMonthYear(monthStr: string, yearStr: string): string {
+export function getIndonesianMonthYear(monthStr: string): string {
   const monthNames: Record<string, string> = {
     "01": "Januari",
     "02": "Februari",
@@ -64,15 +64,22 @@ export function getIndonesianMonthYear(monthStr: string, yearStr: string): strin
     "12": "Desember",
   };
 
-  const name = monthNames[monthStr] || "Agustus";
-  return `${name} ${yearStr}`;
+  return monthNames[monthStr] || "Agustus";
 }
 
 export function getNext7WibDays(wibDate: WibDateDetails): WibDayItem[] {
   const days: WibDayItem[] = [];
   const baseDate = new Date(`${wibDate.fullDate}T00:00:00+07:00`);
   const dayNamesShort = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-  const dayNamesFull = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const dayNamesFull = [
+    "Minggu",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+  ];
 
   for (let i = 0; i < 7; i++) {
     const d = new Date(baseDate);

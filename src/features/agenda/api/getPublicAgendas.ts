@@ -87,11 +87,9 @@ export async function getPublicAgendas(selectedDayParam?: string) {
     return startTimeA.localeCompare(startTimeB);
   });
 
-  const currentMonthName = getIndonesianMonthYear(wibDate.month, wibDate.year);
-
   return {
     agendas: filteredAgendas,
-    currentMonthName,
+    currentMonthName: getIndonesianMonthYear(wibDate.month),
     next7Days,
     defaultDayDate,
     activeDay,
