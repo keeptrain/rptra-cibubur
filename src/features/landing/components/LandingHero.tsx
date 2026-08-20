@@ -106,7 +106,9 @@ function HeroBottom() {
 
         <div className="pt-1">
           <a
-            href="#zona-taman"
+            href="https://www.youtube.com/watch?v=6-bRjN5lxsw"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group inline-flex items-center gap-2.5 text-xs font-bold tracking-wider text-emerald-900 uppercase transition-colors hover:text-emerald-600 sm:text-sm"
           >
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-white shadow-md shadow-emerald-600/20 transition-transform group-hover:scale-105 sm:h-9 sm:w-9">
