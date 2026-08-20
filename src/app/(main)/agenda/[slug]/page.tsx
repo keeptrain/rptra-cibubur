@@ -1,1 +1,1 @@
-export { default } from "@/features/agenda/DetailAgendaPage";
+export { default } from "@/features/agenda/PublicDetailAgendaPage";
