@@ -3,11 +3,11 @@
  */
 export default function EventCardSkeleton() {
   return (
-    <div className="space-y-3 text-left">
+    <div className="space-y-3">
       {[1, 2].map((i) => (
         <div
           key={i}
-          className="flex flex-col justify-between border border-slate-200 bg-white p-4 shadow-2xs"
+          className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-2xs"
         >
           <div className="space-y-2.5">
             <div className="flex items-center justify-between gap-3">

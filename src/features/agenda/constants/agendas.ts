@@ -20,6 +20,7 @@ export interface AgendaItem {
   instructor?: string;
   targetAudience: string;
   description: string;
+  imageUrl?: string;
   isToday?: boolean;
   isOngoing?: boolean;
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Clock, MapPin, User, ArrowUpRight } from "lucide-react";
 import { AgendaItem as PublicAgendaItem } from "../../constants/agendas";
 
@@ -15,33 +16,38 @@ export default function EventCard({ item }: EventCardProps) {
           : "border-slate-200 hover:border-slate-300"
       }`}
     >
-      <div className="space-y-2">
-        {/* TOP ROW: TITLE LINK ON LEFT, ARROW BUTTON LINK ON RIGHT */}
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-base font-bold text-slate-900 sm:text-lg">
+      <div className="space-y-3">
+        {/* TOP ROW: NEXT IMAGE THUMBNAIL ON LEFT, TITLE & ARROW BUTTON ON RIGHT */}
+        <div className="flex items-start gap-3.5">
+          <div className="relative size-14 shrink-0 overflow-hidden rounded-2xl sm:size-16">
+            <Image
+              src={item.imageUrl || "/images/rptra-cibubur.webp"}
+              alt={item.title}
+              fill
+              sizes="(max-width: 640px) 56px, 64px"
+              className="object-cover"
+            />
+          </div>
+
+          <div className="flex flex-1 items-start justify-between gap-3">
+            <h3 className="text-base font-bold text-slate-900 sm:text-lg">
+              <Link
+                href={`/agenda/${item.id}`}
+                className="transition-colors hover:text-emerald-700"
+              >
+                {item.title}
+              </Link>
+            </h3>
+
             <Link
               href={`/agenda/${item.id}`}
-              className="transition-colors hover:text-emerald-700"
+              aria-label={`Rincian agenda ${item.title}`}
+              className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-900 hover:text-white"
             >
-              {item.title}
+              <ArrowUpRight className="size-4" />
             </Link>
-          </h3>
-
-          <Link
-            href={`/agenda/${item.id}`}
-            aria-label={`Rincian agenda ${item.title}`}
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-900 hover:text-white"
-          >
-            <ArrowUpRight className="size-4" />
-          </Link>
+          </div>
         </div>
-
-        {/* DESCRIPTION */}
-        {item.description ? (
-          <p className="line-clamp-2 text-xs leading-relaxed font-medium text-slate-600">
-            {item.description}
-          </p>
-        ) : null}
 
         {/* MERGED TIME | LOCATION | ORGANIZER METADATA LINE */}
         <div className="flex flex-wrap items-center gap-x-2 pt-1 text-xs font-medium text-slate-500">
