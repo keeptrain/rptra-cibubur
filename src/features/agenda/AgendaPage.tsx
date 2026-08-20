@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Calendar } from "lucide-react";
+import MainContainer from "@/components/container/MainContainer";
 import FilterUpcomingEventCard from "./components/public/FilterUpcomingEventCard";
 import EventCard from "./components/public/EventCard";
 import { getPublicAgendas } from "./api/getPublicAgendas";
@@ -18,22 +19,20 @@ export default async function AgendaPage({ searchParams }: AgendaPageProps) {
     await getPublicAgendas(selectedDayParam);
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-8 pb-40 sm:px-6 lg:px-8">
-      <div className="flex flex-1 flex-col space-y-6">
-        {/* FILTER AREA (MONTH TITLE & 7-DAY PILL STRIP FULL WIDTH) */}
-        <FilterUpcomingEventCard
-          next7Days={next7Days}
-          currentMonthName={currentMonthName}
-        />
+    <MainContainer>
+      {/* FILTER AREA (MONTH TITLE & 7-DAY PILL STRIP FULL WIDTH) */}
+      <FilterUpcomingEventCard
+        next7Days={next7Days}
+        currentMonthName={currentMonthName}
+      />
 
-        {/* SUSPENSE BOUNDARY FOR TRANSITION SKELETON */}
-        <div className="min-h-95">
-          <Suspense key={activeDay} fallback={<EventCardSkeleton />}>
-            <AsyncAgendaList agendas={agendas} />
-          </Suspense>
-        </div>
+      {/* SUSPENSE BOUNDARY FOR TRANSITION SKELETON */}
+      <div className="min-h-95">
+        <Suspense key={activeDay} fallback={<EventCardSkeleton />}>
+          <AsyncAgendaList agendas={agendas} />
+        </Suspense>
       </div>
-    </main>
+    </MainContainer>
   );
 }
 
