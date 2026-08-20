@@ -1,9 +1,9 @@
 import {
   CalendarIcon,
-  CheckLineIcon,
-  ClockIcon,
-  FileExclamationPointIcon,
+  CheckCheckIcon,
+  ClipboardClockIcon,
   LucideIcon,
+  UserCheckIcon,
 } from "lucide-react";
 
 export interface AgendaItem {
@@ -48,7 +48,7 @@ export const FILTER_MANAGEMENT_AGENDA: FilterManagementAgenda[] = [
     searchQuery: "",
     selectedMonth: "08",
     selectedYear: "2026",
-    icon: ClockIcon,
+    icon: ClipboardClockIcon,
   },
   {
     activeTab: "COMPLETED",
@@ -56,14 +56,14 @@ export const FILTER_MANAGEMENT_AGENDA: FilterManagementAgenda[] = [
     searchQuery: "",
     selectedMonth: "08",
     selectedYear: "2026",
-    icon: CheckLineIcon,
+    icon: CheckCheckIcon,
   },
   {
     activeTab: "PENDING",
-    title: "Pending",
+    title: "Menunggu Persetujuan",
     searchQuery: "",
     selectedMonth: "08",
     selectedYear: "2026",
-    icon: FileExclamationPointIcon,
+    icon: UserCheckIcon,
   },
 ];
