@@ -36,13 +36,10 @@ export default function FilterCard({
           <IconComponent className={`size-4 sm:size-5`} />
         </div>
         <div className="min-w-0 flex-1">
-          <span className="block text-base leading-tight font-black sm:text-xl">
+          <span className="block text-base leading-tight sm:text-xl">
             {count}
           </span>
-          <span
-            title={agenda.title}
-            className="block truncate text-xs font-semibold"
-          >
+          <span title={agenda.title} className="block truncate text-xs">
             {agenda.title}
           </span>
         </div>
