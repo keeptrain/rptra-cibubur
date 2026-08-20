@@ -16,7 +16,7 @@ export default async function LandingNavbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-10 bg-white backdrop-blur-md">
+    <header className="sticky top-0 z-25 bg-white backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo & Brand */}
