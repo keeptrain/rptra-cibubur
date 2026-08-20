@@ -6,7 +6,6 @@ import { getManagementAgenda } from "./api/getManagementAgenda";
 import AgendaListSection from "./components/AgendaListSection";
 import ManagementAgendaSkeleton from "./components/skeleton/ManagementAgendaSkeleton";
 import { agendaSearchParamsCache } from "./params/agendaParams";
-import { getCurrentWibDateDetails } from "./utils/utils";
 
 interface ManagementAgendaPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -15,17 +14,9 @@ interface ManagementAgendaPageProps {
 export default async function ManagementAgendaPage({
   searchParams,
 }: ManagementAgendaPageProps) {
-  // Single top-level execution of current WIB date details for the request
-  const wibDate = getCurrentWibDateDetails();
-
   const parsedParams = await agendaSearchParamsCache.parse(searchParams);
   const { agendas, metrics, currentMonth, currentYear } =
-    await getManagementAgenda(wibDate, {
-      status: parsedParams.status,
-      month: parsedParams.month || wibDate.month,
-      year: parsedParams.year || wibDate.year,
-      q: parsedParams.q,
-    });
+    await getManagementAgenda(parsedParams);
 
   return (
     <main className="flex-1">

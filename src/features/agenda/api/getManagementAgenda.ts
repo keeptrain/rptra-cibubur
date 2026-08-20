@@ -1,14 +1,15 @@
 import { createClient } from "@/lib/supabase/client";
-import { getAgenda, AgendaData } from "./getAgenda";
-import { WibDateDetails } from "../utils/utils";
+import { getAgendaQuery, computeAgendaMetrics, AgendaData } from "./getAgenda";
+import { getCurrentWibDateDetails } from "../utils/utils";
 import { AgendaStatus } from "../constants/agendas";
 import { isEventTimePassed } from "../utils/isEventTimePassed";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export interface ManagementAgendaParams {
-  status?: AgendaStatus;
-  month?: string;
-  year?: string;
-  q?: string;
+  status?: AgendaStatus | null;
+  month?: string | null;
+  year?: string | null;
+  q?: string | null;
 }
 
 export interface ManagementAgendaData {
@@ -24,50 +25,29 @@ export interface ManagementAgendaData {
 }
 
 /**
- * Management Agenda data fetcher.
- * When status === 'PENDING', executes a dedicated fresh Supabase database query
- * (.eq('status', 'UPCOMING').lte('event_date', wibDate.fullDate)) for optimal fresh performance.
+ * Management Agenda BFF data fetcher.
+ * Reuses 1 SupabaseClient instance across parallel pending query & cached agendas fetch.
  */
 export async function getManagementAgenda(
-  wibDate: WibDateDetails,
   params: ManagementAgendaParams = {},
 ): Promise<ManagementAgendaData> {
+  const wibDate = getCurrentWibDateDetails();
+
   const targetMonth = params.month || wibDate.month;
   const targetYear = params.year || wibDate.year;
   const targetStatus = params.status || "ALL";
   const targetQuery = (params.q || "").trim().toLowerCase();
 
-  // 1. DEDICATED DB QUERY FOR PENDING AGENDAS
+  const supabase = createClient();
+
+  // 1. DEDICATED DB QUERY FOR PENDING AGENDAS (PARALLEL EXECUTION WITH PROMISE.ALL)
   if (targetStatus === "PENDING") {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from("park_agendas")
-      .select(
-        `
-        id,
-        title,
-        eventDate:event_date,
-        startTime:start_time,
-        endTime:end_time,
-        location,
-        organizer,
-        description,
-        status
-      `,
-      )
-      .is("deleted_at", null)
-      .eq("status", "UPCOMING")
-      .lte("event_date", wibDate.fullDate)
-      .order("event_date", { ascending: false });
+    const [pendingAgendasRaw, rawData] = await Promise.all([
+      getPendingAgendasQuery(supabase, wibDate),
+      getAgendaQuery(supabase, wibDate),
+    ]);
 
-    if (error) {
-      console.error("Supabase Pending Query Error:", error.message);
-    }
-
-    let pendingAgendas = (data || []) as AgendaData["agendas"];
-
-    // Filter by fresh WIB time and search query
-    pendingAgendas = pendingAgendas.filter((item) => {
+    const filteredPendingAgendas = pendingAgendasRaw.filter((item) => {
       const isPassed = isEventTimePassed(item.eventDate, item.endTime);
       const matchesSearch =
         targetQuery === "" ||
@@ -78,53 +58,31 @@ export async function getManagementAgenda(
       return isPassed && matchesSearch;
     });
 
-    // Also get general month metrics
-    const rawData = await getAgenda(wibDate);
-    const monthYearAgendas = rawData.agendas.filter((item) => {
-      const itemYearMonth = item.eventDate.slice(0, 7);
-      return itemYearMonth === `${targetYear}-${targetMonth}`;
-    });
-
-    const upcomingCount = monthYearAgendas.filter(
-      (a) => a.status === "UPCOMING",
-    ).length;
-    const completedCount = monthYearAgendas.filter(
-      (a) => a.status === "COMPLETED",
-    ).length;
+    const metrics = computeAgendaMetrics(
+      rawData.agendas,
+      targetMonth,
+      targetYear,
+      filteredPendingAgendas.length,
+    );
 
     return {
-      agendas: pendingAgendas,
-      metrics: {
-        totalThisMonth: monthYearAgendas.length,
-        upcomingCount,
-        completedCount,
-        pendingCount: pendingAgendas.length,
-      },
+      agendas: filteredPendingAgendas,
+      metrics,
       currentMonth: targetMonth,
       currentYear: targetYear,
     };
   }
 
   // 2. STANDARD CACHED QUERY FOR ALL, UPCOMING, COMPLETED
-  const rawData = await getAgenda(wibDate);
+  const rawData = await getAgendaQuery(supabase, wibDate);
   const rawAgendas = rawData.agendas;
+
+  const metrics = computeAgendaMetrics(rawAgendas, targetMonth, targetYear);
 
   const monthYearAgendas = rawAgendas.filter((item) => {
     const itemYearMonth = item.eventDate.slice(0, 7);
     return itemYearMonth === `${targetYear}-${targetMonth}`;
   });
-
-  const totalThisMonth = monthYearAgendas.length;
-  const upcomingCount = monthYearAgendas.filter(
-    (a) => a.status === "UPCOMING",
-  ).length;
-  const completedCount = monthYearAgendas.filter(
-    (a) => a.status === "COMPLETED",
-  ).length;
-
-  const pendingCount = monthYearAgendas.filter(
-    (a) => a.status === "UPCOMING" && isEventTimePassed(a.eventDate, a.endTime),
-  ).length;
 
   const filteredAgendas = monthYearAgendas.filter((item) => {
     const matchesStatus =
@@ -141,13 +99,39 @@ export async function getManagementAgenda(
 
   return {
     agendas: filteredAgendas,
-    metrics: {
-      totalThisMonth,
-      upcomingCount,
-      completedCount,
-      pendingCount,
-    },
+    metrics,
     currentMonth: targetMonth,
     currentYear: targetYear,
   };
+}
+
+async function getPendingAgendasQuery(
+  supabase: SupabaseClient,
+  wibDate: ReturnType<typeof getCurrentWibDateDetails>,
+) {
+  const { data, error } = await supabase
+    .from("park_agendas")
+    .select(
+      `
+        id,
+        title,
+        eventDate:event_date,
+        startTime:start_time,
+        endTime:end_time,
+        location,
+        organizer,
+        description,
+        status
+      `,
+    )
+    .is("deleted_at", null)
+    .eq("status", "UPCOMING")
+    .lte("event_date", wibDate.fullDate)
+    .order("event_date", { ascending: false });
+
+  if (error) {
+    console.error("Supabase Pending Query Error:", error.message);
+  }
+
+  return (data || []) as AgendaData["agendas"];
 }
