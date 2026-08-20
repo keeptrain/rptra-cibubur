@@ -41,8 +41,8 @@ async function AgendaDetailContent({ id }: { id: string }) {
 export default async function DetailAgendaPage({
   params,
 }: DetailAgendaPageProps) {
-  const resolvedParams = await params;
-  const targetId = resolvedParams.slug || resolvedParams.id || "";
+  const { slug, id } = await params;
+  const targetId = slug || id || "";
 
   return (
     <main className="flex-1">
