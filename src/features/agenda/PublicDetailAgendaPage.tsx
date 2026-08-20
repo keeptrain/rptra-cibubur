@@ -14,14 +14,22 @@ export default async function PublicDetailAgendaPage({
   const { slug } = await params;
   return (
     <MainContainer>
-      <div className="flex items-center">
-        <BackButton fallbackHref="/agenda">Kembali</BackButton>
-      </div>
-
-      {/* REACT SUSPENSE BOUNDARY WITH SKELETON FALLBACK */}
-      <Suspense fallback={<DetailAgendaSkeleton />}>
-        <AgendaDetailContent id={slug} renderActions={() => null} />
+      {/* REACT SUSPENSE BOUNDARY WITH ROUNDED-XL SKELETON FALLBACK */}
+      <Suspense fallback={<DetailAgendaSkeleton isRounded />}>
+        <div className="rounded-xl border border-zinc-200 bg-white p-6 text-left shadow-2xs sm:p-8">
+          <AgendaDetailContent id={slug} renderActions={() => null} />
+        </div>
       </Suspense>
+
+      {/* PUBLIC ACTIONS DIRECTLY BELOW THE CARD */}
+      <div className="flex w-full flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+        <BackButton
+          fallbackHref="/agenda"
+          className="w-full justify-center rounded-xl border border-zinc-200 bg-zinc-50 py-3 text-xs font-bold text-zinc-700 transition-all hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 sm:w-auto sm:px-6"
+        >
+          Kembali ke Daftar Agenda
+        </BackButton>
+      </div>
     </MainContainer>
   );
 }
