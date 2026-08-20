@@ -9,10 +9,10 @@ interface EventCardProps {
 export default function EventCard({ item }: EventCardProps) {
   return (
     <article
-      className={`flex flex-col justify-between border p-4 shadow-2xs transition-all ${
+      className={`flex flex-col justify-between border bg-white p-4 shadow-2xs transition-all ${
         item.isOngoing
-          ? "border-emerald-500 bg-emerald-50/30 ring-1 ring-emerald-400"
-          : "border-slate-200 bg-white hover:border-slate-300"
+          ? "border-lime-500"
+          : "border-slate-200 hover:border-slate-300"
       }`}
     >
       <div className="space-y-2">

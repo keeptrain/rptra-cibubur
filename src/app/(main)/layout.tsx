@@ -7,10 +7,10 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-screen flex-col bg-zinc-50">
       <LandingNavbar />
-      {children}
+      <div className="flex flex-1 flex-col">{children}</div>
       <LandingFooter />
     </div>
   );
-};
+}
