@@ -1,7 +1,12 @@
 import { createClient } from "@/lib/supabase/client";
 import { getAgendaQuery } from "./getAgenda";
 import { AgendaItem as PublicAgendaItem } from "../constants/agendas";
-import { getCurrentWibDateDetails } from "../utils/utils";
+import {
+  getCurrentWibDateDetails,
+  getIndonesianMonthYear,
+  getNext7WibDays,
+} from "../utils/utils";
+import { isEventOngoing } from "../utils/isEventOngoing";
 
 function getDayNameIndonesian(dateStr: string): string {
   if (!dateStr) return "Hari Ini";
@@ -12,7 +17,7 @@ function getDayNameIndonesian(dateStr: string): string {
 
 /**
  * Public Agenda BFF data resolution function.
- * Centralizes WIB date evaluation, fetches cached raw agendas, and formats items for public view.
+ * Returns formatted agendas with accurate isToday and isOngoing flags, month title, and 7-day strip items.
  */
 export async function getPublicAgendas() {
   const wibDate = getCurrentWibDateDetails();
@@ -26,6 +31,13 @@ export async function getPublicAgendas() {
     dbAgendas.length > 0
       ? dbAgendas.map((item) => {
           const isToday = item.eventDate === serverWibToday;
+          const isOngoing = isEventOngoing(
+            item.eventDate,
+            item.startTime,
+            item.endTime,
+            serverWibToday,
+          );
+
           return {
             id: item.id,
             title: item.title,
@@ -39,7 +51,7 @@ export async function getPublicAgendas() {
             targetAudience: "Warga RPTRA Cibubur",
             description: item.description,
             isToday,
-            isOngoing: isToday,
+            isOngoing,
           };
         })
       : [];
@@ -47,8 +59,14 @@ export async function getPublicAgendas() {
   const todayAgenda =
     formattedAgendas.find((a) => a.isToday) || formattedAgendas[0];
 
+  const currentMonthName = getIndonesianMonthYear(wibDate.month, wibDate.year);
+  const next7Days = getNext7WibDays(wibDate);
+
   return {
     formattedAgendas,
     todayAgenda,
+    currentMonthName,
+    next7Days,
+    wibDate,
   };
 }
