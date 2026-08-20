@@ -41,7 +41,7 @@ export default function FilterCard({
           </span>
           <span
             title={agenda.title}
-            className="block truncate text-xs font-semibold text-slate-500"
+            className="block truncate text-xs font-semibold"
           >
             {agenda.title}
           </span>

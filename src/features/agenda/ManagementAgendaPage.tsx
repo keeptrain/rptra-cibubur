@@ -33,10 +33,10 @@ export default async function ManagementAgendaPage({
             {/* TOP HEADER ROW: TITLE ON LEFT, CREATE BUTTON ON RIGHT */}
             <div className="flex flex-col gap-3 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold">
                   Daftar Agenda Kegiatan RPTRA
                 </h3>
-                <p className="text-xs font-medium text-slate-500">
+                <p className="text-xs font-medium">
                   Kelola status keterlaksanaan dan rincian agenda publik
                 </p>
               </div>

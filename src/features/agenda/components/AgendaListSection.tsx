@@ -120,21 +120,21 @@ export default function AgendaListSection({
             placeholder="Cari berdasarkan judul kegiatan, lokasi, atau penyelenggara..."
             value={searchQuery}
             onChange={(e) => handleParamChange(setSearchQuery, e.target.value)}
-            className="w-full border border-slate-200 bg-slate-50/50 py-2 pr-4 pl-10 text-xs font-medium text-slate-900 outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+            className="w-full border border-slate-200 bg-slate-50/50 py-2 pr-4 pl-10 text-xs font-medium outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
           />
         </div>
 
         {/* MONTH & YEAR DROPDOWN SELECTORS */}
         <div className="flex items-center gap-2">
           {/* MONTH DROPDOWN */}
-          <div className="flex items-center gap-1.5 border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold text-slate-700">
+          <div className="flex items-center gap-1.5 border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold">
             <Calendar className="size-3.5 shrink-0 text-slate-400" />
             <select
               value={selectedMonth}
               onChange={(e) =>
                 handleParamChange(setSelectedMonth, e.target.value)
               }
-              className="cursor-pointer bg-transparent font-bold text-slate-900 outline-none"
+              className="cursor-pointer bg-transparent font-bold outline-none"
             >
               <option value="01">Januari</option>
               <option value="02">Februari</option>
@@ -152,13 +152,13 @@ export default function AgendaListSection({
           </div>
 
           {/* YEAR DROPDOWN */}
-          <div className="flex items-center gap-1.5 border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold text-slate-700">
+          <div className="flex items-center gap-1.5 border border-slate-200 bg-slate-50/80 px-2.5 py-2 text-xs font-semibold">
             <select
               value={selectedYear}
               onChange={(e) =>
                 handleParamChange(setSelectedYear, e.target.value)
               }
-              className="cursor-pointer bg-transparent font-bold text-slate-900 outline-none"
+              className="cursor-pointer bg-transparent font-bold outline-none"
             >
               <option value="2025">2025</option>
               <option value="2026">2026</option>
@@ -174,7 +174,7 @@ export default function AgendaListSection({
       ) : agendas.length === 0 ? (
         <div className="border border-dashed border-slate-200 bg-slate-50/60 p-8 text-center">
           <AlertCircle className="mx-auto mb-2 size-8 text-slate-300" />
-          <p className="text-xs font-semibold text-slate-500">
+          <p className="text-xs font-semibold">
             Tidak ada agenda kegiatan yang cocok pada bulan dan tahun ini.
           </p>
         </div>
@@ -216,19 +216,17 @@ export default function AgendaListSection({
                       </span>
                     )}
 
-                    <span className="font-semibold text-slate-500">
-                      {item.eventDate}
-                    </span>
+                    <span className="font-semibold">{item.eventDate}</span>
                   </div>
 
                   <Link
                     href={`/manajemen-agenda/${item.id}`}
-                    className="inline-block text-sm font-bold text-slate-900 transition-colors hover:text-emerald-600"
+                    className="inline-block text-sm font-bold"
                   >
                     {item.title}
                   </Link>
 
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
                     <span className="flex items-center gap-1">
                       <Clock className="size-3 text-slate-400" />
                       {item.startTime} - {item.endTime} WIB
@@ -248,7 +246,7 @@ export default function AgendaListSection({
                 <div className="flex shrink-0 items-center gap-2 pt-2 sm:pt-0">
                   <Link
                     href={`/manajemen-agenda/${item.id}`}
-                    className="border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50"
+                    className="border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition-colors hover:bg-slate-50"
                   >
                     Rincian
                   </Link>
