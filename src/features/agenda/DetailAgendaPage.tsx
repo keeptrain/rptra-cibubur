@@ -8,7 +8,7 @@ import DetailAgendaSkeleton from "./components/skeleton/DetailAgendaSkeleton";
 import { ArrowLeft } from "lucide-react";
 
 interface DetailAgendaPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id?: string; slug?: string }>;
 }
 
 async function AgendaDetailContent({ id }: { id: string }) {
@@ -38,8 +38,11 @@ async function AgendaDetailContent({ id }: { id: string }) {
   );
 }
 
-export default async function DetailAgendaPage({ params }: DetailAgendaPageProps) {
-  const { id } = await params;
+export default async function DetailAgendaPage({
+  params,
+}: DetailAgendaPageProps) {
+  const resolvedParams = await params;
+  const targetId = resolvedParams.slug || resolvedParams.id || "";
 
   return (
     <main className="flex-1">
@@ -52,7 +55,7 @@ export default async function DetailAgendaPage({ params }: DetailAgendaPageProps
 
         {/* REACT SUSPENSE BOUNDARY WITH SKELETON FALLBACK */}
         <Suspense fallback={<DetailAgendaSkeleton />}>
-          <AgendaDetailContent id={id} />
+          <AgendaDetailContent id={targetId} />
         </Suspense>
       </div>
     </main>

@@ -1,5 +1,3 @@
-import { uuidV7Schema as validateUuidV7 } from "@/lib/schema";
-import { safeParse } from "valibot";
 import { createClient } from "@/lib/supabase/client";
 
 export interface DetailAgendaItem {
@@ -18,19 +16,16 @@ export interface DetailAgendaItem {
 }
 
 export async function getAgendaById(
-  id: string,
+  idOrSlug: string,
 ): Promise<DetailAgendaItem | null> {
-  const result = safeParse(validateUuidV7(), id);
-  if (!result.success) {
-    return null;
-  }
+  if (!idOrSlug) return null;
 
   try {
     const supabase = createClient();
     const { data, error } = await supabase
       .from("park_agendas")
       .select("*")
-      .eq("id", id)
+      .eq("id", idOrSlug)
       .is("deleted_at", null)
       .maybeSingle();
 
