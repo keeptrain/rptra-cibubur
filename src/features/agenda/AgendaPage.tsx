@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Calendar } from "lucide-react";
-import FilterUpcomingEventCard from "./components/FilterUpcomingEventCard";
-import EventCard from "./components/EventCard";
+import FilterUpcomingEventCard from "./components/public/FilterUpcomingEventCard";
+import EventCard from "./components/public/EventCard";
 import { getPublicAgendas } from "./api/getPublicAgendas";
 import EventCardSkeleton from "./components/skeleton/EventCardSkeleton";
 import { AgendaItem as PublicAgendaItem } from "./constants/agendas";

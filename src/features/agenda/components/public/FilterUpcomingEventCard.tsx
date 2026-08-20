@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryState, parseAsString } from "nuqs";
-import { WibDayItem } from "../utils/utils";
+import { WibDayItem } from "../../utils/utils";
 
 interface FilterUpcomingEventCardProps {
   next7Days: WibDayItem[];
@@ -10,7 +10,7 @@ interface FilterUpcomingEventCardProps {
 
 /**
  * Full-width filter header component for public upcoming events page.
- * Uses nuqs with shallow: false & useTransition to trigger Server Component re-evaluation on URL changes.
+ * Uses nuqs with shallow: false to trigger Server Component re-evaluation on URL changes.
  */
 export default function FilterUpcomingEventCard({
   next7Days,

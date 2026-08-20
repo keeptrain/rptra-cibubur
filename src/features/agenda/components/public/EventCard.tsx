@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Clock, MapPin, User, ArrowUpRight } from "lucide-react";
-import { AgendaItem as PublicAgendaItem } from "../constants/agendas";
+import { AgendaItem as PublicAgendaItem } from "../../constants/agendas";
 
 interface EventCardProps {
   item: PublicAgendaItem;
@@ -9,7 +9,7 @@ interface EventCardProps {
 export default function EventCard({ item }: EventCardProps) {
   return (
     <article
-      className={`flex flex-col justify-between border bg-white p-4 shadow-2xs transition-all ${
+      className={`flex flex-col justify-between rounded-xl border bg-white p-4 shadow-2xs transition-all ${
         item.isOngoing
           ? "border-lime-500"
           : "border-slate-200 hover:border-slate-300"
@@ -38,7 +38,7 @@ export default function EventCard({ item }: EventCardProps) {
 
         {/* DESCRIPTION */}
         {item.description ? (
-          <p className="line-clamp-2 text-xs leading-relaxed text-slate-600">
+          <p className="line-clamp-2 text-xs leading-relaxed font-medium text-slate-600">
             {item.description}
           </p>
         ) : null}
