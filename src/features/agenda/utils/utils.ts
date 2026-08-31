@@ -70,32 +70,54 @@ export function getIndonesianMonthYear(monthStr: string): string {
 export function getNext7WibDays(wibDate: WibDateDetails): WibDayItem[] {
   const days: WibDayItem[] = [];
   const baseDate = new Date(`${wibDate.fullDate}T00:00:00+07:00`);
-  const dayNamesShort = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-  const dayNamesFull = [
-    "Minggu",
-    "Senin",
-    "Selasa",
-    "Rabu",
-    "Kamis",
-    "Jumat",
-    "Sabtu",
-  ];
 
   for (let i = 0; i < 7; i++) {
     const d = new Date(baseDate);
-    d.setDate(baseDate.getDate() + i);
+    d.setUTCDate(baseDate.getUTCDate() + i);
 
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Jakarta",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      weekday: "short",
+    }).formatToParts(d);
+
+    const partMap: Record<string, string> = {};
+    parts.forEach((p) => {
+      partMap[p.type] = p.value;
+    });
+
+    const year = partMap.year || "2026";
+    const month = partMap.month || "08";
+    const day = partMap.day || "01";
     const dateStr = `${year}-${month}-${day}`;
 
-    const dayIndex = d.getDay();
+    const weekdayEn = partMap.weekday || "Mon";
+    const shortMap: Record<string, string> = {
+      Sun: "Min",
+      Mon: "Sen",
+      Tue: "Sel",
+      Wed: "Rab",
+      Thu: "Kam",
+      Fri: "Jum",
+      Sat: "Sab",
+    };
+    const fullMap: Record<string, string> = {
+      Sun: "Minggu",
+      Mon: "Senin",
+      Tue: "Selasa",
+      Wed: "Rabu",
+      Thu: "Kamis",
+      Fri: "Jumat",
+      Sat: "Sabtu",
+    };
+
     days.push({
       dateStr,
       dayNum: day,
-      dayShort: dayNamesShort[dayIndex],
-      dayFull: dayNamesFull[dayIndex],
+      dayShort: shortMap[weekdayEn] || weekdayEn,
+      dayFull: fullMap[weekdayEn] || weekdayEn,
       isToday: i === 0,
     });
   }

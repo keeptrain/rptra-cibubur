@@ -11,9 +11,12 @@ import { isEventTimePassed } from "../utils/isEventTimePassed";
 
 function getDayNameIndonesian(dateStr: string): string {
   if (!dateStr) return "Hari Ini";
-  const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? "Hari Ini" : days[d.getDay()];
+  const d = new Date(`${dateStr}T00:00:00+07:00`);
+  if (isNaN(d.getTime())) return "Hari Ini";
+  return new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Jakarta",
+    weekday: "long",
+  }).format(d);
 }
 
 /**
