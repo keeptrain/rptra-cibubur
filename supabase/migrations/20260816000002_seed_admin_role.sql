@@ -1,7 +1,7 @@
 -- 1. Set app_metadata role: admin for cgilang02@gmail.com in auth.users
 update auth.users
 set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role": "admin"}'::jsonb
-where lower(email) = 'cgilang02@gmail.com';
+where lower(email) = 'admin@gmail.com';
 
 -- 2. Grant INSERT & UPDATE privileges on park_operation_logs to authenticated role
 grant insert, update on public.park_operation_logs to authenticated;
