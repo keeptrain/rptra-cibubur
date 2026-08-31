@@ -1,49 +1,32 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { AlertCircle, AlertCircleIcon, ArrowRightIcon } from "lucide-react";
+import { useActionState, useEffect } from "react";
+import { AlertCircleIcon, ArrowRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { sendOtpAction } from "../actions/login/sendOtpAction";
+import { loginAction } from "../actions/loginAction";
 
 interface EmailStepProps {
   defaultEmail?: string;
-  onSuccessNext: (email: string) => void;
+  onSuccessNext: (link: string) => void;
 }
 
 export default function EmailStep({
   defaultEmail = "",
   onSuccessNext,
 }: EmailStepProps) {
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [state, formAction, isPending] = useActionState(loginAction, null);
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
-    e.preventDefault();
-    const emailVal = emailInputRef.current?.value?.trim();
-    if (!emailVal) return;
-
-    if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(emailVal)) {
-      setErrorMessage("Saat ini hanya menerima email berdomain @gmail.com");
-      return;
+  useEffect(() => {
+    if (state?.success && state.validEmail) {
+      onSuccessNext(state.validEmail);
     }
+  }, [state?.success, state?.validEmail, onSuccessNext]);
 
-    setIsLoading(true);
-    setErrorMessage("");
-
-    const res = await sendOtpAction(emailVal);
-    setIsLoading(false);
-
-    if (res.success) {
-      onSuccessNext(emailVal.toLowerCase());
-    } else {
-      setErrorMessage(res.error || "Gagal mengirimkan kode OTP.");
-    }
-  };
+  const errorMessage = state?.error;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form action={formAction} className="space-y-5">
       {/* Error Alert Box */}
       {errorMessage && (
         <div className="flex items-start gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-left text-xs font-medium text-rose-700">
@@ -61,23 +44,24 @@ export default function EmailStep({
         </label>
 
         <Input
-          ref={emailInputRef}
+          disabled={isPending}
+          id="email"
+          name="email"
           type="email"
           required
           defaultValue={defaultEmail}
-          pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+          pattern="^[a-zA-Z0-9._%+\-]+@gmail\.com$"
           placeholder="example@gmail.com"
-          onChange={() => setErrorMessage("")}
         />
       </div>
 
       <Button
         type="submit"
         size="lg"
-        disabled={isLoading}
+        disabled={isPending}
         className="mt-2 w-full gap-2"
       >
-        {isLoading ? "Mengirim kode OTP..." : "Kirim kode OTP"}
+        {isPending ? "Mengirim kode OTP..." : "Kirim kode OTP"}
         <ArrowRightIcon className="size-4" />
       </Button>
     </form>
