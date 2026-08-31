@@ -110,7 +110,7 @@ export default function LandingFooter() {
               {/* Absolute Floating Info Box at Bottom of Map */}
               <div className="absolute inset-x-3 bottom-3 z-10 flex items-center justify-between gap-3 rounded-xl border border-white/40 bg-white/90 p-3.5 text-[#0B0E17] shadow-lg backdrop-blur-md">
                 <div>
-                  <h4 className="text-base font-black tracking-tight text-[#0B0E17] uppercase sm:text-lg">
+                  <h4 className="text-base font-bold tracking-tight text-[#0B0E17] uppercase sm:text-lg">
                     CIBUBUR PARK
                   </h4>
                   <p className="text-[11px] font-semibold text-zinc-600 sm:text-xs">
@@ -122,7 +122,7 @@ export default function LandingFooter() {
                   href="https://maps.google.com/?q=RPTRA+Cibubur"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#A7F3D0] px-3.5 py-2 text-xs font-black text-emerald-950 uppercase shadow-xs transition-transform hover:scale-105 hover:bg-emerald-200"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#A7F3D0] px-3.5 py-2 text-xs font-bold text-emerald-950 uppercase shadow-xs transition-transform hover:scale-105 hover:bg-emerald-200"
                 >
                   PETUNJUK RUTE
                   <ArrowUpRight className="size-3.5" />
@@ -132,7 +132,7 @@ export default function LandingFooter() {
 
             {/* 2. Compact Connect Card (Fresh Mint Theme) */}
             <div className="flex items-center justify-between rounded-2xl bg-[#A7F3D0] px-6 py-4 text-emerald-950 shadow-md">
-              <h4 className="text-base font-black tracking-tight text-emerald-950 uppercase sm:text-lg">
+              <h4 className="text-base font-bold tracking-tight text-emerald-950 uppercase sm:text-lg">
                 CONNECT WITH US
               </h4>
 

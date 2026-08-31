@@ -17,7 +17,7 @@ export default function HighlightTicker() {
           return (
             <div
               key={idx}
-              className="flex items-center gap-3 text-xs font-black tracking-widest uppercase"
+              className="flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
             >
               <Icon className="size-4 shrink-0 text-emerald-900" />
               <span className="text-[8px] sm:text-[10px]">{item.text}</span>

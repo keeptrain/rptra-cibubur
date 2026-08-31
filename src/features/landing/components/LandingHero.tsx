@@ -17,10 +17,10 @@ function HeroTop() {
       <div className="grid h-full w-full grid-cols-1 items-stretch lg:grid-cols-12">
         {/* Left Side: Main Title - Wide Horizontally with Padding */}
         <div className="relative z-10 flex flex-col justify-center space-y-2 p-6 sm:space-y-3 sm:p-8 lg:col-span-7 lg:p-10 xl:col-span-8">
-          <span className="inline-block text-xs font-extrabold tracking-widest text-emerald-700 uppercase sm:text-sm">
+          <span className="inline-block text-xs font-semibold tracking-widest text-emerald-700 uppercase sm:text-sm">
             Ruang Publik Terpadu Ramah Anak
           </span>
-          <h1 className="text-3xl leading-tight font-black tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl xl:text-7xl">
+          <h1 className="text-3xl leading-tight font-bold tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl xl:text-7xl">
             TAMAN RPTRA CIBUBUR
           </h1>
         </div>
@@ -47,10 +47,10 @@ function HeroStats() {
           key={idx}
           className="flex flex-1 items-center justify-between px-6 py-4 md:px-8"
         >
-          <span className="text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">
+          <span className="text-3xl font-bold tracking-tight text-emerald-950 sm:text-4xl">
             {stat.value}
           </span>
-          <span className="max-w-30 text-right text-[11px] leading-snug font-black tracking-widest text-emerald-900/80 uppercase">
+          <span className="max-w-30 text-right text-[11px] leading-snug font-bold tracking-widest text-emerald-900/80 uppercase">
             {stat.label}
           </span>
         </div>
@@ -67,7 +67,7 @@ function HeroBottom() {
         <div className="relative z-10 space-y-2 sm:space-y-3">
           <CalendarIcon className="size-5 text-white sm:size-6" />
 
-          <h3 className="text-lg font-black tracking-wide text-white uppercase sm:text-xl">
+          <h3 className="text-lg font-bold tracking-wide text-white uppercase sm:text-xl">
             AGENDA WARGA
           </h3>
         </div>
@@ -86,7 +86,7 @@ function HeroBottom() {
       <div className="flex flex-col justify-between space-y-3 p-5 sm:space-y-4 sm:p-6 lg:p-8">
         <div className="space-y-2 sm:space-y-3">
           <HistoryIcon className="size-5 sm:size-6" />
-          <h3 className="text-lg font-black tracking-wide text-emerald-950 uppercase sm:text-xl">
+          <h3 className="text-lg font-bold tracking-wide text-emerald-950 uppercase sm:text-xl">
             Kegiatan Terakhir
           </h3>
         </div>
@@ -100,7 +100,7 @@ function HeroBottom() {
       <div className="flex flex-col justify-between space-y-3 p-5 sm:space-y-4 sm:p-6 lg:p-8">
         <div className="space-y-2 sm:space-y-3">
           <Trees className="h-5 w-5 sm:h-6 sm:w-6" />
-          <h3 className="text-lg font-black tracking-wide text-emerald-950 uppercase sm:text-xl">
+          <h3 className="text-lg font-bold tracking-wide text-emerald-950 uppercase sm:text-xl">
             Fasilitas Lengkap
           </h3>
         </div>
