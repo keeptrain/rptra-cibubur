@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueryState, parseAsString } from "nuqs";
+import { Button } from "@/components/ui/button";
 import { WibDayItem } from "../../utils/utils";
 
 interface FilterUpcomingEventCardProps {
@@ -31,7 +32,9 @@ export default function FilterUpcomingEventCard({
   return (
     <div className="w-full space-y-4 text-left">
       {/* SECTION HEADER: MONTH TITLE */}
-      <h2 className="text-2xl font-black tracking-tight">{currentMonthName}</h2>
+      <h2 className="text-2xl font-semibold tracking-tight">
+        {currentMonthName}
+      </h2>
 
       {/* HORIZONTAL 7-DAY PILLS STRIP FULL WIDTH (7 EQUAL COLUMNS) */}
       <div className="flex w-full scrollbar-none items-center gap-2 overflow-x-auto pb-2 sm:overflow-visible">
@@ -40,25 +43,22 @@ export default function FilterUpcomingEventCard({
             selectedDay === day.dateStr || (selectedDay === "" && day.isToday);
 
           return (
-            <button
+            <Button
               key={day.dateStr}
               type="button"
+              variant={
+                isActive ? "default" : day.isToday ? "outline" : "secondary"
+              }
               onClick={() => handleDaySelect(day.dateStr)}
-              className={`flex min-w-13 flex-1 cursor-pointer flex-col items-center justify-center rounded-2xl px-2.5 py-3 text-center transition-all ${
-                isActive
-                  ? "border border-lime-50 bg-lime-200 font-black shadow-xs"
-                  : day.isToday
-                    ? "border border-lime-500 bg-white font-bold"
-                    : "border border-slate-200 bg-white text-slate-700 hover:border-slate-300"
-              }`}
+              className="flex h-auto min-w-13 flex-1 flex-col items-center justify-center rounded-2xl px-2.5 py-3"
             >
-              <span className="text-base leading-none font-black sm:text-lg">
+              <span className="text-base leading-none sm:text-lg">
                 {day.dayNum}
               </span>
               <span className="mt-2 text-xs leading-none font-bold opacity-80">
                 {day.dayShort}
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Calendar } from "lucide-react";
+import Image from "next/image";
 import MainContainer from "@/components/container/MainContainer";
 import FilterUpcomingEventCard from "./components/public/FilterUpcomingEventCard";
 import EventCard from "./components/public/EventCard";
@@ -59,11 +59,23 @@ async function AsyncAgendaList({ agendas }: { agendas: PublicAgendaItem[] }) {
 
 function Empty() {
   return (
-    <div className="flex min-h-50 flex-col items-center justify-center p-8 text-center">
-      <Calendar className="mx-auto size-8 text-slate-300" />
-      <p className="mt-2 text-base text-slate-500">
-        Tidak ada agenda kegiatan pada tanggal ini.
-      </p>
+    <div className="flex min-h-80 flex-col items-center justify-center gap-4 p-8 text-center">
+      <Image
+        src="/assets/empty-activities.svg"
+        alt="Tidak ada agenda kegiatan"
+        width={280}
+        height={210}
+        className="h-44 w-auto opacity-90 sm:h-52"
+        priority={false}
+      />
+      <div className="space-y-1">
+        <p className="text-sm font-semibold text-zinc-700">
+          Belum ada kegiatan pada tanggal ini
+        </p>
+        <p className="text-xs text-zinc-500">
+          Coba pilih tanggal lain di atas atau kembali lagi nanti.
+        </p>
+      </div>
     </div>
   );
 }
