@@ -19,7 +19,7 @@ export default async function LandingNavbar() {
           </Link>
 
           {/* Desktop Navigation Links (Server Rendered Next.js Links) */}
-          <nav className="hidden items-center gap-2 rounded-xl border px-3 py-1 md:flex">
+          <nav className="hidden items-center gap-2 rounded-xl border px-2 py-0.5 md:flex">
             <SharedNavigations />
           </nav>
 
@@ -34,7 +34,7 @@ export default async function LandingNavbar() {
               <SharedNavigations />
             </nav>
             {user ? (
-              <Button asChild>
+              <Button asChild className="w-full md:w-fit">
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
             ) : (
