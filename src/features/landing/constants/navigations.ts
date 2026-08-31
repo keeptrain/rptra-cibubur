@@ -14,7 +14,7 @@ export const LANDING_NAV_LINKS: NavLinkItem[] = [
   },
   {
     name: "Kunjungan",
-    href: "/peraturan",
+    href: "/rencana-kunjungan",
     iconName: "clipboard",
   },
 ];

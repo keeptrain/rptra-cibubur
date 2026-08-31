@@ -2,9 +2,9 @@ import Link from "next/link";
 import { getCurrentUser } from "@/features/auth/lib/getUser";
 import RptraIcon from "@/components/shared/RptraIcon";
 import { LANDING_NAV_LINKS } from "../../constants/navigations";
-import { Button } from "@/components/ui/button";
+import MobileNavMenu from "./MobileNavMenu";
 import LandingNavLink from "./LandingNavLink";
-import { TextAlignJustifyIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default async function LandingNavbar() {
   const user = await getCurrentUser();
@@ -19,10 +19,8 @@ export default async function LandingNavbar() {
           </Link>
 
           {/* Desktop Navigation Links (Server Rendered Next.js Links) */}
-          <nav className="hidden items-center gap-2 rounded-xl border p-1.5 md:flex">
-            {LANDING_NAV_LINKS.map((link) => (
-              <LandingNavLink key={link.name} link={link} />
-            ))}
+          <nav className="hidden items-center gap-2 rounded-xl border px-3 py-1 md:flex">
+            <SharedNavigations />
           </nav>
 
           {/* Desktop Status & CTA Button */}
@@ -31,11 +29,18 @@ export default async function LandingNavbar() {
           </div>
 
           {/* Isolated Client Component for Mobile Navigation */}
-          <div>
-            <Button variant="outline">
-              <TextAlignJustifyIcon />
-            </Button>
-          </div>
+          <MobileNavMenu>
+            <nav className="flex flex-col items-start gap-2">
+              <SharedNavigations />
+            </nav>
+            {user ? (
+              <Button asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+            ) : (
+              <LoginButton />
+            )}
+          </MobileNavMenu>
         </div>
       </div>
     </header>
@@ -44,17 +49,17 @@ export default async function LandingNavbar() {
 
 function SharedNavigations() {
   return (
-    <nav className="hidden items-center gap-2 rounded-xl border p-1.5 md:flex">
+    <>
       {LANDING_NAV_LINKS.map((link) => (
         <LandingNavLink key={link.name} link={link} />
       ))}
-    </nav>
+    </>
   );
 }
 
-function LoginButton() {
+export function LoginButton() {
   return (
-    <Button asChild size="lg">
+    <Button asChild size="lg" className="w-full md:w-fit">
       <Link href="/login">Login</Link>
     </Button>
   );

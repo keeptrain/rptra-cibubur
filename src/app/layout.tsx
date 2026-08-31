@@ -4,7 +4,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   description:
     "Portal resmi RPTRA Cibubur (RPTRA Cibubur Berseri) Kelurahan Cibubur, Kecamatan Ciracas, Jakarta Timur. Informasi agenda kegiatan warga, posyandu, jadwal operasional taman, dan pendaftaran kunjungan fasilitas.",
   icons: {
-    icon: "/icon.svg",
+    icon: "/fav.svg",
   },
   keywords: [
     "RPTRA Cibubur",
@@ -136,7 +136,15 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={cn("h-full", "antialiased", "light", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        "light",
+        geistSans.variable,
+        geistMono.variable,
+        "font-sans",
+        inter.variable,
+      )}
       style={{ colorScheme: "light" }}
     >
       <head>
