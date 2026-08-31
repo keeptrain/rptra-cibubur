@@ -1,0 +1,22 @@
+{
+  "format_on_save": "on",
+  "formatter": "prettier",
+  "languages": {
+    "TypeScript": {
+      "formatter": "prettier",
+      "format_on_save": "on"
+    },
+    "JavaScript": {
+      "formatter": "prettier",
+      "format_on_save": "on"
+    },
+    "JSON": {
+      "formatter": "prettier",
+      "format_on_save": "on"
+    },
+    "TSX": {
+      "formatter": "prettier",
+      "format_on_save": "on"
+    }
+  }
+}

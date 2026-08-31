@@ -20,34 +20,36 @@ export default function LoginForm() {
   return (
     <>
       {/* STEP INDICATOR TABS */}
-      <div className="grid grid-cols-2 border-y-2 border-emerald-950 text-xs font-black tracking-wider uppercase">
-        {/* Tab 1: Email */}
-        <button
-          type="button"
-          onClick={handleBackToEmail}
-          disabled={step === "otp"}
-          className={`border-r-2 border-emerald-950 px-4 py-3 transition-colors ${
-            step === "email"
-              ? "bg-[#A7F3D0] text-emerald-950"
-              : "bg-emerald-50/70 text-emerald-800/70 hover:bg-emerald-100/60 disabled:cursor-not-allowed disabled:opacity-50"
-          }`}
-        >
-          01 / EMAIL
-        </button>
+      <div className="mx-6 rounded-xl bg-zinc-100 p-1">
+        <div className="grid grid-cols-2 gap-1 text-xs font-semibold">
+          {/* Tab 1: Email */}
+          <button
+            type="button"
+            onClick={handleBackToEmail}
+            disabled={step === "otp"}
+            className={`rounded-lg px-4 py-2.5 transition-all ${
+              step === "email"
+                ? "bg-lime-200 text-zinc-900 shadow-2xs"
+                : "text-zinc-500 hover:text-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
+            }`}
+          >
+            01 — Email
+          </button>
 
-        {/* Tab 2: OTP */}
-        <button
-          type="button"
-          onClick={() => email && setStep("otp")}
-          disabled={!email}
-          className={`px-4 py-3 transition-colors ${
-            step === "otp"
-              ? "bg-[#A7F3D0] text-emerald-950"
-              : "bg-emerald-50/70 text-emerald-800/40 disabled:cursor-not-allowed"
-          }`}
-        >
-          02 / KODE OTP
-        </button>
+          {/* Tab 2: OTP */}
+          <button
+            type="button"
+            onClick={() => email && setStep("otp")}
+            disabled={!email}
+            className={`rounded-lg px-4 py-2.5 transition-all ${
+              step === "otp"
+                ? "bg-lime-200 text-zinc-900 shadow-2xs"
+                : "text-zinc-400 disabled:cursor-not-allowed"
+            }`}
+          >
+            02 — Kode OTP
+          </button>
+        </div>
       </div>
 
       {/* FORM STEP CONTENT BODY */}

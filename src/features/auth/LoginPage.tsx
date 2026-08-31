@@ -1,26 +1,23 @@
-import { Trees } from "lucide-react";
 import LoginForm from "./components/LoginForm";
 import Link from "next/link";
+import RptraIcon from "@/components/shared/RptraIcon";
 
 export default function LoginPage() {
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full">
       {/* HEADER SECTION */}
-      <div className="overflow-hidden rounded-2xl border-3 border-emerald-950 bg-white shadow-[8px_8px_0px_0px_#064e3b]">
-        <div className="px-6 pt-8 pb-6 text-center sm:px-8">
-          {/* Logo Circle */}
-          <Link
-            href={"/"}
-            className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl border-2 border-emerald-950 bg-emerald-600 text-white shadow-[3px_3px_0px_0px_#064e3b]"
-          >
-            <Trees className="size-7 text-[#A7F3D0]" />
+      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xs">
+        <div className="space-y-4 px-6 pt-8 pb-6 text-center sm:px-8">
+          {/* Logo */}
+          <Link href={"/"} className="mx-auto flex w-fit justify-center">
+            <RptraIcon className="size-10" />
           </Link>
 
-          <h1 className="text-3xl font-black tracking-tight uppercase text-emerald-950 sm:text-4xl">
-            MASUK
+          <h1 className="text-1xl font-medium tracking-tight sm:text-2xl">
+            Masuk
           </h1>
 
-          <p className="mx-auto mt-3 max-w-xs text-xs font-semibold leading-relaxed text-emerald-900/80 sm:text-sm">
+          <p className="mx-auto max-w-xs text-sm leading-relaxed text-zinc-600">
             Masukkan email Anda, kami kirimkan kode OTP. Belum punya akun pun
             tidak masalah — akunya dibuat otomatis.
           </p>

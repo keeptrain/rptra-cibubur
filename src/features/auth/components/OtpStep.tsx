@@ -72,10 +72,10 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
       {/* Error / Notification Alert Box */}
       {errorMessage && (
         <div
-          className={`flex items-start gap-2.5 rounded-xl border-2 border-emerald-950 p-3.5 text-left text-xs font-bold ${
+          className={`flex items-start gap-2.5 rounded-xl border p-3.5 text-left text-xs font-medium ${
             errorMessage.includes("berhasil")
-              ? "bg-[#A7F3D0] text-emerald-950"
-              : "bg-rose-100 text-rose-950"
+              ? "border-lime-200 bg-lime-50 text-lime-800"
+              : "border-rose-200 bg-rose-50 text-rose-700"
           }`}
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" />
@@ -88,16 +88,16 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
         <div className="flex items-center justify-between">
           <label
             htmlFor="disabled-email"
-            className="block text-xs font-black tracking-wider text-emerald-950 uppercase"
+            className="block text-xs font-semibold text-zinc-700"
           >
-            EMAIL TUJUAN *
+            Email tujuan <span className="text-rose-500">*</span>
           </label>
           <button
             type="button"
             onClick={onBackToEmail}
-            className="text-[11px] font-bold text-emerald-700 underline hover:text-emerald-950"
+            className="text-xs font-medium text-zinc-600 underline hover:text-zinc-900"
           >
-            Ubah Email
+            Ubah email
           </button>
         </div>
         <input
@@ -105,7 +105,7 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
           type="email"
           disabled
           value={email || "nama@gmail.com"}
-          className="w-full cursor-not-allowed rounded-xl border-2 border-emerald-950/30 bg-emerald-50/60 px-4 py-3 text-sm font-bold text-emerald-950 opacity-80"
+          className="w-full cursor-not-allowed rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm font-medium text-zinc-700"
         />
       </div>
 
@@ -113,9 +113,9 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
       <div className="space-y-2 text-left">
         <label
           htmlFor="otp"
-          className="block text-xs font-black tracking-wider text-emerald-950 uppercase"
+          className="block text-xs font-semibold text-zinc-700"
         >
-          KODE OTP 8-DIGIT *
+          Kode OTP 8-digit <span className="text-rose-500">*</span>
         </label>
         <input
           id="otp"
@@ -130,9 +130,9 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
             setOtp(e.target.value.replace(/\D/g, ""));
             setErrorMessage("");
           }}
-          className="w-full rounded-xl border-2 border-emerald-950 bg-white px-4 py-3 text-center text-lg font-black tracking-widest text-emerald-950 placeholder-emerald-800/40 transition-shadow outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600"
+          className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-widest text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-lime-400 focus:ring-2 focus:ring-lime-200"
         />
-        <p className="pt-1 text-center text-[11px] font-medium text-emerald-800/80">
+        <p className="pt-1 text-center text-xs text-zinc-500">
           Kode 8-digit dikirimkan ke inbox email Anda di atas.
         </p>
       </div>
@@ -140,9 +140,9 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
       <button
         type="submit"
         disabled={isLoading || otp.length !== 8}
-        className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-emerald-950 bg-emerald-600 py-3.5 text-xs font-black tracking-wider text-white uppercase shadow-[4px_4px_0px_0px_#064e3b] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-emerald-700 hover:shadow-none active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
+        className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-lime-500 py-3.5 text-sm font-semibold text-zinc-900 shadow-2xs transition-colors hover:bg-lime-600 disabled:opacity-50"
       >
-        {isLoading ? "MEMVERIFIKASI KODE..." : "VERIFIKASI & MASUK"}
+        {isLoading ? "Memverifikasi kode..." : "Verifikasi & masuk"}
         <ArrowRight className="size-4" />
       </button>
 
@@ -152,14 +152,14 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
           type="button"
           onClick={handleResend}
           disabled={cooldown > 0 || isLoading}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950 disabled:cursor-not-allowed disabled:text-emerald-800/40"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-600 hover:text-zinc-900 disabled:cursor-not-allowed disabled:text-zinc-400"
         >
           <RefreshCw
             className={`size-3.5 ${isLoading ? "animate-spin" : ""}`}
           />
           {cooldown > 0
-            ? `Kirim Ulang Kode (${cooldown}s)`
-            : "Kirim Ulang Kode OTP"}
+            ? `Kirim ulang kode (${cooldown}s)`
+            : "Kirim ulang kode OTP"}
         </button>
       </div>
     </form>

@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   },
   description:
     "Portal resmi RPTRA Cibubur (RPTRA Cibubur Berseri) Kelurahan Cibubur, Kecamatan Ciracas, Jakarta Timur. Informasi agenda kegiatan warga, posyandu, jadwal operasional taman, dan pendaftaran kunjungan fasilitas.",
+  icons: {
+    icon: "/icon.svg",
+  },
   keywords: [
     "RPTRA Cibubur",
     "RPTRA Cibubur Berseri",

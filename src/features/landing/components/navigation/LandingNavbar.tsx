@@ -1,7 +1,7 @@
 import { Trees, CalendarIcon, ClipboardListIcon } from "lucide-react";
 import Link from "next/link";
-import MobileNavMenu from "./MobileNavMenu";
 import { getCurrentUser } from "@/features/auth/lib/getUser";
+import RptraIcon from "@/components/shared/RptraIcon";
 
 export default async function LandingNavbar() {
   const user = await getCurrentUser();
@@ -19,11 +19,9 @@ export default async function LandingNavbar() {
     <header className="sticky top-0 z-25 bg-white backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
-          {/* Logo & Brand */}
+          {/* Logo */}
           <Link href="/">
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500 shadow-sm transition-transform hover:scale-105">
-              <Trees className="size-6 text-white" />
-            </div>
+            <RptraIcon className="size-10" />
           </Link>
 
           {/* Desktop Navigation Links (Server Rendered Next.js Links) */}
