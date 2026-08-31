@@ -1,11 +1,15 @@
 import { TreesIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 export default function RptraIcon({ className }: { className?: string }) {
   return (
-    <div
-      className={`flex items-center justify-center rounded-2xl bg-emerald-500 shadow-sm transition-transform hover:scale-105 ${className}`}
+    <Button
+      size="icon-lg"
+      variant="outline"
+      className={cn("rounded-full p-4 sm:p-6", className)}
     >
-      <TreesIcon className="size-6 text-white" />
-    </div>
+      <TreesIcon className="size-8" />
+    </Button>
   );
 }
