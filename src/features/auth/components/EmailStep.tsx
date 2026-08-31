@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ArrowRight, AlertCircle } from "lucide-react";
+import { AlertCircle, AlertCircleIcon, ArrowRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { sendOtpAction } from "../actions/login/sendOtpAction";
 
 interface EmailStepProps {
@@ -46,37 +47,38 @@ export default function EmailStep({
       {/* Error Alert Box */}
       {errorMessage && (
         <div className="flex items-start gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-left text-xs font-medium text-rose-700">
-          <AlertCircle className="mt-0.5 size-4 shrink-0" />
+          <AlertCircleIcon className="mt-0.5 size-4 shrink-0" />
           <span className="leading-snug">{errorMessage}</span>
         </div>
       )}
 
-      <div className="space-y-2 text-left">
-        <label htmlFor="email" className="block text-xs font-semibold text-zinc-700">
+      <div className="space-y-2">
+        <label
+          htmlFor="email"
+          className="block text-xs font-semibold text-zinc-700"
+        >
           Email <span className="text-rose-500">*</span>
         </label>
 
-        <input
+        <Input
           ref={emailInputRef}
-          id="email"
           type="email"
           required
           defaultValue={defaultEmail}
           pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
-          title="Alamat email harus berdomain @gmail.com (contoh: nama@gmail.com)"
-          placeholder="nama@gmail.com"
+          placeholder="example@gmail.com"
           onChange={() => setErrorMessage("")}
-          className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-lime-400 focus:ring-2 focus:ring-lime-200"
         />
       </div>
 
       <Button
         type="submit"
+        size="lg"
         disabled={isLoading}
-        className="mt-2 w-full gap-2 py-6"
+        className="mt-2 w-full gap-2"
       >
         {isLoading ? "Mengirim kode OTP..." : "Kirim kode OTP"}
-        <ArrowRight className="size-4" />
+        <ArrowRightIcon className="size-4" />
       </Button>
     </form>
   );

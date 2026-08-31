@@ -21,12 +21,12 @@ export default function LoginForm() {
   return (
     <>
       {/* STEP INDICATOR TABS */}
-      <div className="mx-6 rounded-xl bg-zinc-100 p-1">
+      <div className="mx-8 bg-zinc-100 p-1 sm:rounded-xl">
         <div className="grid grid-cols-2 gap-1">
           {/* Tab 1: Email */}
           <Button
             type="button"
-            variant={step === "email" ? "default" : "ghost"}
+            variant={step === "email" ? "outline" : "ghost"}
             size="sm"
             onClick={handleBackToEmail}
             disabled={step === "otp"}
@@ -38,7 +38,7 @@ export default function LoginForm() {
           {/* Tab 2: OTP */}
           <Button
             type="button"
-            variant={step === "otp" ? "default" : "ghost"}
+            variant={step === "otp" ? "outline" : "ghost"}
             size="sm"
             onClick={() => email && setStep("otp")}
             disabled={!email}
