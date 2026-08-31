@@ -21,7 +21,7 @@ export default function LoginForm() {
   return (
     <>
       {/* STEP INDICATOR TABS */}
-      <div className="mx-8 bg-zinc-100 p-1 sm:rounded-xl">
+      <div className="mx-6 rounded-xl bg-zinc-100 p-1 sm:mx-8">
         <div className="grid grid-cols-2 gap-1">
           {/* Tab 1: Email */}
           <Button

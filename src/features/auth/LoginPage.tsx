@@ -6,7 +6,7 @@ export default function LoginPage() {
   return (
     <div className="w-full">
       {/* HEADER SECTION */}
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xs">
+      <div className="overflow-hidden border border-zinc-200 bg-white shadow-2xs sm:rounded-2xl">
         <div className="space-y-4 px-6 pt-8 pb-6 text-center sm:px-8">
           {/* Logo */}
           <Link href={"/"} className="mx-auto flex w-fit justify-center">
