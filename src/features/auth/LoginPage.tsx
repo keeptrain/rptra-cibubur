@@ -10,7 +10,7 @@ export default function LoginPage() {
         <div className="space-y-4 px-6 pt-8 pb-6 text-center sm:px-8">
           {/* Logo */}
           <Link href={"/"} className="mx-auto flex w-fit justify-center">
-            <RptraIcon className="size-10" />
+            <RptraIcon />
           </Link>
 
           <h1 className="text-1xl font-medium tracking-tight sm:text-2xl">

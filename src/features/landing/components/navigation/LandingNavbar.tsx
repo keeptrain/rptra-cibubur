@@ -15,7 +15,7 @@ export default async function LandingNavbar() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/">
-            <RptraIcon className="size-10" />
+            <RptraIcon />
           </Link>
 
           {/* Desktop Navigation Links (Server Rendered Next.js Links) */}
