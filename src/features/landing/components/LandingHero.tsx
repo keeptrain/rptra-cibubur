@@ -4,10 +4,12 @@ import {
   ArrowUpRight,
   CalendarIcon,
   HistoryIcon,
+  ArrowUpRightIcon,
 } from "lucide-react";
 import Link from "next/link";
 import ParkLiveStatus from "./ParkLiveStatus";
 import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
 
 function HeroTop() {
   return (
@@ -61,9 +63,9 @@ function HeroBottom() {
   return (
     <div className="grid shrink-0 grid-cols-1 divide-y divide-emerald-100 border-t border-emerald-200/70 bg-white md:grid-cols-3 md:divide-x md:divide-y-0">
       {/* Column 3 (Highlighted Card) */}
-      <div className="relative flex flex-col justify-between space-y-3 overflow-hidden bg-linear-to-b from-emerald-600 via-teal-700 to-emerald-800 p-5 text-white sm:space-y-4 sm:p-6 lg:p-8">
+      <div className="relative flex flex-col justify-between space-y-3 overflow-hidden bg-linear-to-b from-emerald-600 via-teal-700 to-emerald-800 p-5 sm:space-y-4 sm:p-6 lg:p-8">
         <div className="relative z-10 space-y-2 sm:space-y-3">
-          <CalendarIcon className="size-5 sm:size-6" />
+          <CalendarIcon className="size-5 text-white sm:size-6" />
 
           <h3 className="text-lg font-black tracking-wide text-white uppercase sm:text-xl">
             AGENDA WARGA
@@ -71,13 +73,12 @@ function HeroBottom() {
         </div>
 
         <div className="relative z-10 pt-1">
-          <Link
-            href="/agenda"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 text-[11px] font-black tracking-wider text-emerald-950 uppercase shadow-xl transition-all hover:scale-105 hover:bg-emerald-50 sm:px-6 sm:py-3 sm:text-xs"
-          >
-            EXPLORE AGENDA
-            <ArrowUpRight className="h-3.5 w-3.5" />
-          </Link>
+          <Button asChild variant="outline">
+            <Link href="/agenda">
+              Explore Agenda
+              <ArrowUpRightIcon className="size-4" />
+            </Link>
+          </Button>
         </div>
       </div>
 
