@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ArrowRight, AlertCircle, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { sendOtpAction } from "../actions/login/sendOtpAction";
 import { verifyOtpAction } from "../actions/login/verifyOtpAction";
 
@@ -92,13 +93,15 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
           >
             Email tujuan <span className="text-rose-500">*</span>
           </label>
-          <button
+          <Button
             type="button"
+            variant="link"
+            size="sm"
             onClick={onBackToEmail}
-            className="text-xs font-medium text-zinc-600 underline hover:text-zinc-900"
+            className="h-auto p-0 text-xs"
           >
             Ubah email
-          </button>
+          </Button>
         </div>
         <input
           id="disabled-email"
@@ -137,22 +140,24 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
         </p>
       </div>
 
-      <button
+      <Button
         type="submit"
         disabled={isLoading || otp.length !== 8}
-        className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-lime-500 py-3.5 text-sm font-semibold text-zinc-900 shadow-2xs transition-colors hover:bg-lime-600 disabled:opacity-50"
+        className="mt-2 w-full gap-2 py-6"
       >
         {isLoading ? "Memverifikasi kode..." : "Verifikasi & masuk"}
         <ArrowRight className="size-4" />
-      </button>
+      </Button>
 
       {/* Resend OTP Button with Countdown */}
       <div className="pt-2 text-center">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={handleResend}
           disabled={cooldown > 0 || isLoading}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-600 hover:text-zinc-900 disabled:cursor-not-allowed disabled:text-zinc-400"
+          className="gap-1.5 text-xs"
         >
           <RefreshCw
             className={`size-3.5 ${isLoading ? "animate-spin" : ""}`}
@@ -160,7 +165,7 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
           {cooldown > 0
             ? `Kirim ulang kode (${cooldown}s)`
             : "Kirim ulang kode OTP"}
-        </button>
+        </Button>
       </div>
     </form>
   );

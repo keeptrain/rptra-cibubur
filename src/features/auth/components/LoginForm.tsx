@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import EmailStep from "./EmailStep";
 import OtpStep from "./OtpStep";
 
@@ -21,34 +22,30 @@ export default function LoginForm() {
     <>
       {/* STEP INDICATOR TABS */}
       <div className="mx-6 rounded-xl bg-zinc-100 p-1">
-        <div className="grid grid-cols-2 gap-1 text-xs font-semibold">
+        <div className="grid grid-cols-2 gap-1">
           {/* Tab 1: Email */}
-          <button
+          <Button
             type="button"
+            variant={step === "email" ? "default" : "ghost"}
+            size="sm"
             onClick={handleBackToEmail}
             disabled={step === "otp"}
-            className={`rounded-lg px-4 py-2.5 transition-all ${
-              step === "email"
-                ? "bg-lime-200 text-zinc-900 shadow-2xs"
-                : "text-zinc-500 hover:text-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
-            }`}
+            className="w-full"
           >
             01 — Email
-          </button>
+          </Button>
 
           {/* Tab 2: OTP */}
-          <button
+          <Button
             type="button"
+            variant={step === "otp" ? "default" : "ghost"}
+            size="sm"
             onClick={() => email && setStep("otp")}
             disabled={!email}
-            className={`rounded-lg px-4 py-2.5 transition-all ${
-              step === "otp"
-                ? "bg-lime-200 text-zinc-900 shadow-2xs"
-                : "text-zinc-400 disabled:cursor-not-allowed"
-            }`}
+            className="w-full"
           >
             02 — Kode OTP
-          </button>
+          </Button>
         </div>
       </div>
 

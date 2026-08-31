@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { ArrowRight, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { sendOtpAction } from "../actions/login/sendOtpAction";
 
 interface EmailStepProps {
@@ -69,14 +70,14 @@ export default function EmailStep({
         />
       </div>
 
-      <button
+      <Button
         type="submit"
         disabled={isLoading}
-        className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-lime-500 py-3.5 text-sm font-semibold text-zinc-900 shadow-2xs transition-colors hover:bg-lime-600 disabled:opacity-50"
+        className="mt-2 w-full gap-2 py-6"
       >
         {isLoading ? "Mengirim kode OTP..." : "Kirim kode OTP"}
         <ArrowRight className="size-4" />
-      </button>
+      </Button>
     </form>
   );
 }
