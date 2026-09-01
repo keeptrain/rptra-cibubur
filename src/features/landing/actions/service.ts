@@ -21,7 +21,9 @@ function formatDate(d: string) {
   });
 }
 
-function toHeroAgenda(raw: Omit<HeroAgenda, "formattedDate"> | null): HeroAgenda | null {
+function toHeroAgenda(
+  raw: Omit<HeroAgenda, "formattedDate"> | null,
+): HeroAgenda | null {
   if (!raw) return null;
   return { ...raw, formattedDate: formatDate(raw.eventDate) };
 }
