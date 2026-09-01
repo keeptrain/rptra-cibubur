@@ -135,18 +135,18 @@ export default function VisitForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="name">Nama Lengkap *</Label>
+              <Label htmlFor="name">Nama</Label>
               <Input
                 id="name"
                 required
-                placeholder="Ibu Ani Wijaya"
+                placeholder="nama"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
               />
             </div>
-
+ d
             <div className="space-y-2">
               <Label htmlFor="date">Rencana Tanggal Kunjungan *</Label>
               <Input
@@ -209,11 +209,10 @@ export default function VisitForm() {
 
           <Button
             type="submit"
-            disabled={isLoading || !!emailError || !!phoneError}
-            className="w-full"
+            disabled={isLoading || !!emailError}
+            className="flex"
           >
             {isLoading ? "Mengirim..." : "Kirim Rencana Kunjungan"}
-            {!isLoading && <ArrowRight className="size-4" />}
           </Button>
         </form>
       </CardContent>
