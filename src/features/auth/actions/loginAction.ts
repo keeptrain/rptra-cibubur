@@ -1,7 +1,7 @@
 "use server";
 
 import * as v from "valibot";
-import { sendingOtp } from "./service";
+import { sendingOtp, verifyOtp } from "./service";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
@@ -16,6 +16,61 @@ const EmailSchema = v.pipe(
   ),
   v.maxLength(255, "Email maksimal 255 karakter."),
 );
+
+const OtpSchema = v.pipe(
+  v.string("Kode OTP harus diisi dan berupa teks."),
+  v.trim(),
+  v.nonEmpty("Kode OTP tidak boleh kosong."),
+  v.regex(/^\d{6}$/, "Kode OTP harus berupa 6 digit angka."),
+  v.length(6, "Kode OTP harus 6 digit."),
+);
+
+const VerifyOtpSchema = v.object({
+  email: EmailSchema,
+  otp: OtpSchema,
+});
+
+export async function verifyOtpAction(_prevState: unknown, formData: FormData) {
+  const validationResult = v.safeParse(VerifyOtpSchema, {
+    email: formData.get("email"),
+    otp: formData.get("otp"),
+  });
+
+  if (!validationResult.success) {
+    return {
+      success: false,
+      error: validationResult.issues[0]?.message || "Kode OTP tidak valid.",
+    };
+  }
+
+  const { email: validEmail, otp } = validationResult.output;
+
+  try {
+    const cookieStore = await cookies();
+    const result = await verifyOtp({ email: validEmail, otp }, cookieStore);
+
+    if (result === "OTP berhasil diverifikasi.") {
+      redirect("/dashboard");
+    }
+
+    return {
+      success: true,
+      message: result,
+    };
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
+      throw err;
+    }
+
+    return {
+      success: false,
+      error:
+        err instanceof Error
+          ? err.message
+          : "Gagal memverifikasi kode OTP. Silakan coba lagi.",
+    };
+  }
+}
 
 export async function loginAction(_prevState: unknown, formData: FormData) {
   // 1. Error Validasi

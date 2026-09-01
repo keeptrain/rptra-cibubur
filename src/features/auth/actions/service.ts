@@ -2,8 +2,29 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { createClient as createAnonClient } from "@supabase/supabase-js";
+import { createAnonClient } from "@/lib/supabase/client";
 import { cookies } from "next/headers";
+
+export async function verifyOtp(
+  data: { email: string; otp: string },
+  cookieStore: Awaited<ReturnType<typeof cookies>> | null,
+) {
+  const { email, otp } = data;
+
+  if (!cookieStore)
+    throw new Error("Cookie store required for OTP verification");
+
+  const supabase = await createClient(cookieStore);
+
+  const result = await supabase.auth.verifyOtp({
+    type: "email",
+    email,
+    token: otp,
+  });
+
+  if (result.error) throw result.error;
+  return "OTP berhasil diverifikasi.";
+}
 
 export async function sendingOtp(
   email: string,
@@ -15,10 +36,7 @@ export async function sendingOtp(
   }
 
   // No cookie needed for initial OTP send — use anon client without SSR cookie handling
-  const client = createAnonClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-  );
+  const client = createAnonClient();
 
   const { error } = await client.auth.signInWithOtp({
     email,
