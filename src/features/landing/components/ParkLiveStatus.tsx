@@ -18,7 +18,7 @@ export default async function ParkLiveStatus() {
               }`}
             />
           </span>
-          <span className="text-base font-bold tracking-wide text-emerald-950">
+          <span className="text-sm font-bold tracking-wide text-emerald-950 sm:text-base">
             {isOpen ? "Taman Beroperasi Hari Ini" : "Taman Tutup Hari Ini"}{" "}
             <strong className="font-bold text-emerald-950">
               ( {operatingHours} )
