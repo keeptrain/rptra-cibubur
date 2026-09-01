@@ -39,7 +39,7 @@ export default function MobileNavMenu({
 
       {/* Mobile Dropdown Panel */}
       {isOpen && (
-        <div className="absolute inset-x-0 top-20 space-y-3 border-b border-emerald-100 bg-white/95 px-4 pt-3 pb-6 shadow-lg">
+        <div className="absolute inset-x-0 top-20 space-y-3 border-b border-emerald-100 bg-white px-4 pt-3 pb-6 shadow-lg">
           {children}
         </div>
       )}

@@ -11,7 +11,7 @@ export default async function LandingNavbar() {
   const isLoggedIn = !!user;
 
   return (
-    <header className="sticky top-0 z-25 bg-slate-50 backdrop-blur-md">
+    <header className="sticky top-0 z-15 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}

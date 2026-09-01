@@ -10,13 +10,8 @@ function AgendaTerdekat({ agenda }: { agenda: HeroAgenda | null }) {
         <h3 className="text-lg font-semibold tracking-wide text-white sm:text-xl">
           Belum ada agenda terdekat
         </h3>
-        <div className="pt-1">
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="bg-white text-emerald-800 hover:bg-emerald-50"
-          >
+        <div className="pt-3">
+          <Button asChild>
             <Link href="/agenda">
               Explore Agenda <ArrowUpRightIcon className="size-4" />
             </Link>
@@ -37,7 +32,7 @@ function AgendaTerdekat({ agenda }: { agenda: HeroAgenda | null }) {
         </p>
       </div>
       <div className="pt-3">
-        <Button asChild variant="outline">
+        <Button asChild>
           <Link href={`/agenda/${agenda.id}`}>
             Lihat Detail <ArrowUpRightIcon className="size-4" />
           </Link>
