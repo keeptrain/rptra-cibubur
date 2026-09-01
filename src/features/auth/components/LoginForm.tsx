@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import EmailStep from "./EmailStep";
 import OtpStep from "./OtpStep";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export default function LoginForm() {
-  const [step, setStep] = useState<"email" | "otp">("otp");
-  const [email, setEmail] = useState("remajamesjid1945@gmail.com");
+  const [step, setStep] = useState<"email" | "otp">("email");
+  const [email, setEmail] = useState(
+    isProduction ? "" : "remajamesjid1945@gmail.com",
+  );
 
   const handleEmailSuccessNext = (submittedEmail: string) => {
     setEmail(submittedEmail);
@@ -58,6 +62,18 @@ export default function LoginForm() {
           />
         ) : (
           <OtpStep email={email} onBackToEmail={handleBackToEmail} />
+        )}
+
+        {!isProduction && (
+          <Button
+            variant="outline"
+            onClick={() => {
+              setEmail("admin@gmail.com");
+            }}
+            className="mt-4 w-full"
+          >
+            Login sebagai admin
+          </Button>
         )}
       </div>
     </>
