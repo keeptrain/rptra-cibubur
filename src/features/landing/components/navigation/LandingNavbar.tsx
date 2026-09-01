@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export default async function LandingNavbar() {
   const user = await getCurrentUser();
+  const isLoggedIn = !!user;
 
   return (
     <header className="sticky top-0 z-25 bg-white backdrop-blur-md">
@@ -25,7 +26,7 @@ export default async function LandingNavbar() {
 
           {/* Desktop Status & CTA Button */}
           <div className="hidden items-center gap-3 md:flex">
-            <LoginButton />
+            <LoginOrDashboardButton isLoggedIn={isLoggedIn} />
           </div>
 
           {/* Isolated Client Component for Mobile Navigation */}
@@ -33,13 +34,7 @@ export default async function LandingNavbar() {
             <nav className="flex flex-col items-start gap-2">
               <SharedNavigations />
             </nav>
-            {user ? (
-              <Button asChild className="w-full md:w-fit">
-                <Link href="/dashboard">Dashboard</Link>
-              </Button>
-            ) : (
-              <LoginButton />
-            )}
+            <LoginOrDashboardButton isLoggedIn={isLoggedIn} />
           </MobileNavMenu>
         </div>
       </div>
@@ -57,8 +52,16 @@ function SharedNavigations() {
   );
 }
 
-export function LoginButton() {
-  return (
+export function LoginOrDashboardButton({
+  isLoggedIn,
+}: {
+  isLoggedIn: boolean;
+}) {
+  return isLoggedIn ? (
+    <Button asChild size="lg" className="w-full md:w-fit">
+      <Link href="/dashboard">Dashboard</Link>
+    </Button>
+  ) : (
     <Button asChild size="lg" className="w-full md:w-fit">
       <Link href="/login">Login</Link>
     </Button>
