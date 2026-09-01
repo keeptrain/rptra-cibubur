@@ -80,49 +80,6 @@ export default function LandingFooter() {
               Undang-Undang.
             </p>
           </div>
-
-          {/* RIGHT SIDE: Vertical Stack (Full Map Card + Connect Card) */}
-          <div className="flex flex-col space-y-4 lg:col-span-6">
-            {/* 1. Full Google Maps Card with Absolute Floating Overlay Box */}
-            <div className="relative h-50 w-full overflow-hidden rounded-2xl border border-emerald-900/80 bg-[#072B22] shadow-md">
-              {/* Full background Google Maps iframe */}
-              <div className="absolute inset-0 size-full overflow-hidden">
-                <iframe
-                  title="Peta Lokasi RPTRA Cibubur"
-                  src="https://maps.google.com/maps?q=-6.3605,106.8837&hl=id&z=16&output=embed"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen={false}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="pointer-events-none absolute -top-12 left-0 h-[130%] w-full opacity-75 transition-opacity duration-300 hover:opacity-100"
-                />
-              </div>
-
-              {/* Absolute Floating Info Box at Bottom of Map */}
-              <div className="absolute inset-x-3 bottom-3 z-10 flex items-center justify-between gap-3 rounded-xl border border-white/40 bg-white/90 p-3.5 text-[#0B0E17] shadow-lg backdrop-blur-md">
-                <div>
-                  <h4 className="text-base font-semibold tracking-tight text-[#0B0E17] uppercase sm:text-lg">
-                    CIBUBUR PARK
-                  </h4>
-                  <p className="text-[11px] font-semibold text-zinc-600 sm:text-xs">
-                    Jl. Cibubur I No. 42, RT.04/RW.01, Kel. Cibubur
-                  </p>
-                </div>
-
-                <a
-                  href="https://maps.google.com/?q=RPTRA+Cibubur"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#A7F3D0] px-3.5 py-2 text-xs font-semibold text-emerald-950 uppercase shadow-xs transition-transform hover:scale-105 hover:bg-emerald-200"
-                >
-                  PETUNJUK RUTE
-                  <ArrowUpRight className="size-3.5" />
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </footer>

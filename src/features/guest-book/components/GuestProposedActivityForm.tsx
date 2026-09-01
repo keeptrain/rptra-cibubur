@@ -5,12 +5,11 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { CheckCircle2Icon } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
-export default function GuestFormToggle({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function GuestProposedActivityForm() {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -30,7 +29,7 @@ export default function GuestFormToggle({
     <>
       <Button
         variant="outline"
-        className="w-full sm:hidden"
+        className="mx-4 mb-4 sm:hidden"
         onClick={() => setShow(!show)}
       >
         {show ? "Tutup Form" : "Ajukan Ide Kegiatan"}
@@ -48,7 +47,26 @@ export default function GuestFormToggle({
             onSubmit={handleSubmit}
             className="space-y-4"
           >
-            {children}
+            <div className="space-y-2">
+              <Label htmlFor="guest_contact">Kontak *</Label>
+              <Input
+                id="guest_contact"
+                name="guest_contact"
+                placeholder="nomor wa atau email"
+              />
+              <p className="text-xs text-neutral-500">
+                * Otomatis kami anonimkan di daftar ide kegiatan warga.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Deskripsi Ide *</Label>
+              <Textarea
+                id="description"
+                name="description"
+                rows={3}
+                placeholder="Ceritakan ide kegiatan, target peserta, kebutuhan..."
+              />
+            </div>
           </form>
         </CardContent>
         <CardFooter className="mt-4">
