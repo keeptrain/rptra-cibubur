@@ -107,7 +107,7 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
               value={otp}
               onChange={(value) => setOtp(value)}
             >
-              <InputOTPGroup>
+              <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
                 <InputOTPSlot index={0} />
                 <InputOTPSlot index={1} />
                 <InputOTPSlot index={2} />
@@ -124,6 +124,7 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
         </div>
 
         <Button
+          size="lg"
           type="submit"
           disabled={isLoading || otp.length !== 6}
           className="mt-2 w-full gap-2"
