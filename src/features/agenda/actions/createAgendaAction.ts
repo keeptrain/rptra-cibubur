@@ -15,7 +15,7 @@ export interface ActionResult {
 
 export async function createAgendaAction(
   _prevState: ActionResult | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResult> {
   // 1. Vercel Best Practice: Cheap synchronous validation BEFORE any async calls
   const rawInput = {
@@ -95,6 +95,7 @@ export async function createAgendaAction(
 
     // 5. Invalidate cache tags & paths
     revalidateTag("park-agendas", "default");
+    revalidateTag("heroActivities", "default");
     revalidatePath("/manajemen-agenda");
 
     return {
