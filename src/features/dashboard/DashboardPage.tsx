@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "../auth/lib/getUser";
 import DashboardAdminSection from "./components/DashboardAdminSection";
 import DashboardUserSection from "./components/DashboardUserSection";
-import { TreesIcon } from "lucide-react";
+import { TreesIcon, User, ShieldCheck } from "lucide-react";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -12,14 +12,22 @@ export default async function DashboardPage() {
     <main className="flex-1">
       <div className="mx-auto min-h-screen max-w-4xl">
         {/* SECTION HEADER */}
-        <header className="flex items-center justify-between gap-3 p-4 text-left">
-          {/* Logo & Brand */}
+        <header className="flex items-center gap-3 px-6 py-4 text-left">
           <Link href="/">
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500 shadow-sm transition-transform hover:scale-105">
+            <div className="flex size-10 items-center justify-center rounded-full bg-emerald-500 shadow-xs transition-transform hover:scale-105">
               <TreesIcon className="size-6 text-white" />
             </div>
           </Link>
+
+          {/* Welcome — tanpa header, hanya greeting */}
+          <div >
+            <h2 className="text-lg font-semibold">Selamat datang kembali</h2>
+            <p className="text-muted-foreground text-sm">
+              Kelola kunjungan dan agenda RPTRA Cibubur Anda di sini.
+            </p>
+          </div>
         </header>
+
         {isAdmin ? <DashboardAdminSection /> : <DashboardUserSection />}
       </div>
     </main>

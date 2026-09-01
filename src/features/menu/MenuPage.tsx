@@ -12,9 +12,9 @@ export default async function MenuPage() {
     <main className="flex-1">
       <div className="mx-auto min-h-screen max-w-4xl">
         {/* SECTION HEADER */}
-        <header className="flex items-center justify-between gap-3 p-4 text-left">
+        <header className="flex items-center justify-between gap-3 px-6 py-4 text-left">
           <Link href="/">
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500 shadow-xs transition-transform hover:scale-105">
+            <div className="flex size-10 items-center justify-center rounded-full bg-emerald-500 shadow-xs transition-transform hover:scale-105">
               <TreesIcon className="size-6 text-white" />
             </div>
           </Link>
