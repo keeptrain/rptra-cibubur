@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
 import { logoutAction } from "@/features/auth/actions/logoutAction";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -16,14 +17,20 @@ export default function LogoutButton() {
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleLogout}
+    <Button
       disabled={isLoggingOut}
-      className="flex w-full items-center justify-center gap-2 border border-rose-200 bg-rose-50 p-4 text-xs font-bold text-rose-700 transition-colors hover:bg-rose-100 disabled:opacity-50"
+      onClick={handleLogout}
+      size="sm"
+      variant="destructive"
     >
-      <LogOut className="size-4" />
-      {isLoggingOut ? "Proses Keluar..." : "Keluar Akun"}
-    </button>
+      {isLoggingOut ? (
+        <div className="flex items-center gap-2">
+          <Spinner />
+          Keluar...
+        </div>
+      ) : (
+        "Logout"
+      )}
+    </Button>
   );
 }

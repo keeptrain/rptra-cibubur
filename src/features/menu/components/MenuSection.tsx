@@ -7,7 +7,6 @@ import {
   User,
   ShieldCheck,
 } from "lucide-react";
-import LogoutButton from "./LogoutButton";
 
 interface MenuSectionProps {
   isAdmin: boolean;
@@ -47,7 +46,7 @@ export default function MenuSection({ isAdmin, userEmail }: MenuSectionProps) {
   return (
     <div className="space-y-5 text-left">
       {/* USER PROFILE CARD (Server Rendered) */}
-      <div className="flex items-center justify-between border border-slate-200 bg-white p-5 shadow-xs sm:p-6">
+      <div className="flex items-center justify-between border border-slate-200 bg-white p-4 shadow-xs sm:p-6">
         <div className="flex items-center gap-3.5">
           <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
             <User className="size-4" />
@@ -69,7 +68,7 @@ export default function MenuSection({ isAdmin, userEmail }: MenuSectionProps) {
 
       {/* MENU NAVIGATION LIST (Server Rendered) */}
       <div className="space-y-2.5">
-        <span className="px-1 text-xs font-bold tracking-wider text-slate-400 uppercase">
+        <span className="px-2 text-xs font-bold tracking-wider text-slate-400 uppercase">
           MENU UTAMA
         </span>
 
@@ -103,11 +102,6 @@ export default function MenuSection({ isAdmin, userEmail }: MenuSectionProps) {
             );
           })}
         </div>
-      </div>
-
-      {/* ISOLATED LEAF CLIENT LOGOUT BUTTON */}
-      <div className="pt-2">
-        <LogoutButton />
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ export default async function DashboardPage() {
     <main className="flex-1">
       <div className="mx-auto min-h-screen max-w-4xl">
         {/* SECTION HEADER */}
-        <header className="flex items-center gap-3 px-6 py-4 text-left">
+        <header className="flex items-center gap-3 px-4 py-4 text-left sm:px-6">
           <Link href="/">
             <div className="flex size-10 items-center justify-center rounded-full bg-emerald-500 shadow-xs transition-transform hover:scale-105">
               <TreesIcon className="size-6 text-white" />
@@ -20,9 +20,11 @@ export default async function DashboardPage() {
           </Link>
 
           {/* Welcome — tanpa header, hanya greeting */}
-          <div >
-            <h2 className="text-lg font-semibold">Selamat datang kembali</h2>
-            <p className="text-muted-foreground text-sm">
+          <div>
+            <h2 className="text-base font-semibold sm:text-lg">
+              Selamat datang kembali
+            </h2>
+            <p className="text-muted-foreground text-xs sm:text-sm">
               Kelola kunjungan dan agenda RPTRA Cibubur Anda di sini.
             </p>
           </div>
