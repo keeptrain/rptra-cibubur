@@ -34,7 +34,7 @@ export default function ProtectedBottomNav() {
             <Link
               key={item.name}
               href={item.href}
-              className={`relative flex min-h-11 min-w-18 flex-col items-center justify-center gap-1 rounded-2xl px-4 py-2 transition-all duration-200 md:min-h-10.5 md:min-w-0 md:flex-row md:gap-2.5 md:rounded-2xl md:px-6 md:py-2.5 ${
+              className={`relative flex min-h-11 min-w-18 flex-col items-center justify-center gap-1 rounded-2xl px-4 py-2 transition-all duration-200 md:min-h-10.5 md:min-w-0 md:flex-row md:gap-2.5 md:rounded-2xl md:px-4 md:py-2.5 ${
                 isActive
                   ? "scale-105 border border-emerald-950/10 bg-white font-black text-emerald-950 shadow-xs"
                   : "font-extrabold text-emerald-950/70 hover:bg-white/50 hover:text-emerald-950"
