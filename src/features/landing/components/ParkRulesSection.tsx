@@ -34,7 +34,7 @@ export default function ParkRulesSection() {
             <span className="text-xs font-semibold tracking-widest text-emerald-700 uppercase">
               Panduan Berkunjung
             </span>
-            <h2 className="text-4xl leading-[0.95] font-semibold tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl">
+            <h2 className="text-4xl leading-[0.95] font-semibold tracking-tight uppercase sm:text-5xl lg:text-6xl">
               DIJAGA <br /> BERSAMA <br /> UNTUK WARGA
             </h2>
           </div>
@@ -57,7 +57,7 @@ export default function ParkRulesSection() {
                 <span className="text-sm font-semibold tracking-wider text-emerald-600">
                   {rule.num}
                 </span>
-                <h3 className="text-base font-semibold tracking-tight text-emerald-950 uppercase sm:text-lg">
+                <h3 className="text-base font-semibold tracking-tight uppercase sm:text-lg">
                   {rule.title}
                 </h3>
               </div>

@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -23,8 +22,7 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default:
-      "RPTRA Cibubur Berseri - Portal Resmi Kegiatan Warga & Fasilitas Taman",
+    default: "RPTRA Cibubur Berseri -  Kegiatan Warga & Fasilitas Taman",
     template: "%s | RPTRA Cibubur",
   },
   description:

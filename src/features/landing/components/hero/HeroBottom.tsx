@@ -58,10 +58,10 @@ function KegiatanTerakhir({ agenda }: { agenda: HeroAgenda | null }) {
   return (
     <>
       <div className="space-y-1">
-        <h3 className="line-clamp-2 text-sm leading-tight font-semibold text-emerald-950 sm:text-base">
+        <h3 className="text-primary line-clamp-2 text-sm leading-tight font-semibold sm:text-base">
           {agenda.title}
         </h3>
-        <p className="text-sm">
+        <p className="text-foreground text-sm">
           {agenda.formattedDate} <br /> {agenda.location}
         </p>
       </div>

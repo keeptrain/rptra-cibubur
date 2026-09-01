@@ -42,10 +42,10 @@ export default function FacilityShowcase() {
               </div>
 
               <div className="min-w-0 flex-1">
-                <span className="hidden text-[10px] font-extrabold tracking-wider text-emerald-700 uppercase lg:block">
+                <span className="hidden text-xs font-semibold tracking-wider text-emerald-700 uppercase lg:block">
                   {item.category}
                 </span>
-                <span className="line-clamp-1 block text-[11px] leading-tight font-semibold tracking-tight sm:text-xs lg:line-clamp-none lg:text-base">
+                <span className="line-clamp-1 block text-sm leading-tight font-medium tracking-tight sm:text-xs lg:line-clamp-none lg:text-base">
                   {item.title}
                 </span>
               </div>
