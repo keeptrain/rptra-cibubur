@@ -1,11 +1,5 @@
 import Link from "next/link";
-import {
-  Trees,
-  Play,
-  CalendarIcon,
-  HistoryIcon,
-  ArrowUpRightIcon,
-} from "lucide-react";
+import { CalendarIcon, HistoryIcon, ArrowUpRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { HeroAgenda } from "@/features/landing/actions/service";
 
@@ -115,26 +109,42 @@ export default function HeroBottom({ nearest, latest }: HeroBottomProps) {
         <KegiatanTerakhir agenda={latest} />
       </div>
 
-      {/* Fasilitas Lengkap — static */}
-      <div className="flex flex-col justify-between space-y-3 p-5 sm:space-y-4 sm:p-6 lg:p-8">
-        <div className="space-y-2 sm:space-y-3">
-          <Trees className="h-5 w-5 sm:h-6 sm:w-6" />
-          <h3 className="text-lg font-semibold tracking-wide text-emerald-950 uppercase sm:text-xl">
-            Fasilitas Lengkap
-          </h3>
+      {/* Fasilitas Lengkap — peta alamat dari footer */}
+      <div className="relative flex min-h-48 flex-col overflow-hidden bg-[#072B22] p-0">
+        <div className="absolute inset-0 size-full overflow-hidden">
+          <iframe
+            title="Peta Lokasi RPTRA Cibubur"
+            src="https://maps.google.com/maps?q=-6.3605,106.8837&hl=id&z=16&output=embed"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen={false}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="pointer-events-none absolute -top-12 left-0 h-[130%] w-full opacity-75 transition-opacity duration-300 hover:opacity-100"
+          />
         </div>
-        <div className="pt-1">
-          <a
-            href="https://www.youtube.com/watch?v=6-bRjN5lxsw"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2.5 text-xs font-semibold tracking-wider text-emerald-900 uppercase transition-colors hover:text-emerald-600 sm:text-sm"
-          >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-white shadow-md shadow-emerald-600/20 transition-transform group-hover:scale-105 sm:h-9 sm:w-9">
-              <Play className="ml-0.5 h-3.5 w-3.5 fill-white" />
-            </span>
-            LIHAT ZONA TAMAN
-          </a>
+        <div className="relative z-10 flex h-full flex-1 flex-col justify-end p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-white/40 bg-white/90 p-2 shadow-lg backdrop-blur-md">
+            <div>
+              <h4 className="text-sm font-semibold tracking-tight text-[#0B0E17] uppercase">
+                CIBUBUR PARK
+              </h4>
+              <p className="text-xs font-semibold text-neutral-500">
+                ★ 4.6 / 5 Google Maps Rating
+              </p>
+            </div>
+
+            <Button asChild variant="ghost">
+              <a
+                href="https://maps.google.com/?q=RPTRA+Cibubur"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Rute <ArrowUpRightIcon className="size-3.5" />
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

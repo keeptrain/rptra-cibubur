@@ -1,15 +1,19 @@
 function HeroStats() {
   const stats = [
-    { value: "120+", label: "TOTAL KEGIATAN" },
-    { value: "1.000+", label: "PENGUNJUNG / BULAN" },
-    { value: "4.6 / 5", label: "Google Maps Rating" },
+    { value: "10+", label: "TOTAL KEGIATAN" },
+    { value: "200+", label: "PENGUNJUNG / BULAN" },
   ];
   return (
     <>
       {stats.map((stat, idx) => (
-        <div key={idx} className="flex flex-1 items-center justify-between px-6 py-4 md:px-8">
-          <span className="text-3xl font-semibold tracking-tight text-emerald-950 sm:text-4xl">{stat.value}</span>
-          <span className="max-w-30 text-right text-[11px] leading-snug font-semibold tracking-widest text-emerald-900/80 uppercase">
+        <div
+          key={idx}
+          className="flex flex-1 items-center justify-between px-6 py-4 md:px-8"
+        >
+          <span className="text-3xl font-semibold tracking-tight text-emerald-950 sm:text-4xl">
+            {stat.value}
+          </span>
+          <span className="max-w-30 text-right text-sm leading-snug font-semibold tracking-widest text-emerald-900/80 uppercase">
             {stat.label}
           </span>
         </div>
