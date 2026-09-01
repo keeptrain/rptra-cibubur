@@ -2,72 +2,76 @@ export default function ParkRulesSection() {
   const rules = [
     {
       num: "01",
-      title: "BEBAS ASAP ROKOK",
-      desc: "Kawasan 100% bebas dari asap rokok dan vape demi menjaga kesehatan udara pernapasan buah hati.",
+      title: "Bebas Asap Rokok",
+      desc: "Kawasan 100% bebas asap rokok dan vape demi menjaga udara pernapasan buah hati.",
+      active: true,
     },
     {
       num: "02",
-      title: "KEBERSIHAN & KETERTIBAN",
-      desc: "Buanglah sampah pada tempat sampah pilah yang disediakan. Rawat dan jaga keasrian fasilitas bersama.",
+      title: "Kebersihan & Ketertiban",
+      desc: "Buang sampah pada tempat pilah, rawat keasrian fasilitas bersama.",
+      active: false,
     },
     {
       num: "03",
-      title: "PENGAWASAN ANANDA",
-      desc: "Orang tua atau pendamping wajib mengawasi aktivitas putra-putri saat beraktivitas di area wahana.",
+      title: "Pengawasan Ananda",
+      desc: "Orang tua wajib mengawasi putra-putri saat di wahana.",
+      active: false,
     },
     {
       num: "04",
-      title: "JAM OPERASIONAL",
-      desc: "Taman terbuka pukul 06:00 - 18:00 WIB. Mohon saling menjaga ketenangan dengan lingkungan permukiman.",
+      title: "Jam Operasional",
+      desc: "Taman buka 06:00 - 18:00 WIB, jaga ketenangan lingkungan.",
+      active: false,
     },
   ];
 
   return (
     <section
       id="rules"
-      className="mx-auto w-full max-w-7xl px-6 pt-6 pb-20 sm:px-6 lg:px-8 lg:py-20"
+      className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16"
     >
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-        {/* Left Column: Big Editorial Headline (No Card, No Badge) */}
-        <div className="flex flex-col justify-between space-y-6 lg:col-span-5">
-          <div className="space-y-4">
-            <span className="text-xs font-semibold tracking-widest text-emerald-700 uppercase">
-              Panduan Berkunjung
-            </span>
-            <h2 className="text-4xl leading-[0.95] font-semibold tracking-tight uppercase sm:text-5xl lg:text-6xl">
-              DIJAGA <br /> BERSAMA <br /> UNTUK WARGA
-            </h2>
-          </div>
-
-          <p className="max-w-md text-xs leading-relaxed font-medium text-emerald-800/80 sm:text-sm">
-            RPTRA Cibubur hadir sebagai ruang aman bagi anak-anak dan sarana
-            silaturahmi seluruh warga. Empat prinsip sederhana ini menjaga taman
-            tetap nyaman untuk kita semua.
-          </p>
+      <div className="mb-8 grid gap-6 lg:grid-cols-12 lg:items-start">
+        <div className="lg:col-span-7">
+          <span className="text-primary inline-flex items-center gap-1.5 text-xs font-semibold tracking-widest">
+            <span className="bg-primary size-2" /> PANDUAN BERKUNJUNG
+          </span>
+          <h2 className="mt-2 text-3xl leading-tight font-bold tracking-tight sm:text-4xl lg:text-5xl">
+            Dijaga{" "}
+            <span className="text-primary font-semibold italic">bersama</span>{" "}
+            <br /> untuk warga
+          </h2>
         </div>
+        <p className="max-w-md self-end text-xs leading-relaxed text-zinc-600 lg:col-span-5">
+          RPTRA Cibubur hadir sebagai ruang aman bagi anak dan sarana
+          silaturahmi warga. Empat prinsip sederhana ini menjaga taman tetap
+          nyaman untuk semua.
+        </p>
+      </div>
 
-        {/* Right Column: Clean Editorial Numbered List (Hairline Dividers) */}
-        <div className="flex flex-col divide-y divide-emerald-200/80 lg:col-span-7">
-          {rules.map((rule) => (
-            <div
-              key={rule.num}
-              className="group flex flex-col space-y-2 py-6 transition-colors first:pt-0 last:pb-0 hover:bg-emerald-100/30 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 sm:space-y-0 sm:px-4"
-            >
-              <div className="flex items-baseline gap-4 sm:w-1/2">
-                <span className="text-sm font-semibold tracking-wider text-emerald-600">
-                  {rule.num}
-                </span>
-                <h3 className="text-base font-semibold tracking-tight uppercase sm:text-lg">
-                  {rule.title}
-                </h3>
-              </div>
-
-              <p className="text-xs leading-relaxed font-medium text-emerald-800/80 sm:w-1/2 sm:text-xs">
+      <div className="grid gap-6 border-t px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+        {rules.map((rule) => (
+          <div key={rule.num} className="flex flex-col justify-between">
+            <div>
+              <h4 className="text-sm font-semibold text-zinc-900">
+                {rule.title}
+              </h4>
+              <p className="mt-2 text-xs leading-relaxed text-zinc-600">
                 {rule.desc}
               </p>
             </div>
-          ))}
-        </div>
+            <div className="mt-8">
+              <span
+                className={`text-lg font-semibold ${rule.active ? "text-primary" : "text-zinc-500"}`}
+              >
+                {rule.num}
+              </span>
+              <div
+                className={`mt-1 h-0.5 ${rule.active ? "bg-primary" : "bg-zinc-200"}`}
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

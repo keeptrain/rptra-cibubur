@@ -9,12 +9,14 @@ const SOCIALS = [
 
 export default function SocialFollowSection() {
   return (
-    <section className="bg-slate-50 py-5 md:py-10">
+    <section className="bg-neutral-900 py-5 md:py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 rounded-none py-4 sm:flex-row sm:py-6">
           <h2 className="flex items-center gap-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-            <span className="border-b-2 border-black pb-1">Ikuti Kami</span>
-            <ArrowUpRightIcon />
+            <span className="text-accent border-accent border-b-2 pb-1">
+              Ikuti Kami
+            </span>
+            <ArrowUpRightIcon className="text-accent" />
           </h2>
 
           <div className="flex items-center gap-2 sm:gap-3">

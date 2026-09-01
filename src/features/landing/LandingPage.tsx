@@ -6,11 +6,11 @@ import SocialFollowSection from "./components/SocialFollowSection";
 
 export default function LandingPage() {
   return (
-    <main className="flex flex-1 flex-col bg-emerald-50">
+    <main className="flex flex-1 flex-col bg-neutral-50">
       <LandingHero />
-      <HighlightTicker />
       <FacilitiesSection />
       <ParkRulesSection />
+      <HighlightTicker />
       <SocialFollowSection />
     </main>
   );
