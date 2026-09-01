@@ -14,7 +14,7 @@ export default function GuestProposedActivityForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [done, setDone] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setTimeout(() => {
@@ -50,6 +50,7 @@ export default function GuestProposedActivityForm() {
             <div className="space-y-2">
               <Label htmlFor="guest_contact">Kontak *</Label>
               <Input
+                disabled={isLoading}
                 id="guest_contact"
                 name="guest_contact"
                 placeholder="nomor wa atau email"
@@ -61,6 +62,7 @@ export default function GuestProposedActivityForm() {
             <div className="space-y-2">
               <Label htmlFor="description">Deskripsi Ide *</Label>
               <Textarea
+                disabled={isLoading}
                 id="description"
                 name="description"
                 rows={3}
