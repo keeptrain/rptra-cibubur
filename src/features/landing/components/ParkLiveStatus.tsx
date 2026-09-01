@@ -4,10 +4,10 @@ export default async function ParkLiveStatus() {
   const { isOpen, operatingHours, closeNotice } = await getLiveStatus();
 
   return (
-    <div className="w-full border-t border-emerald-200/70 bg-white/90 text-xs text-emerald-950">
+    <div className="w-full border-t border-emerald-200/70 bg-white/90 text-emerald-950">
       <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-3 sm:px-8">
         {/* Status Indicator (Taman Beroperasi / Tutup) */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <span className="relative flex size-2.5">
             {isOpen && (
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
@@ -18,7 +18,7 @@ export default async function ParkLiveStatus() {
               }`}
             />
           </span>
-          <span className="font-extrabold tracking-wide text-emerald-950">
+          <span className="text-base font-bold tracking-wide text-emerald-950">
             {isOpen ? "Taman Beroperasi Hari Ini" : "Taman Tutup Hari Ini"}{" "}
             <strong className="font-bold text-emerald-950">
               ( {operatingHours} )

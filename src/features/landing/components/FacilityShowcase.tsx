@@ -45,7 +45,7 @@ export default function FacilityShowcase() {
                 <span className="hidden text-[10px] font-extrabold tracking-wider text-emerald-700 uppercase lg:block">
                   {item.category}
                 </span>
-                <span className="line-clamp-1 block text-[11px] leading-tight font-bold tracking-tight sm:text-xs lg:line-clamp-none lg:text-base">
+                <span className="line-clamp-1 block text-[11px] leading-tight font-semibold tracking-tight sm:text-xs lg:line-clamp-none lg:text-base">
                   {item.title}
                 </span>
               </div>
@@ -59,17 +59,17 @@ export default function FacilityShowcase() {
         <div className="space-y-6">
           {/* Stage Top Tag & Badge */}
           <div>
-            <span className="text-xs font-bold tracking-widest text-emerald-700 uppercase">
+            <span className="text-xs font-semibold tracking-widest text-emerald-700 uppercase">
               {current.category}
             </span>
           </div>
 
           {/* Stage Title & Tagline */}
           <div>
-            <h3 className="text-2xl font-bold text-emerald-950 sm:text-4xl">
+            <h3 className="text-2xl font-semibold text-emerald-950 sm:text-4xl">
               {current.title}
             </h3>
-            <p className="mt-1 text-sm font-bold text-emerald-700 sm:text-base">
+            <p className="mt-1 text-sm font-semibold text-emerald-700 sm:text-base">
               {current.tagline}
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function FacilityShowcase() {
 
           {/* Feature Checklist */}
           <div className="pt-2">
-            <h4 className="mb-3 text-xs font-bold tracking-wider text-emerald-950 uppercase">
+            <h4 className="mb-3 text-xs font-semibold tracking-wider text-emerald-950 uppercase">
               Keunggulan &amp; Fasilitas Zona Ini:
             </h4>
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">

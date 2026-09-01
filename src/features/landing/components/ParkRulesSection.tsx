@@ -31,10 +31,10 @@ export default function ParkRulesSection() {
         {/* Left Column: Big Editorial Headline (No Card, No Badge) */}
         <div className="flex flex-col justify-between space-y-6 lg:col-span-5">
           <div className="space-y-4">
-            <span className="text-xs font-bold tracking-widest text-emerald-700 uppercase">
+            <span className="text-xs font-semibold tracking-widest text-emerald-700 uppercase">
               Panduan Berkunjung
             </span>
-            <h2 className="text-4xl leading-[0.95] font-bold tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl">
+            <h2 className="text-4xl leading-[0.95] font-semibold tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl">
               DIJAGA <br /> BERSAMA <br /> UNTUK WARGA
             </h2>
           </div>
@@ -54,10 +54,10 @@ export default function ParkRulesSection() {
               className="group flex flex-col space-y-2 py-6 transition-colors first:pt-0 last:pb-0 hover:bg-emerald-100/30 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 sm:space-y-0 sm:px-4"
             >
               <div className="flex items-baseline gap-4 sm:w-1/2">
-                <span className="text-sm font-bold tracking-wider text-emerald-600">
+                <span className="text-sm font-semibold tracking-wider text-emerald-600">
                   {rule.num}
                 </span>
-                <h3 className="text-base font-bold tracking-tight text-emerald-950 uppercase sm:text-lg">
+                <h3 className="text-base font-semibold tracking-tight text-emerald-950 uppercase sm:text-lg">
                   {rule.title}
                 </h3>
               </div>

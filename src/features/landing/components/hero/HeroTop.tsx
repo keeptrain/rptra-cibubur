@@ -8,8 +8,8 @@ function HeroStats() {
     <>
       {stats.map((stat, idx) => (
         <div key={idx} className="flex flex-1 items-center justify-between px-6 py-4 md:px-8">
-          <span className="text-3xl font-bold tracking-tight text-emerald-950 sm:text-4xl">{stat.value}</span>
-          <span className="max-w-30 text-right text-[11px] leading-snug font-bold tracking-widest text-emerald-900/80 uppercase">
+          <span className="text-3xl font-semibold tracking-tight text-emerald-950 sm:text-4xl">{stat.value}</span>
+          <span className="max-w-30 text-right text-[11px] leading-snug font-semibold tracking-widest text-emerald-900/80 uppercase">
             {stat.label}
           </span>
         </div>
@@ -26,7 +26,7 @@ export default function HeroTop() {
           <span className="inline-block text-xs font-semibold tracking-widest text-emerald-700 uppercase sm:text-sm">
             Ruang Publik Terpadu Ramah Anak
           </span>
-          <h1 className="text-3xl leading-tight font-bold tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl xl:text-7xl">
+          <h1 className="text-3xl leading-tight font-semibold tracking-tight text-emerald-950 uppercase sm:text-5xl lg:text-6xl xl:text-7xl">
             TAMAN RPTRA CIBUBUR
           </h1>
         </div>

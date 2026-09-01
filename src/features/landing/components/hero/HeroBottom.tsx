@@ -13,7 +13,7 @@ function AgendaTerdekat({ agenda }: { agenda: HeroAgenda | null }) {
   if (!agenda) {
     return (
       <>
-        <h3 className="text-lg font-bold tracking-wide text-white sm:text-xl">
+        <h3 className="text-lg font-semibold tracking-wide text-white sm:text-xl">
           Belum ada agenda terdekat
         </h3>
         <div className="pt-1">
@@ -34,7 +34,7 @@ function AgendaTerdekat({ agenda }: { agenda: HeroAgenda | null }) {
   return (
     <>
       <div className="space-y-1 pt-1">
-        <h3 className="line-clamp-2 text-base leading-tight font-bold text-white sm:text-lg">
+        <h3 className="line-clamp-2 text-base leading-tight font-semibold text-white sm:text-lg">
           {agenda.title}
         </h3>
         <p className="text-sm text-white/90">
@@ -57,7 +57,7 @@ function KegiatanTerakhir({ agenda }: { agenda: HeroAgenda | null }) {
   if (!agenda) {
     return (
       <>
-        <h3 className="text-lg font-bold tracking-wide text-emerald-950 uppercase sm:text-xl">
+        <h3 className="text-lg font-semibold tracking-wide text-emerald-950 uppercase sm:text-xl">
           Kegiatan Terakhir
         </h3>
         <span className="pt-1 text-xs text-zinc-400">
@@ -97,7 +97,7 @@ export default function HeroBottom({ nearest, latest }: HeroBottomProps) {
       <div className="relative flex flex-col justify-between space-y-3 overflow-hidden bg-linear-to-b from-emerald-600 via-teal-700 to-emerald-800 p-5 sm:space-y-4 sm:p-6 lg:p-8">
         <div className="relative z-10 flex items-center gap-2">
           <CalendarIcon className="size-5 text-white sm:size-6" />
-          <span className="rounded-full bg-white/20 px-2.5 py-1 text-xs font-bold tracking-widest text-white uppercase">
+          <span className="rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold tracking-widest text-white uppercase">
             Agenda Terdekat
           </span>
         </div>
@@ -108,7 +108,7 @@ export default function HeroBottom({ nearest, latest }: HeroBottomProps) {
       <div className="flex flex-col justify-between space-y-3 p-5 sm:space-y-4 sm:p-6 lg:p-8">
         <div className="flex items-center gap-2">
           <HistoryIcon className="size-5 text-emerald-700 sm:size-6" />
-          <span className="text-xs font-bold tracking-widest text-emerald-700 uppercase">
+          <span className="text-xs font-semibold tracking-widest text-emerald-700 uppercase">
             Kegiatan Terakhir
           </span>
         </div>
@@ -128,7 +128,7 @@ export default function HeroBottom({ nearest, latest }: HeroBottomProps) {
             href="https://www.youtube.com/watch?v=6-bRjN5lxsw"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2.5 text-xs font-bold tracking-wider text-emerald-900 uppercase transition-colors hover:text-emerald-600 sm:text-sm"
+            className="group inline-flex items-center gap-2.5 text-xs font-semibold tracking-wider text-emerald-900 uppercase transition-colors hover:text-emerald-600 sm:text-sm"
           >
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-white shadow-md shadow-emerald-600/20 transition-transform group-hover:scale-105 sm:h-9 sm:w-9">
               <Play className="ml-0.5 h-3.5 w-3.5 fill-white" />
