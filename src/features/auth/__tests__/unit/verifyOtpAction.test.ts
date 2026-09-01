@@ -25,17 +25,17 @@ describe("verifyOtpAction", () => {
     it("should reject when email or OTP input is empty", async () => {
       const res = await verifyOtpAction("", "");
       expect(res.success).toBe(false);
-      expect(res.error).toBe("Kode OTP harus berupa 8 digit angka.");
+      expect(res.error).toBe("Kode OTP harus berupa 6 digit angka.");
     });
 
-    it("should reject when OTP length is not 8 digits", async () => {
+    it("should reject when OTP length is not 6 digits", async () => {
       const resShort = await verifyOtpAction("warga@gmail.com", "12345");
       expect(resShort.success).toBe(false);
-      expect(resShort.error).toBe("Kode OTP harus berupa 8 digit angka.");
+      expect(resShort.error).toBe("Kode OTP harus berupa 6 digit angka.");
 
-      const resLong = await verifyOtpAction("warga@gmail.com", "123456789");
+      const resLong = await verifyOtpAction("warga@gmail.com", "1234567");
       expect(resLong.success).toBe(false);
-      expect(resLong.error).toBe("Kode OTP harus berupa 8 digit angka.");
+      expect(resLong.error).toBe("Kode OTP harus berupa 6 digit angka.");
     });
 
     it("should return error message when verify_otp_code RPC fails with rpcError", async () => {
@@ -44,7 +44,7 @@ describe("verifyOtpAction", () => {
         error: { message: "Database timeout" },
       });
 
-      const res = await verifyOtpAction("warga@gmail.com", "12345678");
+      const res = await verifyOtpAction("warga@gmail.com", "123456");
       expect(res.success).toBe(false);
       expect(res.error).toBe("Gagal verifikasi OTP (Database timeout).");
     });
@@ -55,7 +55,7 @@ describe("verifyOtpAction", () => {
         error: null,
       });
 
-      const res = await verifyOtpAction("warga@gmail.com", "87654321");
+      const res = await verifyOtpAction("warga@gmail.com", "654321");
       expect(res.success).toBe(false);
       expect(res.error).toBe("Kode OTP tidak valid atau sudah kadaluwarsa.");
     });
@@ -71,7 +71,7 @@ describe("verifyOtpAction", () => {
         error: "Gagal membuat token autentikasi admin.",
       });
 
-      const res = await verifyOtpAction("warga@gmail.com", "12345678");
+      const res = await verifyOtpAction("warga@gmail.com", "123456");
       expect(res.success).toBe(false);
       expect(res.error).toBe("Gagal membuat token autentikasi admin.");
     });
@@ -89,11 +89,11 @@ describe("verifyOtpAction", () => {
         success: true,
       });
 
-      const res = await verifyOtpAction("warga@gmail.com", "12345678");
+      const res = await verifyOtpAction("warga@gmail.com", "123456");
 
       expect(mockRpc).toHaveBeenCalledWith("verify_otp_code", {
         p_email: "warga@gmail.com",
-        p_otp: "12345678",
+        p_otp: "123456",
       });
       expect(res.success).toBe(true);
       expect(res.redirectTo).toBe("/dashboard");
