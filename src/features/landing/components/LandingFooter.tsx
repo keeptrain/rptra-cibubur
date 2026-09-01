@@ -129,44 +129,6 @@ export default function LandingFooter() {
                 </a>
               </div>
             </div>
-
-            {/* 2. Compact Connect Card (Fresh Mint Theme) */}
-            <div className="flex items-center justify-between rounded-2xl bg-[#A7F3D0] px-6 py-4 text-emerald-950 shadow-md">
-              <h4 className="text-base font-semibold tracking-tight text-emerald-950 uppercase sm:text-lg">
-                CONNECT WITH US
-              </h4>
-
-              {/* Social Media SVG Icons */}
-              <div className="flex items-center gap-2">
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex size-9 items-center justify-center rounded-xl bg-emerald-950 text-[#A7F3D0] shadow-2xs transition-transform hover:scale-110 hover:bg-emerald-900"
-                  aria-label="Instagram"
-                >
-                  <ComputerIcon className="size-4" />
-                </a>
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex size-9 items-center justify-center rounded-xl bg-emerald-950 text-[#A7F3D0] shadow-2xs transition-transform hover:scale-110 hover:bg-emerald-900"
-                  aria-label="Facebook"
-                >
-                  <AdIcon className="size-4" />
-                </a>
-                <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex size-9 items-center justify-center rounded-xl bg-emerald-950 text-[#A7F3D0] shadow-2xs transition-transform hover:scale-110 hover:bg-emerald-900"
-                  aria-label="YouTube"
-                >
-                  <TvIcon className="size-4" />
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </div>

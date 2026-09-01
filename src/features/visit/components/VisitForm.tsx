@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 import {
-  Calendar,
-  User,
-  Mail,
-  Phone,
-  CheckCircle2,
-  AlertCircle,
-  ArrowRight,
-  FileText,
-} from "lucide-react";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
 export default function VisitForm() {
@@ -21,25 +23,41 @@ export default function VisitForm() {
     date: "",
     purposeNotes: "",
   });
-
   const [emailError, setEmailError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Validate Gmail Domain
+  const isValidPhone = (val: string) => {
+    const cleaned = val.replace(/\D/g, "");
+    return (
+      cleaned.length >= 10 &&
+      cleaned.length <= 15 &&
+      (cleaned.startsWith("08") || cleaned.startsWith("628"))
+    );
+  };
+
   const handleEmailChange = (val: string) => {
     setFormData((prev) => ({ ...prev, email: val }));
     if (val && !/^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(val.trim())) {
-      setEmailError("Saat ini hanya menerima email berdomain @gmail.com");
+      setEmailError("Hanya menerima email @gmail.com");
     } else {
       setEmailError("");
     }
   };
 
+  const handlePhoneChange = (val: string) => {
+    setFormData((prev) => ({ ...prev, phone: val }));
+    if (val && !isValidPhone(val)) {
+      setPhoneError("Nomor WhatsApp harus dimulai dengan 08 atau 628");
+    } else {
+      setPhoneError("");
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailError || !formData.email) return;
-
+    if (emailError || phoneError || !formData.email || !formData.phone) return;
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -49,226 +67,156 @@ export default function VisitForm() {
 
   if (isSubmitted) {
     return (
-      <div className="rounded-3xl border border-emerald-200/80 bg-white p-6 shadow-xl shadow-emerald-950/5 sm:p-10">
-        <div className="space-y-6 text-center">
-          <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-            <CheckCircle2 className="size-10" />
+      <Card>
+        <CardContent className="flex flex-col items-center gap-4 py-10 text-center">
+          <div className="flex size-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+            <CheckCircle2 className="size-8" />
           </div>
-
-          <div className="space-y-2">
-            <span className="text-xs font-black tracking-widest text-emerald-700 uppercase">
-              Pengajuan Berhasil Dikirim
-            </span>
-            <h2 className="text-2xl font-black text-emerald-950 uppercase sm:text-3xl">
-              TANDA TERIMA KUNJUNGAN
-            </h2>
-            <p className="text-xs font-medium text-emerald-800/80 sm:text-sm">
-              Bukti pendaftaran telah dikirim ke{" "}
-              <strong className="text-emerald-950">{formData.email}</strong>
+          <div className="space-y-1">
+            <h3 className="text-lg font-semibold">Pengajuan Berhasil</h3>
+            <p className="text-muted-foreground text-sm">
+              Bukti pendaftaran dikirim ke{" "}
+              <span className="text-foreground font-medium">
+                {formData.email}
+              </span>
             </p>
           </div>
-
-          {/* E-Ticket Card Summary */}
-          <div className="space-y-3 rounded-2xl border border-emerald-200/80 bg-[#F4FBF7] p-5 text-left text-xs text-emerald-950">
-            <div className="flex items-center justify-between border-b border-emerald-200/60 pb-3">
-              <span className="font-bold text-emerald-800/70">PEMOHON</span>
-              <span className="font-extrabold uppercase">{formData.name}</span>
-            </div>
-            <div className="flex items-center justify-between border-b border-emerald-200/60 pb-3">
-              <span className="font-bold text-emerald-800/70">WHATSAPP</span>
-              <span className="font-extrabold">{formData.phone}</span>
-            </div>
-            <div className="flex items-center justify-between border-b border-emerald-200/60 pb-3">
-              <span className="font-bold text-emerald-800/70">TANGGAL</span>
-              <span className="font-extrabold">{formData.date}</span>
-            </div>
-            {formData.purposeNotes && (
-              <div className="space-y-1 border-b border-emerald-200/60 pb-3">
-                <span className="block font-bold text-emerald-800/70">
-                  TUJUAN / CATATAN
-                </span>
-                <p className="leading-relaxed font-medium text-emerald-900">
+          <Card className="bg-muted/50 w-full text-left">
+            <CardContent className="space-y-2 p-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Pemohon</span>
+                <span className="font-medium">{formData.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">WhatsApp</span>
+                <span className="font-medium">{formData.phone}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Tanggal</span>
+                <span className="font-medium">{formData.date}</span>
+              </div>
+              {formData.purposeNotes && (
+                <p className="text-muted-foreground pt-2">
                   {formData.purposeNotes}
                 </p>
+              )}
+              <div className="flex justify-between border-t pt-2">
+                <span className="text-muted-foreground">Biaya</span>
+                <span className="font-semibold text-emerald-600">Gratis</span>
               </div>
-            )}
-            <div className="flex items-center justify-between pt-1">
-              <span className="font-bold text-emerald-800/70">BIAYA</span>
-              <span className="font-black text-emerald-600 uppercase">
-                100% GRATIS
-              </span>
-            </div>
+            </CardContent>
+          </Card>
+          <div className="flex w-full gap-2">
+            <Button asChild className="flex-1">
+              <a
+                href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Pengelola RPTRA Cibubur, saya ${formData.name} ingin konfirmasi kunjungan pada ${formData.date}.`)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Konfirmasi WhatsApp <ArrowRight className="size-4" />
+              </a>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/">Kembali</Link>
+            </Button>
           </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <a
-              href={`https://wa.me/6281234567890?text=${encodeURIComponent(
-                `Halo Pengelola RPTRA Cibubur, saya ${formData.name} ingin konfirmasi rencana kunjungan pada ${formData.date}.`,
-              )}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-xs font-black text-white uppercase shadow-md transition-all hover:bg-emerald-700"
-            >
-              KONFIRMASI WHATSAPP
-              <ArrowRight className="size-4" />
-            </a>
-
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-xl border border-emerald-300 bg-emerald-50 px-6 py-3.5 text-xs font-bold text-emerald-950 uppercase transition-all hover:bg-emerald-100"
-            >
-              KEMBALI KE BERANDA
-            </Link>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6 rounded-3xl border border-emerald-200/80 bg-white p-6 shadow-xl shadow-emerald-950/5 sm:p-10"
-    >
-      <div className="space-y-1 border-b border-emerald-100 pb-4 text-left">
-        <h3 className="text-lg font-black text-emerald-950 uppercase sm:text-xl">
-          FORMULIR RENCANA KUNJUNGAN
-        </h3>
-        <p className="text-xs font-medium text-emerald-800/80">
-          Isi data kunjungan di bawah ini. Bebas biaya &amp; konfirmasi langsung
-          via WhatsApp.
-        </p>
-      </div>
-
-      <div className="space-y-5 text-left">
-        {/* 1. Nama Pemohon */}
-        <div className="space-y-2">
-          <label className="block text-xs font-black tracking-wider text-emerald-950 uppercase">
-            Nama Lengkap Pemohon *
-          </label>
-          <div className="relative">
-            <User className="absolute top-3.5 left-3.5 size-4 text-emerald-600" />
-            <input
-              type="text"
-              required
-              placeholder="Contoh: Ibu Ani Wijaya"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              className="w-full rounded-xl border border-emerald-200 bg-[#F4FBF7] py-3 pr-4 pl-10 text-xs font-semibold text-emerald-950 placeholder-emerald-800/40 transition-all outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-600/20"
-            />
-          </div>
-        </div>
-
-        {/* 2 & 3. Email & WhatsApp (2 Columns) */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {/* Email (@gmail.com) */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-black tracking-wider text-emerald-950 uppercase">
-                Email (@gmail.com) *
-              </label>
-              <span className="text-[10px] font-bold text-emerald-600 uppercase">
-                Khusus Gmail
-              </span>
+    <Card>
+      <CardHeader>
+        <CardTitle>Formulir Rencana Kunjungan</CardTitle>
+        <CardDescription>Isi data kunjungan.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="name">Nama Lengkap *</Label>
+              <Input
+                id="name"
+                required
+                placeholder="Ibu Ani Wijaya"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+              />
             </div>
-            <div className="relative">
-              <Mail className="absolute top-3.5 left-3.5 size-4 text-emerald-600" />
-              <input
+
+            <div className="space-y-2">
+              <Label htmlFor="date">Rencana Tanggal Kunjungan *</Label>
+              <Input
+                id="date"
+                type="date"
+                required
+                value={formData.date}
+                onChange={(e) =>
+                  setFormData({ ...formData, date: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email (@gmail.com) *</Label>
+              <Input
+                id="email"
                 type="email"
                 required
                 placeholder="nama@gmail.com"
                 value={formData.email}
                 onChange={(e) => handleEmailChange(e.target.value)}
-                className={`w-full rounded-xl border ${
-                  emailError
-                    ? "border-rose-400 bg-rose-50/50"
-                    : "border-emerald-200 bg-[#F4FBF7]"
-                } py-3 pr-4 pl-10 text-xs font-semibold text-emerald-950 placeholder-emerald-800/40 transition-all outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-600/20`}
+                aria-invalid={!!emailError}
               />
+              {emailError && (
+                <p className="text-destructive text-xs">{emailError}</p>
+              )}
             </div>
-            {emailError && (
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-rose-600">
-                <AlertCircle className="size-3.5 shrink-0" />
-                <span>{emailError}</span>
-              </div>
-            )}
-          </div>
-
-          {/* WhatsApp */}
-          <div className="space-y-2">
-            <label className="block text-xs font-black tracking-wider text-emerald-950 uppercase">
-              No. WhatsApp *
-            </label>
-            <div className="relative">
-              <Phone className="absolute top-3.5 left-3.5 size-4 text-emerald-600" />
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="phone">No. WhatsApp *</Label>
+              <Input
+                id="phone"
                 type="tel"
                 required
                 placeholder="081234567890"
                 value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                className="w-full rounded-xl border border-emerald-200 bg-[#F4FBF7] py-3 pr-4 pl-10 text-xs font-semibold text-emerald-950 placeholder-emerald-800/40 transition-all outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-600/20"
+                onChange={(e) => handlePhoneChange(e.target.value)}
+                aria-invalid={!!phoneError}
               />
+              {phoneError && (
+                <p className="text-destructive text-xs">{phoneError}</p>
+              )}
             </div>
           </div>
-        </div>
 
-        {/* 4. Rencana Tanggal Kunjungan */}
-        <div className="space-y-2">
-          <label className="block text-xs font-black tracking-wider text-emerald-950 uppercase">
-            Rencana Tanggal Kunjungan *
-          </label>
-          <div className="relative">
-            <Calendar className="absolute top-3.5 left-3.5 size-4 text-emerald-600" />
-            <input
-              type="date"
-              required
-              value={formData.date}
-              onChange={(e) =>
-                setFormData({ ...formData, date: e.target.value })
-              }
-              className="w-full rounded-xl border border-emerald-200 bg-[#F4FBF7] py-3 pr-4 pl-10 text-xs font-semibold text-emerald-950 transition-all outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-600/20"
-            />
-          </div>
-        </div>
-
-        {/* 5. Tujuan Kunjungan (Textarea Bebas) */}
-        <div className="space-y-2">
-          <label className="block text-xs font-black tracking-wider text-emerald-950 uppercase">
-            Tujuan Kunjungan / Catatan
-          </label>
-          <div className="relative">
-            <FileText className="absolute top-3.5 left-3.5 size-4 text-emerald-600" />
-            <textarea
+          <div className="space-y-2">
+            <Label htmlFor="purpose">Tujuan / Catatan</Label>
+            <Textarea
+              id="purpose"
               rows={3}
-              placeholder="Tuliskan instansi, jumlah rombongan, atau keperluan kunjungan Anda di sini (opsional)..."
+              placeholder="Instansi, jumlah rombongan, keperluan (opsional)"
               value={formData.purposeNotes}
               onChange={(e) =>
                 setFormData({ ...formData, purposeNotes: e.target.value })
               }
-              className="w-full rounded-xl border border-emerald-200 bg-[#F4FBF7] py-3 pr-4 pl-10 text-xs font-semibold text-emerald-950 placeholder-emerald-800/40 transition-all outline-none focus:border-emerald-600 focus:bg-white focus:ring-2 focus:ring-emerald-600/20"
             />
           </div>
-        </div>
-      </div>
 
-      {/* Submit Button */}
-      <div className="pt-2">
-        <button
-          type="submit"
-          disabled={isLoading || !!emailError}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-xs font-black text-white uppercase shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-700 active:scale-[0.99] disabled:opacity-50"
-        >
-          {isLoading
-            ? "MENGIRIM PENGAJUAN..."
-            : "KIRIM RENCANA KUNJUNGAN (100% GRATIS)"}
-          <ArrowRight className="size-4" />
-        </button>
-      </div>
-    </form>
+          <Button
+            type="submit"
+            disabled={isLoading || !!emailError || !!phoneError}
+            className="w-full"
+          >
+            {isLoading ? "Mengirim..." : "Kirim Rencana Kunjungan"}
+            {!isLoading && <ArrowRight className="size-4" />}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
