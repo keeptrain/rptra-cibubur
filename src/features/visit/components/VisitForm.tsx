@@ -146,7 +146,6 @@ export default function VisitForm() {
                 }
               />
             </div>
- d
             <div className="space-y-2">
               <Label htmlFor="date">Rencana Tanggal Kunjungan *</Label>
               <Input

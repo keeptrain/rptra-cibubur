@@ -55,7 +55,7 @@ export default function FilterUpcomingEventCard({
               <span className="text-base leading-none sm:text-lg">
                 {day.dayNum}
               </span>
-              <span className="mt-2 text-xs leading-none font-bold opacity-80">
+              <span className="mt-1 text-sm leading-none font-bold opacity-80">
                 {day.dayShort}
               </span>
             </Button>

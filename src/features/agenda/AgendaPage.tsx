@@ -6,6 +6,8 @@ import EventCard from "./components/public/EventCard";
 import { getPublicAgendas } from "./api/getPublicAgendas";
 import EventCardSkeleton from "./components/skeleton/EventCardSkeleton";
 import { AgendaItem as PublicAgendaItem } from "./constants/agendas";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface AgendaPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -27,10 +29,24 @@ export default async function AgendaPage({ searchParams }: AgendaPageProps) {
       />
 
       {/* SUSPENSE BOUNDARY FOR TRANSITION SKELETON */}
-      <div className="min-h-95">
+      <div className="min-h-80">
         <Suspense key={activeDay} fallback={<EventCardSkeleton />}>
           <AsyncAgendaList agendas={agendas} />
         </Suspense>
+      </div>
+
+      {/* FILLER — agar tidak terlalu kosong */}
+      <div className="bg-accent space-y-4 rounded-2xl border p-3 text-center sm:p-4">
+        <h3 className="font-semibold">Punya ide kegiatan?</h3>
+        <p className="text-muted-foreground mx-auto mt-1 max-w-md text-sm">
+          Ajukan kegiatan warga RPTRA Cibubur — senam, posyandu, lomba, atau
+          pelatihan.
+        </p>
+        <div className="flex flex-col justify-center gap-2 sm:flex-row">
+          <Button asChild variant="outline">
+            <Link href="/ajukan-kegiatan">Ajukan Kegiatan</Link>
+          </Button>
+        </div>
       </div>
     </MainContainer>
   );
