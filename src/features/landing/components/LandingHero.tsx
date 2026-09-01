@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import ParkLiveStatus from "./ParkLiveStatus";
+import ParkLiveStatus from "./hero/ParkLiveStatus";
 import HeroTop from "./hero/HeroTop";
 import HeroBottom from "./hero/HeroBottom";
 import { ParkLiveStatusSkeleton } from "./LandingSkeleton";

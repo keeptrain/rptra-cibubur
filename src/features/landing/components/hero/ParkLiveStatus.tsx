@@ -1,4 +1,4 @@
-import { getLiveStatus } from "../api/getLiveStatus";
+import { getLiveStatus } from "../../api/getLiveStatus";
 
 export default async function ParkLiveStatus() {
   const { isOpen, operatingHours, closeNotice } = await getLiveStatus();
