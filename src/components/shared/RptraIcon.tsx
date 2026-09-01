@@ -7,9 +7,9 @@ export default function RptraIcon({ className }: { className?: string }) {
     <Button
       size="icon-lg"
       variant="outline"
-      className={cn("rounded-full p-4 sm:p-6", className)}
+      className={cn("rounded-full border-none p-4 sm:p-6", className)}
     >
-      <TreesIcon className="size-8" />
+      <TreesIcon className="text-primary size-8" />
     </Button>
   );
 }
