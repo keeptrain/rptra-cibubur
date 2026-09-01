@@ -10,8 +10,17 @@ export default function VisitPage() {
           <InfoIcon />
           <AlertTitle>Tidak perlu login untuk mengisi formulir kunjungan</AlertTitle>
           <AlertDescription>
-            Pastikan email @gmail.com dan nomor WhatsApp benar sebelum
-            mengirimkan formulir.
+            <ul className="mt-1 list-disc space-y-1 pl-5">
+              <li>
+                Pastikan email @gmail.com benar dan valid agar riwayat
+                pengajuan tercatat di sistem kami.
+              </li>
+              <li>Pastikan nomor WhatsApp benar untuk konfirmasi kunjungan.</li>
+              <li>
+                Isi tujuan / catatan selengkap mungkin sesuai kebutuhan
+                kunjungan.
+              </li>
+            </ul>
           </AlertDescription>
         </Alert>
 

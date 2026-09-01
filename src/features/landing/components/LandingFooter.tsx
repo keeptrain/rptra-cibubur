@@ -1,11 +1,4 @@
-import {
-  ArrowUpRight,
-  Phone,
-  Mail,
-  ComputerIcon,
-  AdIcon,
-  TvIcon,
-} from "lucide-react";
+import { ArrowUpRight, Phone, Mail } from "lucide-react";
 
 export default function LandingFooter() {
   return (
