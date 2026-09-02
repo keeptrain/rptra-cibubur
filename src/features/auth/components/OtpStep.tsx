@@ -1,12 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import {
-  ArrowRight,
-  AlertCircle,
-  RefreshCw,
-  AlertCircleIcon,
-} from "lucide-react";
+import { ArrowRight, RefreshCw, AlertCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
@@ -25,53 +20,24 @@ interface OtpStepProps {
 }
 
 export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
-  const [cooldown, setCooldown] = useState(60);
-  const [resendState, resendFormAction, resendPending] = useActionState(
-    async (_prevState: unknown, formData: FormData) => {
-      const res = (await resendOtpAction(null, formData)) as {
-        success: boolean;
-        error?: string;
-      };
-      if (res?.success) {
-        setCooldown(60);
-        return {
-          success: true,
-          error: "Kode OTP 6-digit berhasil dikirim ulang ke email Anda.",
-        };
-      }
-      return res;
-    },
-    null,
-  );
-
-  useEffect(() => {
-    if (cooldown <= 0) return;
-    const timer = setInterval(() => {
-      setCooldown((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [cooldown]);
-
-  const resendError = resendState?.error || "";
-  const isResending = resendPending;
+  const [globalError, setGlobalError] = useState<string | null>(null);
+  const isSuccess = globalError?.includes("berhasil");
 
   return (
     <div className="space-y-5">
-      {/* Resend Error */}
-      {resendError && (
-        <div
-          className={`flex items-start gap-2.5 rounded-xl border p-3.5 text-left text-xs font-medium ${
-            resendError.includes("berhasil")
-              ? "border-lime-200 bg-lime-50 text-lime-800"
-              : "border-rose-200 bg-rose-50 text-rose-700"
-          }`}
+      {globalError && (
+        <Alert
+          variant={isSuccess ? "default" : "destructive"}
+          className="max-w-full"
         >
-          <AlertCircle className="mt-0.5 size-4 shrink-0" />
-          <span className="leading-snug">{resendError}</span>
-        </div>
+          <AlertCircleIcon />
+          <AlertTitle>
+            {isSuccess ? "Berhasil" : "Terjadi kesalahan"}
+          </AlertTitle>
+          <AlertDescription>{globalError}</AlertDescription>
+        </Alert>
       )}
 
-      {/* Disabled Email Field */}
       <div className="space-y-2 text-left">
         <div className="flex items-center justify-between">
           <label htmlFor="disabled-email" className="text-xs font-semibold">
@@ -87,57 +53,34 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
             Ubah email
           </Button>
         </div>
-        <Input aria-disabled disabled type="email" value={email} />
+        <Input aria-disabled disabled type="email" name="email" value={email} />
       </div>
 
-      {/* Isolated OTP Verify Form — rerender hanya di dalam */}
-      <OtpVerifyForm email={email} disabled={isResending} />
-
-      {/* Resend — tanpa Turnstile, pakai token dari verify widget yang sama */}
-      <form action={resendFormAction} className="pt-2 text-center">
-        <input type="hidden" name="email" value={email} />
-        <Button
-          type="submit"
-          variant="ghost"
-          size="sm"
-          disabled={cooldown > 0 || isResending}
-          className="gap-1.5 text-xs"
-        >
-          <RefreshCw
-            className={`size-3.5 ${isResending ? "animate-spin" : ""}`}
-          />
-          {cooldown > 0
-            ? `Kirim ulang kode (${cooldown}s)`
-            : "Kirim ulang kode OTP"}
-        </Button>
-      </form>
+      <OtpVerifyForm email={email} onError={setGlobalError} />
+      <ResendForm email={email} onError={setGlobalError} />
     </div>
   );
 }
 
 function OtpVerifyForm({
   email,
-  disabled,
+  onError,
 }: {
   email: string;
-  disabled?: boolean;
+  onError: (msg: string | null) => void;
 }) {
-  const [turnstileResetKey] = useState(0);
   const [otp, setOtp] = useState("");
   const [state, formAction, isPending] = useActionState(verifyOtpAction, null);
-  const isLoading = isPending || disabled;
+  const isLoading = isPending;
+
+  useEffect(() => {
+    if (state?.error) onError(state.error);
+    else if (state?.success) onError(null);
+  }, [state, onError]);
 
   return (
     <form action={formAction} className="space-y-5">
       <input type="hidden" name="email" value={email} />
-      <input type="hidden" name="otp" value={otp} />
-      {state?.error && (
-        <Alert variant="destructive" className="max-w-full">
-          <AlertCircleIcon />
-          <AlertTitle>Terjadi kesalahan</AlertTitle>
-          <AlertDescription>{state.error}</AlertDescription>
-        </Alert>
-      )}
       <div className="space-y-2 text-left">
         <label className="block text-xs font-semibold">
           Kode OTP 6-digit <span className="text-rose-500">*</span>
@@ -145,6 +88,7 @@ function OtpVerifyForm({
         <div className="flex justify-center py-2">
           <InputOTP
             disabled={isLoading}
+            name="otp"
             maxLength={6}
             pattern={REGEXP_ONLY_DIGITS}
             value={otp}
@@ -166,11 +110,7 @@ function OtpVerifyForm({
           silakan cek folder spam/junk.
         </p>
       </div>
-      <TurnstileWidget
-        action="verify-otp"
-        resetKey={turnstileResetKey}
-        hidden
-      />
+      <TurnstileWidget action="verify-otp" resetKey={state?.error} hidden />
       <Button
         size="lg"
         type="submit"
@@ -179,6 +119,61 @@ function OtpVerifyForm({
       >
         {isPending ? "Memverifikasi kode..." : "Verifikasi & masuk"}
         <ArrowRight className="size-4" />
+      </Button>
+    </form>
+  );
+}
+
+function ResendForm({
+  email,
+  onError,
+}: {
+  email: string;
+  onError: (msg: string | null) => void;
+}) {
+  const [cooldown, setCooldown] = useState(60);
+  const [state, formAction, isPending] = useActionState(
+    async (_prevState: unknown, formData: FormData) => {
+      const res = (await resendOtpAction(null, formData)) as {
+        success: boolean;
+        error?: string;
+      };
+      if (res?.success) {
+        setCooldown(60);
+        return {
+          success: true,
+          error: "Kode OTP 6-digit berhasil dikirim ulang ke email Anda.",
+        };
+      }
+      return res;
+    },
+    null,
+  );
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => setCooldown((prev) => prev - 1), 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
+  useEffect(() => {
+    if (state?.error) onError(state.error);
+  }, [state, onError]);
+
+  return (
+    <form action={formAction} className="pt-2 text-center">
+      <input type="hidden" name="email" value={email} />
+      <Button
+        type="submit"
+        variant="ghost"
+        size="sm"
+        disabled={cooldown > 0 || isPending}
+        className="gap-1.5 text-xs"
+      >
+        <RefreshCw className={`size-3.5 ${isPending ? "animate-spin" : ""}`} />
+        {cooldown > 0
+          ? `Kirim ulang kode (${cooldown}s)`
+          : "Kirim ulang kode OTP"}
       </Button>
     </form>
   );
