@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useId, useState } from "react";
 import { ArrowRight, RefreshCw, AlertCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,13 +19,33 @@ interface OtpStepProps {
   onBackToEmail: () => void;
 }
 
+async function otpFormAction(_prevState: unknown, formData: FormData) {
+  const intent = formData.get("intent");
+  if (intent === "resend") {
+    formData.set("mode", "resend");
+    return sendOtp(_prevState, formData);
+  }
+  return verifyOtpAction(_prevState, formData);
+}
+
 export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
-  const [globalError, setGlobalError] = useState<string | null>(null);
-  const isSuccess = globalError?.includes("berhasil");
+  const id = useId();
+  const [state, formAction, isPending] = useActionState(otpFormAction, null);
+
+  const globalMessage =
+    state?.error ||
+    (state?.success
+      ? state?.message === "SUCCESS_RESEND_OTP"
+        ? "Kode OTP berhasil dikirim ulang ke email."
+        : state?.message
+      : null);
+  const isSuccess = Boolean(state?.success);
+
+  const turnstileResetKey = state?.error ?? state?.message;
 
   return (
     <div className="space-y-5">
-      {globalError && (
+      {globalMessage && (
         <Alert
           variant={isSuccess ? "default" : "destructive"}
           className="max-w-full"
@@ -34,7 +54,7 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
           <AlertTitle>
             {isSuccess ? "Berhasil" : "Terjadi kesalahan"}
           </AlertTitle>
-          <AlertDescription>{globalError}</AlertDescription>
+          <AlertDescription>{globalMessage}</AlertDescription>
         </Alert>
       )}
 
@@ -56,38 +76,33 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
         <Input aria-disabled disabled type="email" name="email" value={email} />
       </div>
 
-      <OtpVerifyForm email={email} onError={setGlobalError} />
-      <ResendForm email={email} onError={setGlobalError} />
+      <form id={id} action={formAction}>
+        <input type="hidden" name="email" value={email} />
+        <TurnstileWidget
+          hidden
+          action="otp-step"
+          resetKey={turnstileResetKey}
+        />
+        <OtpVerifyForm isPending={isPending} />
+      </form>
+
+      <ResendButton formId={id} isPending={isPending} state={state} />
     </div>
   );
 }
 
-function OtpVerifyForm({
-  email,
-  onError,
-}: {
-  email: string;
-  onError: (msg: string | null) => void;
-}) {
+function OtpVerifyForm({ isPending }: { isPending: boolean }) {
   const [otp, setOtp] = useState("");
-  const [state, formAction, isPending] = useActionState(verifyOtpAction, null);
-  const isLoading = isPending;
-
-  useEffect(() => {
-    if (state?.error) onError(state.error);
-    else if (state?.success) onError(null);
-  }, [state, onError]);
 
   return (
-    <form action={formAction} className="space-y-5">
-      <input type="hidden" name="email" value={email} />
+    <>
       <div className="space-y-2 text-left">
         <label className="block text-xs font-semibold">
           Kode OTP 6-digit <span className="text-rose-500">*</span>
         </label>
         <div className="flex justify-center py-2">
           <InputOTP
-            disabled={isLoading}
+            disabled={isPending}
             name="otp"
             maxLength={6}
             pattern={REGEXP_ONLY_DIGITS}
@@ -110,57 +125,65 @@ function OtpVerifyForm({
           silakan cek folder spam/junk.
         </p>
       </div>
-      <TurnstileWidget action="verify-otp" resetKey={state?.error} hidden />
       <Button
         size="lg"
         type="submit"
-        disabled={isLoading || otp.length !== 6}
+        disabled={isPending || otp.length !== 6}
         className="mt-2 w-full gap-2"
       >
         {isPending ? "Memverifikasi kode..." : "Verifikasi & masuk"}
         <ArrowRight className="size-4" />
       </Button>
-    </form>
+    </>
   );
 }
 
-function ResendForm({
-  email,
-  onError,
+function ResendButton({
+  formId,
+  isPending,
+  state,
 }: {
-  email: string;
-  onError: (msg: string | null) => void;
+  formId: string;
+  isPending: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state: any;
 }) {
   const [cooldown, setCooldown] = useState(60);
-  const [state, formAction, isPending] = useActionState(sendOtp, null);
+  const [lastProcessedState, setLastProcessedState] = useState<unknown>(null);
+
+  // Memicu cooldown hanya saat state berubah DAN bernilai sukses resend (aman dari linter & tanpa efek samping sinkron luar)
+  if (state !== lastProcessedState) {
+    setLastProcessedState(state);
+    if (state?.success && state?.message === "SUCCESS_RESEND_OTP") {
+      setCooldown(60);
+    }
+  }
 
   useEffect(() => {
     if (cooldown <= 0) return;
-    const timer = setInterval(() => setCooldown((prev) => prev - 1), 1000);
+    const timer = setInterval(() => setCooldown((p) => p - 1), 1000);
     return () => clearInterval(timer);
   }, [cooldown]);
 
-  useEffect(() => {
-    if (state?.error) onError(state.error);
-  }, [state, onError]);
-
   return (
-    <form action={formAction} className="pt-2 text-center">
-      <input type="hidden" name="email" value={email} />
-      <input type="hidden" name="mode" value="resend" />
-      <TurnstileWidget action="login" resetKey={state?.error} hidden />
+    <div className="pt-2 text-center">
+      {/* name/value pada button ikut terkirim di FormData saat button ini yang submit */}
       <Button
         type="submit"
+        form={formId}
+        formNoValidate
+        name="intent"
+        value="resend"
         variant="ghost"
         size="sm"
         disabled={cooldown > 0 || isPending}
-        className="gap-1.5 text-xs"
+        className="gap-2 text-xs"
       >
         <RefreshCw className={`size-3.5 ${isPending ? "animate-spin" : ""}`} />
         {cooldown > 0
           ? `Kirim ulang kode (${cooldown}s)`
           : "Kirim ulang kode OTP"}
       </Button>
-    </form>
+    </div>
   );
 }

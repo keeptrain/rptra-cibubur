@@ -30,19 +30,7 @@ const VerifyOtpSchema = v.object({
 });
 
 export async function verifyOtpAction(_prevState: unknown, formData: FormData) {
-  const { token, ip: remoteIp } = await getTurnstileFormData(formData);
-  const check = await verifyTurnstile({
-    token,
-    expectedAction: "verify-otp",
-    remoteIp,
-  });
-  if (!check.success) {
-    return {
-      success: false,
-      error: "Verifikasi keamanan gagal. Silakan coba lagi.",
-    };
-  }
-
+  // 1. Validation step
   const validationResult = v.safeParse(VerifyOtpSchema, {
     email: formData.get("email"),
     otp: formData.get("otp"),
@@ -52,6 +40,20 @@ export async function verifyOtpAction(_prevState: unknown, formData: FormData) {
     return {
       success: false,
       error: validationResult.issues[0]?.message || "Kode OTP tidak valid.",
+    };
+  }
+
+  // 2. Turnstile verification step
+  const { token, ip: remoteIp } = await getTurnstileFormData(formData);
+  const check = await verifyTurnstile({
+    token,
+    expectedAction: "otp-step",
+    remoteIp,
+  });
+  if (!check.success) {
+    return {
+      success: false,
+      error: "Verifikasi keamanan gagal. Silakan coba lagi.",
     };
   }
 
@@ -106,11 +108,13 @@ export async function sendOtp(_prevState: unknown, formData: FormData) {
     };
   }
 
+  const { email: validEmail, mode } = validationResult.output;
+
   // 2. Turnstile verification step
   const { token, ip: remoteIp } = await getTurnstileFormData(formData);
   const check = await verifyTurnstile({
     token,
-    expectedAction: "login",
+    expectedAction: mode === "send" ? "sending-otp" : "otp-step",
     remoteIp,
   });
 
@@ -121,9 +125,6 @@ export async function sendOtp(_prevState: unknown, formData: FormData) {
     };
   }
 
-  const { email: validEmail, mode } = validationResult.output;
-
-  // 2. Error Gagal Kirim Email
   try {
     const cookieStore =
       validEmail === "admin@gmail.com" ? await cookies() : null;
@@ -138,10 +139,7 @@ export async function sendOtp(_prevState: unknown, formData: FormData) {
     return {
       success: true,
       data: validEmail,
-      message:
-        mode === "resend"
-          ? "Kode OTP berhasil dikirim ulang ke email Anda."
-          : undefined,
+      message: mode === "resend" ? "SUCCESS_RESEND_OTP" : undefined,
     };
   } catch (err: unknown) {
     if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
@@ -157,3 +155,5 @@ export async function sendOtp(_prevState: unknown, formData: FormData) {
     };
   }
 }
+
+export type SendOtpActionReturn = Awaited<ReturnType<typeof sendOtp>>;

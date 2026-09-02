@@ -59,7 +59,7 @@ export default function EmailStep({
         />
       </div>
 
-      <TurnstileWidget action="login" resetKey={state?.error} />
+      <TurnstileWidget action="sending-otp" resetKey={state?.error} />
       <Button
         type="submit"
         size="lg"
