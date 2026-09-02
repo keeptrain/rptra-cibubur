@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { loginAction } from "../actions/loginAction";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface EmailStepProps {
   defaultEmail?: string;
@@ -30,10 +31,11 @@ export default function EmailStep({
     <form action={formAction} className="space-y-5">
       {/* Error Alert Box */}
       {errorMessage && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-left text-xs font-medium text-rose-700">
-          <AlertCircleIcon className="mt-0.5 size-4 shrink-0" />
-          <span className="leading-snug">{errorMessage}</span>
-        </div>
+        <Alert variant="destructive" className="max-w-full">
+          <AlertCircleIcon />
+          <AlertTitle>Terjadi kesalahan</AlertTitle>
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
       )}
 
       <div className="space-y-2">
@@ -50,22 +52,19 @@ export default function EmailStep({
           name="email"
           type="email"
           required
+          pattern="[A-Za-z0-9._+\-']+@gmail\.com"
           defaultValue={defaultEmail}
-          pattern="^[a-zA-Z0-9._%+\-]+@gmail\.com$"
           placeholder="example@gmail.com"
         />
       </div>
 
-      <TurnstileWidget
-        action="login"
-        resetKey={state ? JSON.stringify(state) : "idle"}
-      />
+      <TurnstileWidget action="login" resetKey={state?.error} />
 
       <Button
         type="submit"
         size="lg"
         disabled={isPending}
-        className="mt-2 w-full gap-2"
+        className="w-full gap-2"
       >
         {isPending ? "Mengirim kode OTP..." : "Kirim kode OTP"}
         <ArrowRightIcon className="size-4" />

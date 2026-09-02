@@ -35,6 +35,8 @@ export default function TurnstileWidget({
 
   useEffect(() => {
     let cancelled = false;
+    let iv: NodeJS.Timeout | null = null;
+
     const render = () => {
       if (!containerRef.current || !window.turnstile || widgetIdRef.current)
         return;
@@ -52,19 +54,18 @@ export default function TurnstileWidget({
     if (window.turnstile) {
       render();
     } else {
-      const iv = setInterval(() => {
+      iv = setInterval(() => {
         if (window.turnstile) {
-          clearInterval(iv);
+          if (iv) clearInterval(iv);
           if (!cancelled) render();
         }
       }, 100);
-      return () => {
-        cancelled = true;
-        clearInterval(iv);
-      };
     }
 
     return () => {
+      cancelled = true;
+      if (iv) clearInterval(iv);
+
       if (widgetIdRef.current && window.turnstile) {
         try {
           window.turnstile.remove(widgetIdRef.current);

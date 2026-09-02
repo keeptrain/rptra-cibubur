@@ -1,7 +1,12 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import { ArrowRight, AlertCircle, RefreshCw } from "lucide-react";
+import {
+  ArrowRight,
+  AlertCircle,
+  RefreshCw,
+  AlertCircleIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
@@ -12,6 +17,7 @@ import { resendOtpAction, verifyOtpAction } from "../actions/loginAction";
 import { Input } from "@/components/ui/input";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface OtpStepProps {
   email: string;
@@ -116,6 +122,7 @@ function OtpVerifyForm({
   email: string;
   disabled?: boolean;
 }) {
+  const [turnstileResetKey] = useState(0);
   const [otp, setOtp] = useState("");
   const [state, formAction, isPending] = useActionState(verifyOtpAction, null);
   const isLoading = isPending || disabled;
@@ -125,10 +132,11 @@ function OtpVerifyForm({
       <input type="hidden" name="email" value={email} />
       <input type="hidden" name="otp" value={otp} />
       {state?.error && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-left text-xs font-medium text-rose-700">
-          <AlertCircle className="mt-0.5 size-4 shrink-0" />
-          <span className="leading-snug">{state.error}</span>
-        </div>
+        <Alert variant="destructive" className="max-w-full">
+          <AlertCircleIcon />
+          <AlertTitle>Terjadi kesalahan</AlertTitle>
+          <AlertDescription>{state.error}</AlertDescription>
+        </Alert>
       )}
       <div className="space-y-2 text-left">
         <label className="block text-xs font-semibold">
@@ -141,6 +149,7 @@ function OtpVerifyForm({
             pattern={REGEXP_ONLY_DIGITS}
             value={otp}
             onChange={(v) => setOtp(v)}
+            required
           >
             <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
               <InputOTPSlot index={0} />
@@ -157,8 +166,17 @@ function OtpVerifyForm({
           silakan cek folder spam/junk.
         </p>
       </div>
-      <TurnstileWidget action="verify-otp" resetKey={state ? JSON.stringify(state) : "idle"} hidden />
-      <Button size="lg" type="submit" disabled={isLoading || otp.length !== 6} className="mt-2 w-full gap-2">
+      <TurnstileWidget
+        action="verify-otp"
+        resetKey={turnstileResetKey}
+        hidden
+      />
+      <Button
+        size="lg"
+        type="submit"
+        disabled={isLoading || otp.length !== 6}
+        className="mt-2 w-full gap-2"
+      >
         {isPending ? "Memverifikasi kode..." : "Verifikasi & masuk"}
         <ArrowRight className="size-4" />
       </Button>

@@ -13,7 +13,7 @@ const EmailSchema = v.pipe(
   v.email("Format email tidak valid."),
   v.regex(
     /^[a-zA-Z0-9._%+-]+@gmail\.com$/i,
-    "Saat ini hanya menerima email @gmail.com.",
+    "Saat ini hanya menerima email dengan domain @gmail.com.",
   ),
   v.maxLength(255, "Email maksimal 255 karakter."),
 );

@@ -64,9 +64,7 @@ export default function LoginForm() {
             {!isProduction && (
               <Button
                 variant="outline"
-                onClick={() => {
-                  setEmail("admin@gmail.com");
-                }}
+                onClick={() => setEmail("admin@gmail.com")}
                 className="mt-4 w-full"
               >
                 Login sebagai admin
