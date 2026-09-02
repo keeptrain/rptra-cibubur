@@ -28,18 +28,28 @@ async function otpFormAction(_prevState: unknown, formData: FormData) {
   return verifyOtpAction(_prevState, formData);
 }
 
+type OtpFormState = {
+  success: boolean;
+  error?: string;
+  message?: string;
+  validEmail?: string;
+} | null;
+
 export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
   const id = useId();
-  const [state, formAction, isPending] = useActionState(otpFormAction, null);
+  const [state, formAction, isPending] = useActionState<OtpFormState, FormData>(
+    otpFormAction,
+    null,
+  );
 
   const globalMessage =
     state?.error ||
     (state?.success
-      ? state?.message === "SUCCESS_RESEND_OTP"
-        ? "Kode OTP berhasil dikirim ulang ke email."
-        : state?.message
+      ? state.message === "SUCCESS_RESEND_OTP"
+        ? "OTP berhasil dikirim ulang ke email Anda."
+        : state.message
       : null);
-  const isSuccess = Boolean(state?.success);
+  const isSuccess = state?.success === true;
 
   const turnstileResetKey = state?.error ?? state?.message;
 
@@ -145,10 +155,9 @@ function ResendButton({
 }: {
   formId: string;
   isPending: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  state: any;
+  state: OtpFormState;
 }) {
-  const [cooldown, setCooldown] = useState(60);
+  const [cooldown, setCooldown] = useState(0);
   const [lastProcessedState, setLastProcessedState] = useState<unknown>(null);
 
   // Memicu cooldown hanya saat state berubah DAN bernilai sukses resend (aman dari linter & tanpa efek samping sinkron luar)
@@ -161,7 +170,9 @@ function ResendButton({
 
   useEffect(() => {
     if (cooldown <= 0) return;
-    const timer = setInterval(() => setCooldown((p) => p - 1), 1000);
+    const timer = setInterval(() => {
+      setCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
     return () => clearInterval(timer);
   }, [cooldown]);
 

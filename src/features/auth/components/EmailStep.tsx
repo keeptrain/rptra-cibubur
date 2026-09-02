@@ -20,8 +20,8 @@ export default function EmailStep({
   const [state, formAction, isPending] = useActionState(sendOtp, null);
 
   useEffect(() => {
-    if (state?.success && state?.data) {
-      onSuccessNext(state.data);
+    if (state?.success && state?.validEmail) {
+      onSuccessNext(state.validEmail);
     }
   }, [state, onSuccessNext]);
 

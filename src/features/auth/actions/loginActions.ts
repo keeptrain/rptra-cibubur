@@ -138,7 +138,7 @@ export async function sendOtp(_prevState: unknown, formData: FormData) {
 
     return {
       success: true,
-      data: validEmail,
+      validEmail,
       message: mode === "resend" ? "SUCCESS_RESEND_OTP" : undefined,
     };
   } catch (err: unknown) {
