@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { STATIC_ENV } from "@/lib/static-env";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -154,6 +156,7 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-full flex-col">
         <NuqsAdapter>{children}</NuqsAdapter>
+        {STATIC_ENV.isProduction && <Analytics />}
       </body>
     </html>
   );
