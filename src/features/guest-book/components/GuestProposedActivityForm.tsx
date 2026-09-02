@@ -8,6 +8,7 @@ import { CheckCircle2Icon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import TurnstileWidget from "@/components/TurnstileWidget";
 
 export default function GuestProposedActivityForm() {
   const [show, setShow] = useState(false);
@@ -69,6 +70,11 @@ export default function GuestProposedActivityForm() {
                 placeholder="Ceritakan ide kegiatan, target peserta, kebutuhan..."
               />
             </div>
+            <TurnstileWidget
+              hidden
+              action="guest-propose-activity"
+              resetKey={done ? "done-reset" : "dont-reset"}
+            />
           </form>
         </CardContent>
         <CardFooter className="mt-4">
