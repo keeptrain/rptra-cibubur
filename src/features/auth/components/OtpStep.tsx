@@ -8,7 +8,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { resendOtpAction, verifyOtpAction } from "../actions/loginAction";
+import { resendOtpAction, verifyOtpAction } from "../actions/loginActions";
 import { Input } from "@/components/ui/input";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { REGEXP_ONLY_DIGITS } from "input-otp";

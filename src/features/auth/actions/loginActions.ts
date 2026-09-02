@@ -113,7 +113,7 @@ export async function resendOtpAction(_prevState: unknown, formData: FormData) {
   }
 }
 
-export async function loginAction(_prevState: unknown, formData: FormData) {
+export async function sendOtp(_prevState: unknown, formData: FormData) {
   const token = formData.get("cf-turnstile-response") as string | null;
   const ip =
     (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;

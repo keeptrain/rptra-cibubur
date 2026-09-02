@@ -5,7 +5,7 @@ import { AlertCircleIcon, ArrowRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import TurnstileWidget from "@/components/TurnstileWidget";
-import { loginAction } from "../actions/loginAction";
+import { sendOtp } from "../actions/loginActions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface EmailStepProps {
@@ -17,7 +17,7 @@ export default function EmailStep({
   defaultEmail = "",
   onSuccessNext,
 }: EmailStepProps) {
-  const [state, formAction, isPending] = useActionState(loginAction, null);
+  const [state, formAction, isPending] = useActionState(sendOtp, null);
 
   useEffect(() => {
     if (state?.success && state.validEmail) {
