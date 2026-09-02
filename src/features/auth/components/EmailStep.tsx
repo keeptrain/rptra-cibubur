@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { AlertCircleIcon, ArrowRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import TurnstileWidget from "@/components/TurnstileWidget";
 import { loginAction } from "../actions/loginAction";
 
 interface EmailStepProps {
@@ -21,7 +22,7 @@ export default function EmailStep({
     if (state?.success && state.validEmail) {
       onSuccessNext(state.validEmail);
     }
-  }, [state?.success, state?.validEmail, onSuccessNext]);
+  }, [state, onSuccessNext]);
 
   const errorMessage = state?.error;
 
@@ -54,6 +55,11 @@ export default function EmailStep({
           placeholder="example@gmail.com"
         />
       </div>
+
+      <TurnstileWidget
+        action="login"
+        resetKey={state ? JSON.stringify(state) : "idle"}
+      />
 
       <Button
         type="submit"

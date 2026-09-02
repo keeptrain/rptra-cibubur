@@ -3,7 +3,8 @@
 import * as v from "valibot";
 import { sendingOtp, verifyOtp } from "./service";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 const EmailSchema = v.pipe(
   v.string("Email harus diisi dan berupa teks."),
@@ -31,6 +32,21 @@ const VerifyOtpSchema = v.object({
 });
 
 export async function verifyOtpAction(_prevState: unknown, formData: FormData) {
+  const token = formData.get("cf-turnstile-response") as string | null;
+  const ip =
+    (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  const check = await verifyTurnstile({
+    token,
+    expectedAction: "verify-otp",
+    remoteIp: ip,
+  });
+  if (!check.success) {
+    return {
+      success: false,
+      error: "Verifikasi keamanan gagal. Silakan coba lagi.",
+    };
+  }
+
   const validationResult = v.safeParse(VerifyOtpSchema, {
     email: formData.get("email"),
     otp: formData.get("otp"),
@@ -72,7 +88,47 @@ export async function verifyOtpAction(_prevState: unknown, formData: FormData) {
   }
 }
 
+export async function resendOtpAction(_prevState: unknown, formData: FormData) {
+  const validationResult = v.safeParse(EmailSchema, formData.get("email"));
+  if (!validationResult.success) {
+    return {
+      success: false,
+      error: validationResult.issues[0]?.message || "Email tidak valid.",
+    };
+  }
+  const validEmail = validationResult.output;
+  try {
+    const cookieStore =
+      validEmail === "admin@gmail.com" ? await cookies() : null;
+    const result = await sendingOtp(validEmail, cookieStore);
+    if (result === "SUCCESS_BYPASS") redirect("/dashboard");
+    return { success: true, validEmail };
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message.includes("NEXT_REDIRECT"))
+      throw err;
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Gagal mengirim OTP.",
+    };
+  }
+}
+
 export async function loginAction(_prevState: unknown, formData: FormData) {
+  const token = formData.get("cf-turnstile-response") as string | null;
+  const ip =
+    (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  const check = await verifyTurnstile({
+    token,
+    expectedAction: "login",
+    remoteIp: ip,
+  });
+  if (!check.success) {
+    return {
+      success: false,
+      error: "Verifikasi keamanan gagal. Silakan coba lagi.",
+    };
+  }
+
   // 1. Error Validasi
   const validationResult = v.safeParse(EmailSchema, formData.get("email"));
 

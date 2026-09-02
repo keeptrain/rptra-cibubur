@@ -56,24 +56,25 @@ export default function LoginForm() {
       {/* FORM STEP CONTENT BODY */}
       <div className="p-6 sm:p-8">
         {step === "email" ? (
-          <EmailStep
-            defaultEmail={email}
-            onSuccessNext={handleEmailSuccessNext}
-          />
+          <>
+            <EmailStep
+              defaultEmail={email}
+              onSuccessNext={handleEmailSuccessNext}
+            />
+            {!isProduction && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEmail("admin@gmail.com");
+                }}
+                className="mt-4 w-full"
+              >
+                Login sebagai admin
+              </Button>
+            )}
+          </>
         ) : (
           <OtpStep email={email} onBackToEmail={handleBackToEmail} />
-        )}
-
-        {!isProduction && (
-          <Button
-            variant="outline"
-            onClick={() => {
-              setEmail("admin@gmail.com");
-            }}
-            className="mt-4 w-full"
-          >
-            Login sebagai admin
-          </Button>
         )}
       </div>
     </>

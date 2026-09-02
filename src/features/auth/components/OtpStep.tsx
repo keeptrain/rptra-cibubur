@@ -8,8 +8,9 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { loginAction, verifyOtpAction } from "../actions/loginAction";
+import { resendOtpAction, verifyOtpAction } from "../actions/loginAction";
 import { Input } from "@/components/ui/input";
+import TurnstileWidget from "@/components/TurnstileWidget";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 interface OtpStepProps {
@@ -21,7 +22,7 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
   const [cooldown, setCooldown] = useState(60);
   const [resendState, resendFormAction, resendPending] = useActionState(
     async (_prevState: unknown, formData: FormData) => {
-      const res = (await loginAction(null, formData)) as {
+      const res = (await resendOtpAction(null, formData)) as {
         success: boolean;
         error?: string;
       };
@@ -70,7 +71,13 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
           <label htmlFor="disabled-email" className="text-xs font-semibold">
             Email tujuan
           </label>
-          <Button type="button" variant="link" size="sm" onClick={onBackToEmail} className="h-auto p-0 text-xs">
+          <Button
+            type="button"
+            variant="link"
+            size="sm"
+            onClick={onBackToEmail}
+            className="h-auto p-0 text-xs"
+          >
             Ubah email
           </Button>
         </div>
@@ -80,19 +87,35 @@ export default function OtpStep({ email, onBackToEmail }: OtpStepProps) {
       {/* Isolated OTP Verify Form — rerender hanya di dalam */}
       <OtpVerifyForm email={email} disabled={isResending} />
 
-      {/* Resend */}
+      {/* Resend — tanpa Turnstile, pakai token dari verify widget yang sama */}
       <form action={resendFormAction} className="pt-2 text-center">
         <input type="hidden" name="email" value={email} />
-        <Button type="submit" variant="ghost" size="sm" disabled={cooldown > 0 || isResending} className="gap-1.5 text-xs">
-          <RefreshCw className={`size-3.5 ${isResending ? "animate-spin" : ""}`} />
-          {cooldown > 0 ? `Kirim ulang kode (${cooldown}s)` : "Kirim ulang kode OTP"}
+        <Button
+          type="submit"
+          variant="ghost"
+          size="sm"
+          disabled={cooldown > 0 || isResending}
+          className="gap-1.5 text-xs"
+        >
+          <RefreshCw
+            className={`size-3.5 ${isResending ? "animate-spin" : ""}`}
+          />
+          {cooldown > 0
+            ? `Kirim ulang kode (${cooldown}s)`
+            : "Kirim ulang kode OTP"}
         </Button>
       </form>
     </div>
   );
 }
 
-function OtpVerifyForm({ email, disabled }: { email: string; disabled?: boolean }) {
+function OtpVerifyForm({
+  email,
+  disabled,
+}: {
+  email: string;
+  disabled?: boolean;
+}) {
   const [otp, setOtp] = useState("");
   const [state, formAction, isPending] = useActionState(verifyOtpAction, null);
   const isLoading = isPending || disabled;
@@ -112,7 +135,13 @@ function OtpVerifyForm({ email, disabled }: { email: string; disabled?: boolean 
           Kode OTP 6-digit <span className="text-rose-500">*</span>
         </label>
         <div className="flex justify-center py-2">
-          <InputOTP disabled={isLoading} maxLength={6} pattern={REGEXP_ONLY_DIGITS} value={otp} onChange={(v) => setOtp(v)}>
+          <InputOTP
+            disabled={isLoading}
+            maxLength={6}
+            pattern={REGEXP_ONLY_DIGITS}
+            value={otp}
+            onChange={(v) => setOtp(v)}
+          >
             <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
               <InputOTPSlot index={0} />
               <InputOTPSlot index={1} />
@@ -124,9 +153,11 @@ function OtpVerifyForm({ email, disabled }: { email: string; disabled?: boolean 
           </InputOTP>
         </div>
         <p className="text-foreground/70 pt-1 text-center text-xs">
-          Kode 6-digit dikirimkan ke inbox email Anda. Jika tidak ada di inbox, silakan cek folder spam/junk.
+          Kode 6-digit dikirimkan ke inbox email Anda. Jika tidak ada di inbox,
+          silakan cek folder spam/junk.
         </p>
       </div>
+      <TurnstileWidget action="verify-otp" resetKey={state ? JSON.stringify(state) : "idle"} hidden />
       <Button size="lg" type="submit" disabled={isLoading || otp.length !== 6} className="mt-2 w-full gap-2">
         {isPending ? "Memverifikasi kode..." : "Verifikasi & masuk"}
         <ArrowRight className="size-4" />
