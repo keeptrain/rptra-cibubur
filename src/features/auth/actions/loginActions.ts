@@ -3,8 +3,8 @@
 import * as v from "valibot";
 import { sendingOtp, verifyOtp } from "./service";
 import { redirect } from "next/navigation";
-import { cookies, headers } from "next/headers";
-import { verifyTurnstile } from "@/lib/turnstile";
+import { cookies } from "next/headers";
+import { getTurnstileFormData, verifyTurnstile } from "@/lib/turnstile";
 
 const EmailSchema = v.pipe(
   v.string("Email harus diisi dan berupa teks."),
@@ -18,27 +18,23 @@ const EmailSchema = v.pipe(
   v.maxLength(255, "Email maksimal 255 karakter."),
 );
 
-const OtpSchema = v.pipe(
-  v.string("Kode OTP harus diisi dan berupa teks."),
-  v.trim(),
-  v.nonEmpty("Kode OTP tidak boleh kosong."),
-  v.regex(/^\d{6}$/, "Kode OTP harus berupa 6 digit angka."),
-  v.length(6, "Kode OTP harus 6 digit."),
-);
-
 const VerifyOtpSchema = v.object({
   email: EmailSchema,
-  otp: OtpSchema,
+  otp: v.pipe(
+    v.string("Kode OTP harus diisi dan berupa teks."),
+    v.trim(),
+    v.nonEmpty("Kode OTP tidak boleh kosong."),
+    v.regex(/^\d{6}$/, "Kode OTP harus berupa 6 digit angka."),
+    v.length(6, "Kode OTP harus 6 digit."),
+  ),
 });
 
 export async function verifyOtpAction(_prevState: unknown, formData: FormData) {
-  const token = formData.get("cf-turnstile-response") as string | null;
-  const ip =
-    (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  const { token, ip: remoteIp } = await getTurnstileFormData(formData);
   const check = await verifyTurnstile({
     token,
     expectedAction: "verify-otp",
-    remoteIp: ip,
+    remoteIp,
   });
   if (!check.success) {
     return {
@@ -88,40 +84,36 @@ export async function verifyOtpAction(_prevState: unknown, formData: FormData) {
   }
 }
 
-export async function resendOtpAction(_prevState: unknown, formData: FormData) {
-  const validationResult = v.safeParse(EmailSchema, formData.get("email"));
+const SendOtpSchema = v.object({
+  email: EmailSchema,
+  mode: v.enum(
+    { send: "send", resend: "resend" },
+    "Mode harus 'send' atau 'resend'.",
+  ),
+});
+
+export async function sendOtp(_prevState: unknown, formData: FormData) {
+  // 1. Validation step
+  const validationResult = v.safeParse(SendOtpSchema, {
+    email: formData.get("email"),
+    mode: formData.get("mode"),
+  });
+
   if (!validationResult.success) {
     return {
       success: false,
       error: validationResult.issues[0]?.message || "Email tidak valid.",
     };
   }
-  const validEmail = validationResult.output;
-  try {
-    const cookieStore =
-      validEmail === "admin@gmail.com" ? await cookies() : null;
-    const result = await sendingOtp(validEmail, cookieStore);
-    if (result === "SUCCESS_BYPASS") redirect("/dashboard");
-    return { success: true, validEmail };
-  } catch (err: unknown) {
-    if (err instanceof Error && err.message.includes("NEXT_REDIRECT"))
-      throw err;
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Gagal mengirim OTP.",
-    };
-  }
-}
 
-export async function sendOtp(_prevState: unknown, formData: FormData) {
-  const token = formData.get("cf-turnstile-response") as string | null;
-  const ip =
-    (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  // 2. Turnstile verification step
+  const { token, ip: remoteIp } = await getTurnstileFormData(formData);
   const check = await verifyTurnstile({
     token,
     expectedAction: "login",
-    remoteIp: ip,
+    remoteIp,
   });
+
   if (!check.success) {
     return {
       success: false,
@@ -129,17 +121,7 @@ export async function sendOtp(_prevState: unknown, formData: FormData) {
     };
   }
 
-  // 1. Error Validasi
-  const validationResult = v.safeParse(EmailSchema, formData.get("email"));
-
-  if (!validationResult.success) {
-    return {
-      success: false,
-      error: validationResult.issues[0]?.message || "Email tidak valid.",
-    };
-  }
-
-  const validEmail = validationResult.output;
+  const { email: validEmail, mode } = validationResult.output;
 
   // 2. Error Gagal Kirim Email
   try {
@@ -148,13 +130,18 @@ export async function sendOtp(_prevState: unknown, formData: FormData) {
 
     const result = await sendingOtp(validEmail, cookieStore);
 
+    // only on development mode, bypass OTP verification
     if (result === "SUCCESS_BYPASS") {
       redirect("/dashboard");
     }
 
     return {
       success: true,
-      validEmail,
+      data: validEmail,
+      message:
+        mode === "resend"
+          ? "Kode OTP berhasil dikirim ulang ke email Anda."
+          : undefined,
     };
   } catch (err: unknown) {
     if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {

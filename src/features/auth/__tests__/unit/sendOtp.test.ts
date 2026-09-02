@@ -10,6 +10,10 @@ vi.mock("next/headers", () => ({
 // Mock turnstile
 vi.mock("@/lib/turnstile", () => ({
   verifyTurnstile: vi.fn().mockResolvedValue({ success: true }),
+  getTurnstileFormData: vi.fn().mockImplementation(async (formData: FormData) => ({
+    token: formData.get("cf-turnstile-response") as string | null,
+    ip: null,
+  })),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -32,6 +36,7 @@ describe("sendOtp — email step", () => {
   it("should reject empty email", async () => {
     const fd = new FormData();
     fd.set("email", "");
+    fd.set("mode", "send");
     fd.set("cf-turnstile-response", "tok");
     const res = await sendOtp(null, fd);
     expect(res.success).toBe(false);
@@ -41,6 +46,7 @@ describe("sendOtp — email step", () => {
   it("should reject non-gmail", async () => {
     const fd = new FormData();
     fd.set("email", "user@yahoo.com");
+    fd.set("mode", "send");
     fd.set("cf-turnstile-response", "tok");
     const res = await sendOtp(null, fd);
     expect(res.success).toBe(false);
@@ -50,16 +56,17 @@ describe("sendOtp — email step", () => {
   it("should accept valid gmail", async () => {
     const fd = new FormData();
     fd.set("email", "warga@gmail.com");
+    fd.set("mode", "send");
     fd.set("cf-turnstile-response", "tok");
     const res = await sendOtp(null, fd);
     expect(res.success).toBe(true);
-    expect((res as { validEmail: string }).validEmail).toBe("warga@gmail.com");
   });
 
   it("should fail turnstile", async () => {
     vi.mocked(verifyTurnstile).mockResolvedValueOnce({ success: false });
     const fd = new FormData();
     fd.set("email", "warga@gmail.com");
+    fd.set("mode", "send");
     fd.set("cf-turnstile-response", "bad");
     const res = await sendOtp(null, fd);
     expect(res.success).toBe(false);

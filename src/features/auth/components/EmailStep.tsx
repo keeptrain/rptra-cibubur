@@ -10,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface EmailStepProps {
   defaultEmail?: string;
-  onSuccessNext: (link: string) => void;
+  onSuccessNext: (email: string) => void;
 }
 
 export default function EmailStep({
@@ -20,8 +20,8 @@ export default function EmailStep({
   const [state, formAction, isPending] = useActionState(sendOtp, null);
 
   useEffect(() => {
-    if (state?.success && state.validEmail) {
-      onSuccessNext(state.validEmail);
+    if (state?.success && state?.data) {
+      onSuccessNext(state.data);
     }
   }, [state, onSuccessNext]);
 
@@ -38,6 +38,7 @@ export default function EmailStep({
         </Alert>
       )}
 
+      <input type="hidden" name="mode" value="send" />
       <div className="space-y-2">
         <label
           htmlFor="email"
@@ -59,7 +60,6 @@ export default function EmailStep({
       </div>
 
       <TurnstileWidget action="login" resetKey={state?.error} />
-
       <Button
         type="submit"
         size="lg"

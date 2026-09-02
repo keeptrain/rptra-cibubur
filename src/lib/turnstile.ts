@@ -1,5 +1,7 @@
 "use server";
 
+import { headers } from "next/headers";
+
 const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET;
 const TURNSTILE_HOSTNAMES = (process.env.TURNSTILE_HOSTNAMES ?? "")
   .split(",")
@@ -12,6 +14,15 @@ if (!TURNSTILE_SECRET) {
 
 if (TURNSTILE_HOSTNAMES.length === 0) {
   throw new Error("TURNSTILE_HOSTNAMES is not configured");
+}
+
+export async function getTurnstileFormData(
+  formData: FormData,
+): Promise<{ token: string | null; ip: string | null }> {
+  const token = formData.get("cf-turnstile-response") as string | null;
+  const ip =
+    (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  return { token, ip };
 }
 
 export async function verifyTurnstile({

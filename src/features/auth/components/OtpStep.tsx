@@ -8,7 +8,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { resendOtpAction, verifyOtpAction } from "../actions/loginActions";
+import { sendOtp, verifyOtpAction } from "../actions/loginActions";
 import { Input } from "@/components/ui/input";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
@@ -132,23 +132,7 @@ function ResendForm({
   onError: (msg: string | null) => void;
 }) {
   const [cooldown, setCooldown] = useState(60);
-  const [state, formAction, isPending] = useActionState(
-    async (_prevState: unknown, formData: FormData) => {
-      const res = (await resendOtpAction(null, formData)) as {
-        success: boolean;
-        error?: string;
-      };
-      if (res?.success) {
-        setCooldown(60);
-        return {
-          success: true,
-          error: "Kode OTP 6-digit berhasil dikirim ulang ke email Anda.",
-        };
-      }
-      return res;
-    },
-    null,
-  );
+  const [state, formAction, isPending] = useActionState(sendOtp, null);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -163,6 +147,8 @@ function ResendForm({
   return (
     <form action={formAction} className="pt-2 text-center">
       <input type="hidden" name="email" value={email} />
+      <input type="hidden" name="mode" value="resend" />
+      <TurnstileWidget action="login" resetKey={state?.error} hidden />
       <Button
         type="submit"
         variant="ghost"
